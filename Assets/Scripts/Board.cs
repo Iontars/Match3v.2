@@ -22,6 +22,7 @@ public class TileType // класс хранящйи в себе информа�
 public class Board : MonoBehaviour
 {
     public World world;
+    public int level;
 
     public GameState currentState = GameState.move; // ?Рудимент
     public int width, height;
@@ -48,6 +49,10 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
+        width = world.levels[level].width;
+        height = world.levels[level].height;
+
+
         
         scoreManager = FindObjectOfType<ScoreManager>();
         goalManager = FindObjectOfType<GoalManager>();

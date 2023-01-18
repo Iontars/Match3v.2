@@ -17,7 +17,7 @@ public class CameraScalar : MonoBehaviour
         board = FindObjectOfType<Board>();
         if (board != null)
         {
-            //RepositionCamera(board.width - 1, board.height - 1, cameraOffset);
+            RepositionCamera(board.width - 1, board.height - 1, cameraOffset);
         }
     }
 

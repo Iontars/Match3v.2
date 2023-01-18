@@ -21,6 +21,6 @@ public class Level : ScriptableObject
     public GameObject[] dots;
 
     [Header("Score Goal")]
-    public int scoreGoals;
+    public int[] scoreGoals;
 
 }
