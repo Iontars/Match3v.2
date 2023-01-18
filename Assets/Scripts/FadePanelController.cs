@@ -25,7 +25,7 @@ public class FadePanelController : MonoBehaviour
         panelAnim?.SetBool("Game Over", true);
     }
 
-
+    //задержка после нажатия на OK что бы всё остальное встало на свои места
     IEnumerator GameStartCo()
     {
         yield return new WaitForSeconds(1.0f);

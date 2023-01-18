@@ -21,6 +21,7 @@ public class TileType // класс хранящйи в себе информа�
 /// </summary>
 public class Board : MonoBehaviour
 {
+    public World world;
 
     public GameState currentState = GameState.move; // ?Рудимент
     public int width, height;
@@ -41,12 +42,13 @@ public class Board : MonoBehaviour
     SoundManager soundManager;
 
     GoalManager goalManager; // vid 40
-    public int[] scoreGoals;
+    public int[] scoreGoals; // сколько нужно набрать очков для различных успехов на карте, 1 звезда 2000 очков 2 звезды 4000 очков итд
 
     public float refillDelay = 0.5f;
 
     private void Awake()
     {
+        
         scoreManager = FindObjectOfType<ScoreManager>();
         goalManager = FindObjectOfType<GoalManager>();
         soundManager = FindObjectOfType<SoundManager>();
