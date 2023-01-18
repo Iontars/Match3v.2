@@ -1427,7 +1427,7 @@ MonoBehaviour:
   levelGoals:
   - numberNeeded: 5
     numberCollected: 0
-    goalSprite: {fileID: 21300000, guid: 3238dca1e9ea9fb4aa64b28298ba6dbd, type: 3}
+    goalSprite: {fileID: 21300000, guid: abac20393146f491e92ff599d2685ef6, type: 3}
     MatchValue: Yellow Dot
   - numberNeeded: 5
     numberCollected: 0
@@ -3139,7 +3139,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe5a8f40a5664ac4b706734d020ac12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  world: {fileID: 0}
+  world: {fileID: 11400000, guid: c6bae184ebc5b45989041782252617dc, type: 2}
+  level: 2
   currentState: 1
   width: 7
   height: 10
@@ -3156,61 +3157,7 @@ MonoBehaviour:
   - {fileID: 851745900852720794, guid: ff92602f56e93984c92de6fefbe04a61, type: 3}
   destroyEffect: {fileID: 5307088077756954478, guid: dc79056933b4b9341b475f5e6534393c,
     type: 3}
-  boardLayout:
-  - x: 0
-    y: 0
-    tileKind: 1
-  - x: 6
-    y: 0
-    tileKind: 1
-  - x: 0
-    y: 4
-    tileKind: 1
-  - x: 0
-    y: 9
-    tileKind: 1
-  - x: 6
-    y: 9
-    tileKind: 1
-  - x: 0
-    y: 5
-    tileKind: 1
-  - x: 6
-    y: 4
-    tileKind: 1
-  - x: 6
-    y: 5
-    tileKind: 1
-  - x: 1
-    y: 4
-    tileKind: 0
-  - x: 2
-    y: 4
-    tileKind: 0
-  - x: 3
-    y: 4
-    tileKind: 0
-  - x: 4
-    y: 4
-    tileKind: 0
-  - x: 5
-    y: 4
-    tileKind: 0
-  - x: 1
-    y: 5
-    tileKind: 0
-  - x: 2
-    y: 5
-    tileKind: 0
-  - x: 3
-    y: 5
-    tileKind: 0
-  - x: 4
-    y: 5
-    tileKind: 0
-  - x: 5
-    y: 5
-    tileKind: 0
+  boardLayout: []
   currentDot: {fileID: 0}
   basePieceValue: 20
   scoreGoals: d0070000a00f000088130000
