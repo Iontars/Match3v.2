@@ -2,10 +2,12 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
+Build folder/[Ll]ibraries/
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
+/[Bb]uild folder/
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/

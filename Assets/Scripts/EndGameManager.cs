@@ -1,0 +1,110 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+using UnityEngine.UI;
+
+public enum GameType
+{
+    Moves, Time
+}
+
+[System.Serializable]
+public class EndGameRequirements
+{
+    public GameType gameType;
+    public int counterValue;
+}
+
+/// <summary>
+/// Устанавливает условия победы или поражения
+/// </summary>
+public class EndGameManager : MonoBehaviour
+{
+    
+    public EndGameRequirements requirements;
+    public GameObject timeLable;
+    public GameObject movesLable;
+    public GameObject youWinPanel;
+    public GameObject tryAgainPanel;
+
+    public Text counter;
+    public int currentCounterValue; // счётчик ходов до окончания уровня
+
+    float timerSeconds; // счётчик секунд до окончания уровня
+    Board board;
+
+    private void Awake()
+    {
+        board = FindObjectOfType<Board>();
+    }
+
+    void SetupGame()
+    {
+        currentCounterValue = requirements.counterValue;
+        if (requirements.gameType == GameType.Moves)
+        {
+            movesLable.SetActive(true);
+            timeLable.SetActive(false);
+        }
+        else if (requirements.gameType == GameType.Time)
+        {
+            timerSeconds = 1;
+            movesLable.SetActive(false);
+            timeLable.SetActive(true);
+        }
+        counter.text = "" + currentCounterValue.ToString();
+    }
+
+    public void DecreaseCountervalue()
+    {
+        if (board.currentState != GameState.pause) // 1) Перенести эту обёртку  в более ранне место что бы сэкономит ресурсы, в метот Update в оператор IF requirements.gameType == GameType.Time && currentCounterValue > 0 && board.currentState != GameState.pause
+        {
+        currentCounterValue--;
+            counter.text = "" + currentCounterValue.ToString();
+            if (currentCounterValue <= 0)
+            {
+                LoseGame();
+            }
+        }
+    }
+
+    public void WinGame()
+    {
+        youWinPanel.SetActive(true);
+        board.currentState = GameState.win;
+        counter.text = "" + (currentCounterValue = 0);
+        FadePanelController fadePanelController = FindObjectOfType<FadePanelController>();
+        fadePanelController.GameOver();
+    }
+
+    public void LoseGame()
+    {
+        // ?добавить ивент на поражение
+        tryAgainPanel.SetActive(true);
+        board.currentState = GameState.lose;
+        print("Yoy Lose");
+        counter.text = "" + (currentCounterValue = 0);
+        FadePanelController fadePanelController = FindObjectOfType<FadePanelController>();
+        fadePanelController.GameOver();
+    }
+
+    void Start()
+    {
+        SetupGame();
+    }
+    
+    void Update()
+    {
+        if (requirements.gameType == GameType.Time && currentCounterValue > 0) // 1)
+        {
+            timerSeconds -= Time.deltaTime;
+            if (timerSeconds <= 0)
+            {
+                Debug.Log(" still active");
+                DecreaseCountervalue(); 
+                timerSeconds = 1;
+            }
+        }
+    }
+}
