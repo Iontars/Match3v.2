@@ -57,6 +57,7 @@ public class Board : MonoBehaviour
         {
             if (world.levels[level] != null)
             {
+                //присваивание значений из выбранного уровня в нашу доску
                 width = world.levels[level].width;
                 height = world.levels[level].height;
             }
