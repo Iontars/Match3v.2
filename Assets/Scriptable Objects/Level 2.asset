@@ -12,3 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2249442d61c6456db7b927b9bebf5fa, type: 3}
   m_Name: Level 2
   m_EditorClassIdentifier: 
+  width: 6
+  height: 8
+  boardLayout: 
+  dots:
+  - {fileID: 6602495750976175007, guid: 5fce1479c2edba54d9525be058e1c3d1, type: 3}
+  - {fileID: 3222974119019145949, guid: d523a2bdbda671a4e9430a06834921af, type: 3}
+  - {fileID: 2205036190841030540, guid: 156afdf7791a33f49b79eda7f8470c40, type: 3}
+  - {fileID: 851745900852720794, guid: 6bec68f4a3ef68242a6eff67dd4a42e5, type: 3}
+  scoreGoals: c80000002c010000f4010000
