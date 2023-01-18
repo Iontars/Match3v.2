@@ -1208,9 +1208,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraOffset: -10
-  aspectRatio: 0.4615
   pudding: 1
-  yOffset: 1
+  yOffset: 0
 --- !u!1 &597840263
 GameObject:
   m_ObjectHideFlags: 0
