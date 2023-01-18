@@ -34,7 +34,7 @@ public class Board : MonoBehaviour
     public GameObject breakebleTilePrefab;
     public GameObject[] dots;
     public GameObject destroyEffect;
-    [Header("layout")]
+    [Header("Layout")]
     public TileType[] boardLayout;
     private bool[,] blankSpaces; // массив с зарезервированными местами на доске
     private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске
@@ -60,6 +60,9 @@ public class Board : MonoBehaviour
                 //присваивание значений из выбранного уровня в нашу доску
                 width = world.levels[level].width;
                 height = world.levels[level].height;
+                dots = world.levels[level].dots;
+                scoreGoals = world.levels[level].scoreGoals;
+                boardLayout = world.levels[level].boardLayout;
             }
         }
         

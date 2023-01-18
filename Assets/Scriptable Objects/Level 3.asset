@@ -14,10 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 4
   height: 4
-  boardLayout: 
+  boardLayout:
+  - x: 0
+    y: 0
+    tileKind: 1
   dots:
   - {fileID: 851745900852720794, guid: ff92602f56e93984c92de6fefbe04a61, type: 3}
   - {fileID: 851745900852720794, guid: 6bec68f4a3ef68242a6eff67dd4a42e5, type: 3}
   - {fileID: 2824903673362020317, guid: 6b39ee9d546e8544c9613a849df8cd7c, type: 3}
   - {fileID: 6602495750976175007, guid: 5fce1479c2edba54d9525be058e1c3d1, type: 3}
+  - {fileID: 1092129758423907793, guid: 8fc9ae9e922b409468be77874941f554, type: 3}
+  - {fileID: 380217878639168106, guid: 626dad3cdd87a174e85bdf3fc6d75b7f, type: 3}
   scoreGoals: 64000000
+  endGameRequirements:
+    gameType: 0
+    counterValue: 0
+  levelGoals: []
