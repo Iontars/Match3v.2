@@ -13,7 +13,7 @@ public class CameraScalar : MonoBehaviour
 
     void Start()
     {
-        //board = gameObject.AddComponent(typeof(Board)) as Board;
+        board = gameObject.AddComponent(typeof(Board)) as Board;
         board = FindObjectOfType<Board>();
         if (board != null)
         {
