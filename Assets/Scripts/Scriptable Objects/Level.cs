@@ -20,7 +20,7 @@ public class Level : ScriptableObject
     [Header("Avalible dots")]
     public GameObject[] dots;
 
-    [Header("Score Goals")]
+    [Header("Score Goal")]
     public int scoreGoals;
 
 }
