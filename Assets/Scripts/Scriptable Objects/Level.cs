@@ -10,10 +10,17 @@ using UnityEngine.UI;
 [CreateAssetMenu (fileName = "World", menuName = "Level")]
 public class Level : ScriptableObject
 {
+    [Header("Board Dimensions")]
+    public int width;
+    public int height;
 
-    void Awake()
-    {
-        
-    }
+    [Header("Start Tiles")]
+    public TileKind[] boardLayout;
+
+    [Header("Avalible dots")]
+    public GameObject[] dots;
+
+    [Header("Score Goals")]
+    public int scoreGoals;
 
 }
