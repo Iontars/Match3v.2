@@ -11,6 +11,7 @@ public class CameraScalar : MonoBehaviour
     public float pudding = 10;
     public float yOffset = 1;
 
+    
     void Start()
     {
         aspectRatio = (float)Screen.width / Screen.height;
@@ -20,9 +21,6 @@ public class CameraScalar : MonoBehaviour
         {
             RepositionCamera(board.width - 1, board.height - 1, cameraOffset);
         }
-        print(Screen.width);
-        print(Screen.height);
-        print(aspectRatio);
     }
 
     void RepositionCamera(float x, float y, float z)

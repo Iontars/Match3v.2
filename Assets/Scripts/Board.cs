@@ -55,14 +55,17 @@ public class Board : MonoBehaviour
     {
         if (world != null)
         {
-            if (world.levels[level] != null)
+            if (level < world.levels.Length)
             {
-                //присваивание значений из выбранного уровня в нашу доску
-                width = world.levels[level].width;
-                height = world.levels[level].height;
-                dots = world.levels[level].dots;
-                scoreGoals = world.levels[level].scoreGoals;
-                boardLayout = world.levels[level].boardLayout;
+                if (world.levels[level] != null)
+                {
+                    //присваивание значений из выбранного уровня в нашу доску
+                    width = world.levels[level].width;
+                    height = world.levels[level].height;
+                    dots = world.levels[level].dots;
+                    scoreGoals = world.levels[level].scoreGoals;
+                    boardLayout = world.levels[level].boardLayout;
+                } 
             }
         }
         
