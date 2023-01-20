@@ -29,6 +29,6 @@ MonoBehaviour:
     counterValue: 10
   levelGoals:
   - numberNeeded: 10
-    numberCollected: 13
+    numberCollected: 0
     goalSprite: {fileID: 21300000, guid: 7c50335625e40405eb15ac320fb2ba42, type: 3}
     MatchValue: Red Dot

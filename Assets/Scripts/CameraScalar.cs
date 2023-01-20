@@ -30,12 +30,12 @@ public class CameraScalar : MonoBehaviour
         if (board.width >= board.height)
         {
             Camera.main.orthographicSize = board.height / 2 + pudding;
-            Debug.LogWarning("ширина доски больше высоты");
+            //Debug.LogWarning("ширина доски больше высоты");
         }
         else
         {
             Camera.main.orthographicSize = (board.width / 2 + pudding) / aspectRatio;
-            Debug.LogWarning("высота доски больше ширины");
+            //Debug.LogWarning("высота доски больше ширины");
         }
     }
 
