@@ -19,7 +19,7 @@ public class GoalManager : MonoBehaviour
     public BlankGoal[] levelGoals;
     public List<GoalPanel> currentGoals = new List<GoalPanel>(); // vid 40
     public GameObject goalPrefab;
-    public GameObject goalIntoParent;
+    public GameObject goalIntroParent;
     public GameObject goalGameParent;
     EndGameManager EndGame;
     Board board;
@@ -29,8 +29,8 @@ public class GoalManager : MonoBehaviour
         for (int i = 0; i < levelGoals.Length; i++)
         {
             // создать панель целей в меню
-            GameObject goal = Instantiate(goalPrefab, goalIntoParent.transform.position, Quaternion.identity);
-            goal.transform.SetParent(goalIntoParent.transform);
+            GameObject goal = Instantiate(goalPrefab, goalIntroParent.transform.position, Quaternion.identity);
+            goal.transform.SetParent(goalIntroParent.transform);
             // установить изображение и текст количество целей
             GoalPanel panel = goal.GetComponent<GoalPanel>();
             panel.thisSprite = levelGoals[i].goalSprite;
