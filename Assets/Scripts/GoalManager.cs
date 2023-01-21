@@ -29,7 +29,7 @@ public class GoalManager : MonoBehaviour
         for (int i = 0; i < levelGoals.Length; i++)
         {
             // создать панель целей в меню
-            GameObject goal = Instantiate(goalPrefab, goalIntroParent.transform.position, Quaternion.identity);
+            GameObject goal = Instantiate(goalPrefab, goalIntroParent.transform.position, Quaternion.identity, goalIntroParent.transform);
             goal.transform.SetParent(goalIntroParent.transform);
             // установить изображение и текст количество целей
             GoalPanel panel = goal.GetComponent<GoalPanel>();
@@ -37,7 +37,7 @@ public class GoalManager : MonoBehaviour
             panel.thisString = "0/" + levelGoals[i].numberNeeded;
 
             // создать панель целей на доске
-            GameObject gameGoal = Instantiate(goalPrefab, goalGameParent.transform.position, Quaternion.identity);
+            GameObject gameGoal = Instantiate(goalPrefab, goalGameParent.transform.position, Quaternion.identity, goalIntroParent.transform);
             gameGoal.transform.SetParent(goalGameParent.transform);
             panel = gameGoal.GetComponent<GoalPanel>();
             currentGoals.Add(panel); // vid 40

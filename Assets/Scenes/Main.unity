@@ -1438,7 +1438,7 @@ MonoBehaviour:
     goalSprite: {fileID: 21300000, guid: bee7a49d1ba314b309550bb8e7cda055, type: 3}
     MatchValue: Green Dot
   currentGoals: []
-  goalPrefab: {fileID: 5027942956795496727, guid: 87353e8281eae4dc4848152d3e21bccf,
+  goalPrefab: {fileID: 5027942956795496727, guid: 4c42dadd4e7d5c84eb9bcf990b6f7971,
     type: 3}
   goalIntroParent: {fileID: 597840263}
   goalGameParent: {fileID: 518866349}

@@ -29,7 +29,11 @@ MonoBehaviour:
     counterValue: 10
   levelGoals:
   - numberNeeded: 10
+<<<<<<< HEAD
     numberCollected: 10
+=======
+    numberCollected: 0
+>>>>>>> c42b8ca00ad00b66543697efebea6e505e30e568
     goalSprite: {fileID: 21300000, guid: 8561d51adc19a49c1aa7397d4746d559, type: 3}
     MatchValue: Orange Dot
   - numberNeeded: 10
