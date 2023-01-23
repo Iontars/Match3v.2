@@ -90,6 +90,7 @@ public class GoalManager : MonoBehaviour
         }
     }
 
+    // метод достиженяи целей
     public void GetGoal()
     {
         if (board != null)
@@ -101,6 +102,11 @@ public class GoalManager : MonoBehaviour
                     if (board.world.levels[board.level] != null)
                     {
                         levelGoals = board.world.levels[board.level].levelGoals;
+                        // очень важная часть// установка нулевых значений в поле SO numberCollected иначе SO (Level) не обновит свои значения
+                        for (int i = 0; i < levelGoals.Length; i++)
+                        {
+                            levelGoals[i].numberCollected = 0;
+                        }
                     } 
                 }
             }
