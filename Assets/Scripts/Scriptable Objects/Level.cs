@@ -15,12 +15,17 @@ public class Level : ScriptableObject
     public int height;
 
     [Header("Start Tiles")]
-    public TileKind[] boardLayout;
+    public TileType[] boardLayout;
 
     [Header("Avalible dots")]
     public GameObject[] dots;
 
     [Header("Score Goal")]
     public int[] scoreGoals;
+
+    [Header("End Game Requirements")]
+    public EndGameRequirements endGameRequirements;
+
+    public BlankGoal[] levelGoals;
 
 }

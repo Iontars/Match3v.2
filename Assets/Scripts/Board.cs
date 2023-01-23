@@ -21,16 +21,20 @@ public class TileType // класс хранящйи в себе информа�
 /// </summary>
 public class Board : MonoBehaviour
 {
+    [Header("SO Sfuff")]
     public World world;
     public int level;
-
     public GameState currentState = GameState.move; // ?Рудимент
-    public int width, height;
+    [Header("Board Dimension")]
+    public int width;
+    public int height;
     public int offSet; // смещает позициаю спавна точек по оси х что позволяет им скользить вниз при появлении
+    [Header("Prefabs")]
     public GameObject tilePrefab;
     public GameObject breakebleTilePrefab;
     public GameObject[] dots;
     public GameObject destroyEffect;
+    [Header("Layout")]
     public TileType[] boardLayout;
     private bool[,] blankSpaces; // массив с зарезервированными местами на доске
     private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске
@@ -49,10 +53,21 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
-        width = world.levels[level].width;
-        height = world.levels[level].height;
-
-
+        if (world != null)
+        {
+            if (level < world.levels.Length)
+            {
+                if (world.levels[level] != null)
+                {
+                    //присваивание значений из выбранного уровня в нашу доску
+                    width = world.levels[level].width;
+                    height = world.levels[level].height;
+                    dots = world.levels[level].dots;
+                    scoreGoals = world.levels[level].scoreGoals;
+                    boardLayout = world.levels[level].boardLayout;
+                } 
+            }
+        }
         
         scoreManager = FindObjectOfType<ScoreManager>();
         goalManager = FindObjectOfType<GoalManager>();
@@ -61,13 +76,11 @@ public class Board : MonoBehaviour
         findMatches = FindObjectOfType<FindMatches>();
         breakableTiles = new BackgroundTile[width, height];       
         allDots = new GameObject[width, height];
-
-        currentState = GameState.pause; // игра начинается с состояния паузы !!!!!!!!!!!!
-
     }
 
     void Start()
     {
+        currentState = GameState.pause; // игра начинается с состояния паузы !!!!!!!!!!!!
         SetUp();
     }
 
