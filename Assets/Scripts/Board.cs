@@ -53,6 +53,12 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
+        //загрузка номера уровня переданного из сцены выбора уровней
+        if (PlayerPrefs.HasKey(PlayerPrefsStorage.keyCurrentLevel))
+        {
+            level = PlayerPrefs.GetInt(PlayerPrefsStorage.keyCurrentLevel);
+        }
+
         if (world != null)
         {
             if (level < world.levels.Length)

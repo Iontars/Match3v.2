@@ -90,6 +90,7 @@ public class GoalManager : MonoBehaviour
         }
     }
 
+    // метод достиженяи целей
     public void GetGoal()
     {
         if (board != null)
