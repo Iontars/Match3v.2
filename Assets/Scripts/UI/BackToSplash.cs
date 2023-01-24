@@ -17,7 +17,6 @@ public class BackToSplash : MonoBehaviour
         
     }
 
-
     void Update()
     {
         
