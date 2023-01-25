@@ -862,7 +862,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bed0e1b8ece7d49bc8fb2351343bc078, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 157361b8ec4d84e72880892924773b3d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1065,8 +1065,8 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 4
   m_Spacing: 30
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 1
@@ -1306,8 +1306,8 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 4
   m_Spacing: 60
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
@@ -2665,8 +2665,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 22820894232954bb88e21f2c5425616d, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2769,7 +2769,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1152643202}
         m_TargetAssemblyTypeName: BackToSplash, Assembly-CSharp
-        m_MethodName: OK
+        m_MethodName: LoseOK
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3166,7 +3166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   world: {fileID: 11400000, guid: c6bae184ebc5b45989041782252617dc, type: 2}
-  level: 2
+  level: 3
   currentState: 1
   width: 7
   height: 10
@@ -3623,7 +3623,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1152643202}
         m_TargetAssemblyTypeName: BackToSplash, Assembly-CSharp
-        m_MethodName: OK
+        m_MethodName: WinOK
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -9,13 +9,18 @@ public class LevelButton : MonoBehaviour
     public bool isActive;
     public Sprite activeSprite;
     public Sprite lockedSprite; 
+    Image buttonImage;
+    Button myButton;
+    private int starsActive;
+
+    [Header("Level UI")]
     public Image[] stars;
     public Text levelText;
     public int level;
     public GameObject confirmPanel;
 
-    Image buttonImage;
-    Button myButton;
+    GameData gameData;
+
 
     // ������
     public void ConfirmPanel() // public void ConfirmPanel(int level) �������� ���������� �� ������
@@ -24,6 +29,27 @@ public class LevelButton : MonoBehaviour
         confirmPanel.GetComponent<ConfirmPanel>().level = this.level;
         confirmPanel.SetActive(true);
     }
+
+    void LoadData()
+    {
+        // проверить есть ли файл данных
+        if (gameData != null)
+        {
+            // решить активен ли уровень
+            if (gameData.saveData.isActive[level - 1])
+            {
+                isActive = true;
+            }
+            else
+            {
+                isActive = false;
+            }
+
+            // решить сколько звезд активировать// загрузка из базы данных 
+            starsActive = gameData.saveData.stars[level - 1];
+        }
+    }
+
 
     // ��������� ����������� ������ ������/. ��������� ������������ ������ ������ �������
     void DecideSprite()
@@ -48,17 +74,18 @@ public class LevelButton : MonoBehaviour
         levelText.text = "" + level;
     }
 
-    // �������� ����� ��� ������� ������ ������ 
+    // сколько звёзд активировать на данном объекте
     void ActivateStars()
     {
-        for (int i = 0; i < stars.Length; i++)
+        for (int i = 0; i < starsActive; i++) 
         {
-            stars[i].enabled = false;
+            stars[i].enabled = true;
         }
     }
 
     private void Awake()
     {
+        gameData = FindObjectOfType<GameData>();
         buttonImage = GetComponent<Image>();
         myButton = GetComponent<Button>();
     }
@@ -66,6 +93,7 @@ public class LevelButton : MonoBehaviour
 
     void Start()
     {
+        LoadData();
         ActivateStars();
         DecideSprite();
         ShowLevel();
