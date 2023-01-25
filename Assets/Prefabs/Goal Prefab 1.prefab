@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.07728885, y: 0.26900002}
   m_AnchorMax: {x: 0.93268996, y: 0.9248899}
-  m_AnchoredPosition: {x: 6.2962, y: -2.100006}
+  m_AnchoredPosition: {x: 6.2962036, y: -2.0999756}
   m_SizeDelta: {x: 14.772, y: 1.205}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5027942956436022890
@@ -112,7 +112,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.13335, y: 0.097}
   m_AnchorMax: {x: 0.874, y: 0.26900002}
-  m_AnchoredPosition: {x: -0.50271606, y: -4.999939}
+  m_AnchoredPosition: {x: -0.50268555, y: -4.999878}
   m_SizeDelta: {x: -0.8899994, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5027942956568573391
@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 5027942956795496714}
   - component: {fileID: 5027942956795496725}
   - component: {fileID: 4766222609677017103}
+  - component: {fileID: 2346846065021609132}
   m_Layer: 5
   m_Name: Goal Prefab 1
   m_TagString: Untagged
@@ -208,10 +209,10 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0.029}
-  m_AnchorMin: {x: 0.03222638, y: 0.42827356}
-  m_AnchorMax: {x: 0.88966674, y: 0.9592906}
-  m_AnchoredPosition: {x: 42.178, y: -303}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5027942956795496714
 CanvasRenderer:
@@ -267,3 +268,23 @@ MonoBehaviour:
   thisSprite: {fileID: 0}
   thisText: {fileID: 5027942956568573390}
   thisString: 
+--- !u!114 &2346846065021609132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5027942956795496727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 150
+  m_PreferredHeight: 150
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1

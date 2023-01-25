@@ -9,23 +9,49 @@ public class LevelButton : MonoBehaviour
     public bool isActive;
     public Sprite activeSprite;
     public Sprite lockedSprite; 
+    Image buttonImage;
+    Button myButton;
+    private int starsActive;
+
+    [Header("Level UI")]
     public Image[] stars;
     public Text levelText;
     public int level;
     public GameObject confirmPanel;
 
-    Image buttonImage;
-    Button myButton;
+    GameData gameData;
 
-    // кнопка
-    public void ConfirmPanel() // public void ConfirmPanel(int level) вводится пераметром на кнопке
+
+    // пїЅпїЅпїЅпїЅпїЅпїЅ
+    public void ConfirmPanel() // public void ConfirmPanel(int level) пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     {
-        // vid 45 (27 мин)  переделал более оптимальным способом//confirmPanel.GetComponent<ConfirmPanel>().level = level; // передача номера запущеного уровня дальше на панель Панель подтверждения уровня
+        // vid 45 (27 пїЅпїЅпїЅ)  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ//confirmPanel.GetComponent<ConfirmPanel>().level = level; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         confirmPanel.GetComponent<ConfirmPanel>().level = this.level;
         confirmPanel.SetActive(true);
     }
 
-    // проверяет доступность выбора уровня/. блокирует разблокирует кнопки выбора уровней
+    void LoadData()
+    {
+        // РїСЂРѕРІРµСЂРёС‚СЊ РµСЃС‚СЊ Р»Рё С„Р°Р№Р» РґР°РЅРЅС‹С…
+        if (gameData != null)
+        {
+            // СЂРµС€РёС‚СЊ Р°РєС‚РёРІРµРЅ Р»Рё СѓСЂРѕРІРµРЅСЊ
+            if (gameData.saveData.isActive[level - 1])
+            {
+                isActive = true;
+            }
+            else
+            {
+                isActive = false;
+            }
+
+            // СЂРµС€РёС‚СЊ СЃРєРѕР»СЊРєРѕ Р·РІРµР·Рґ Р°РєС‚РёРІРёСЂРѕРІР°С‚СЊ// Р·Р°РіСЂСѓР·РєР° РёР· Р±Р°Р·С‹ РґР°РЅРЅС‹С… 
+            starsActive = gameData.saveData.stars[level - 1];
+        }
+    }
+
+
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ/. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     void DecideSprite()
     {
         if (isActive)
@@ -42,30 +68,32 @@ public class LevelButton : MonoBehaviour
         }
     }
 
-    // показать номер уровня на кнопке
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     void ShowLevel()
     {
         levelText.text = "" + level;
     }
 
-    // показать звёзды под кнопкой выбора уровня 
+    // СЃРєРѕР»СЊРєРѕ Р·РІС‘Р·Рґ Р°РєС‚РёРІРёСЂРѕРІР°С‚СЊ РЅР° РґР°РЅРЅРѕРј РѕР±СЉРµРєС‚Рµ
     void ActivateStars()
     {
-        for (int i = 0; i < stars.Length; i++)
+        for (int i = 0; i < starsActive; i++) 
         {
-            stars[i].enabled = false;
+            stars[i].enabled = true;
         }
     }
 
     private void Awake()
     {
+        gameData = FindObjectOfType<GameData>();
         buttonImage = GetComponent<Image>();
-        myButton= GetComponent<Button>();
+        myButton = GetComponent<Button>();
     }
 
 
     void Start()
     {
+        LoadData();
         ActivateStars();
         DecideSprite();
         ShowLevel();
