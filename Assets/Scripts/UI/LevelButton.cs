@@ -90,13 +90,17 @@ public class LevelButton : MonoBehaviour
         myButton = GetComponent<Button>();
     }
 
-
-    void Start()
+    private void OnEnable()
     {
         LoadData();
         ActivateStars();
         DecideSprite();
         ShowLevel();
+    }
+
+    void Start()
+    {
+        
     }
 
     void Update()

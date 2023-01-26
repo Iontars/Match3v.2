@@ -70,9 +70,22 @@ public class GameData : MonoBehaviour
             file.Close();
             Debug.Log("Data loaded");
         }
+        else // первый запуск игры, если файла сохранения ещё нет то создадим его 
+        {
+            SaveData saveData = new();
+            saveData.isActive = new bool[20];
+            saveData.isActive[0] = true;
+            saveData.stars = new int[20];
+            saveData.highScores = new int[20];
+        }
     }
 
     private void OnDisable()
+    {
+        Save();
+    }
+
+    private void OnApplicationQuit()
     {
         Save();
     }
