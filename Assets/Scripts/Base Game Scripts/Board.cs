@@ -25,15 +25,18 @@ public class Board : MonoBehaviour
     public World world;
     public int level;
     public GameState currentState = GameState.move; // ?Рудимент
+
     [Header("Board Dimension")]
     public int width;
     public int height;
     public int offSet; // смещает позициаю спавна точек по оси х что позволяет им скользить вниз при появлении
+
     [Header("Prefabs")]
     public GameObject tilePrefab;
     public GameObject breakebleTilePrefab;
     public GameObject[] dots;
     public GameObject destroyEffect;
+
     [Header("Layout")]
     public TileType[] boardLayout;
     private bool[,] blankSpaces; // массив с зарезервированными местами на доске
@@ -53,16 +56,25 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
+        //загрузка номера уровня переданного из сцены выбора уровней
+        if (PlayerPrefs.HasKey(PlayerPrefsStorage.keyCurrentLevel))
+        {
+            level = PlayerPrefs.GetInt(PlayerPrefsStorage.keyCurrentLevel);
+        }
+
         if (world != null)
         {
-            if (world.levels[level] != null)
+            if (level < world.levels.Length)
             {
-                //присваивание значений из выбранного уровня в нашу доску
-                width = world.levels[level].width;
-                height = world.levels[level].height;
-                dots = world.levels[level].dots;
-                scoreGoals = world.levels[level].scoreGoals;
-                boardLayout = world.levels[level].boardLayout;
+                if (world.levels[level] != null)
+                {
+                    //присваивание значений из выбранного уровня в нашу доску
+                    width = world.levels[level].width;
+                    height = world.levels[level].height;
+                    dots = world.levels[level].dots;
+                    scoreGoals = world.levels[level].scoreGoals;
+                    boardLayout = world.levels[level].boardLayout;
+                } 
             }
         }
         
@@ -111,7 +123,6 @@ public class Board : MonoBehaviour
             }
         }
     }
-
 
     //создание доски
     void SetUp()
@@ -298,7 +309,6 @@ public class Board : MonoBehaviour
         }
     }
 
-
     // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод
     void DestroyMatchesAt(int colunm, int row)
     {
@@ -388,9 +398,8 @@ public class Board : MonoBehaviour
         StartCoroutine(nameof(FillBoardCo));
     }
 
-
-   //распознавание пустых мест на доске
-   IEnumerator DecreaseRowCo()
+    //распознавание пустых мест на доске
+    IEnumerator DecreaseRowCo()
     {
         int nullCount = 0;
         for (int i = 0; i < width; i++)
@@ -466,8 +475,8 @@ public class Board : MonoBehaviour
 
     IEnumerator FillBoardCo()
     {
-        RefillBoard(); // заполнить досу токенами после первого совпадения
         yield return new WaitForSeconds(refillDelay); // и подождать
+        RefillBoard(); // заполнить досу токенами после первого совпадения
         // каскад совпадений
         while (MatchesOnBoard()) // пока есть каскад совпадений, ждать wait
         {
@@ -638,6 +647,7 @@ public class Board : MonoBehaviour
             ShuffleBorad();
         }
     }
+
     private void Update()
     {
         

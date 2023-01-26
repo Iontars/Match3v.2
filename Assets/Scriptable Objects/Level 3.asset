@@ -24,9 +24,25 @@ MonoBehaviour:
   - {fileID: 2824903673362020317, guid: 6b39ee9d546e8544c9613a849df8cd7c, type: 3}
   - {fileID: 6602495750976175007, guid: 5fce1479c2edba54d9525be058e1c3d1, type: 3}
   - {fileID: 1092129758423907793, guid: 8fc9ae9e922b409468be77874941f554, type: 3}
-  - {fileID: 380217878639168106, guid: 626dad3cdd87a174e85bdf3fc6d75b7f, type: 3}
+  - {fileID: 2824903673362020317, guid: 6b39ee9d546e8544c9613a849df8cd7c, type: 3}
   scoreGoals: 64000000
   endGameRequirements:
-    gameType: 0
-    counterValue: 0
-  levelGoals: []
+    gameType: 1
+    counterValue: 50
+  levelGoals:
+  - numberNeeded: 10
+    numberCollected: 0
+    goalSprite: {fileID: 21300000, guid: d688146237e554fceb4bf24c72c9a18b, type: 3}
+    MatchValue: Blue Dot
+  - numberNeeded: 10
+    numberCollected: 0
+    goalSprite: {fileID: 21300000, guid: 8561d51adc19a49c1aa7397d4746d559, type: 3}
+    MatchValue: Orange Dot
+  - numberNeeded: 10
+    numberCollected: 0
+    goalSprite: {fileID: 21300000, guid: abac20393146f491e92ff599d2685ef6, type: 3}
+    MatchValue: Yellow Dot
+  - numberNeeded: 10
+    numberCollected: 0
+    goalSprite: {fileID: 21300000, guid: 38c21eeba4d7348f4a465a578055c9e8, type: 3}
+    MatchValue: Purple Dot

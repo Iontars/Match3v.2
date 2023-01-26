@@ -39,6 +39,22 @@ public class EndGameManager : MonoBehaviour
         board = FindObjectOfType<Board>();
     }
 
+    // 1) установка параметров игры, загружаемых из SO
+    public void SetGameType()
+    {
+        if (board.world != null)
+        {
+            if (board.level < board.world.levels.Length)
+            {
+                if (board.world.levels[board.level] != null)
+                {
+                    requirements = board.world.levels[board.level].endGameRequirements;
+                } 
+            }
+        }
+    }
+
+    // настройка интерфейса игры исходя из выбранных праметров в 1)
     void SetupGame()
     {
         currentCounterValue = requirements.counterValue;
@@ -56,6 +72,7 @@ public class EndGameManager : MonoBehaviour
         counter.text = "" + currentCounterValue.ToString();
     }
 
+    // уменьшение времени либо шагов необходиных ходов для победы
     public void DecreaseCountervalue()
     {
         if (board.currentState != GameState.pause) // 1) Перенести эту обёртку  в более ранне место что бы сэкономит ресурсы, в метот Update в оператор IF requirements.gameType == GameType.Time && currentCounterValue > 0 && board.currentState != GameState.pause
@@ -69,6 +86,7 @@ public class EndGameManager : MonoBehaviour
         }
     }
 
+    // Настройка игры в режим победы, показ экрана победы, установка стейт машины на win, вызов анимации
     public void WinGame()
     {
         youWinPanel.SetActive(true);
@@ -78,6 +96,7 @@ public class EndGameManager : MonoBehaviour
         fadePanelController.GameOver();
     }
 
+    // Настройка игры в режим поражения, показ экрана поражения, установка стейт машины на lose, вызов анимации
     public void LoseGame()
     {
         // ?добавить ивент на поражение
@@ -91,11 +110,13 @@ public class EndGameManager : MonoBehaviour
 
     void Start()
     {
+        SetGameType();
         SetupGame();
     }
     
     void Update()
     {
+        // если выбран режим игры на время но этот участ кода отвечает за это
         if (requirements.gameType == GameType.Time && currentCounterValue > 0) // 1)
         {
             timerSeconds -= Time.deltaTime;

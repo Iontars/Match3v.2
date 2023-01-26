@@ -6,18 +6,15 @@ public class CameraScalar : MonoBehaviour
 {
     private Board board;
     public float cameraOffset;
-<<<<<<< Updated upstream
-    //public float aspectRatio = 0.5625f; // ширина разделённая на высоту разрешения экрана (1080/1920)
-    public float aspectRatio = .4615f; // ширина разделённая на высоту разрешения экрана (1080/2340)
-=======
-    float aspectRatio;  // ширина разделённая на высоту разрешения экрана 
->>>>>>> Stashed changes
+    float aspectRatio;  // ширина разделённая на высоту разрешения экрана (1080/2340)
     public float pudding = 10;
     public float yOffset = 1;
 
+    
     void Start()
     {
-        board = gameObject.AddComponent(typeof(Board)) as Board;
+        aspectRatio = (float)Screen.width / Screen.height;
+        //board = gameObject.AddComponent(typeof(Board)) as Board;
         board = FindObjectOfType<Board>();
         if (board != null)
         {

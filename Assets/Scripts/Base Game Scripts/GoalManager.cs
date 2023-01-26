@@ -11,30 +11,33 @@ public class BlankGoal
     public Sprite goalSprite;
     public string MatchValue;
 }
-
+/// <summary>
+/// Отвечает за колличество токенов которые необходимо собрать для завершения карты, а тк же вывод этой информации на UI
+/// </summary>
 public class GoalManager : MonoBehaviour
 {
     public BlankGoal[] levelGoals;
     public List<GoalPanel> currentGoals = new List<GoalPanel>(); // vid 40
     public GameObject goalPrefab;
-    public GameObject goalIntoParent;
+    public GameObject goalIntroParent;
     public GameObject goalGameParent;
     EndGameManager EndGame;
+    Board board;
 
     void SetupGoals()
     {
         for (int i = 0; i < levelGoals.Length; i++)
         {
             // создать панель целей в меню
-            GameObject goal = Instantiate(goalPrefab, goalIntoParent.transform.position, Quaternion.identity);
-            goal.transform.SetParent(goalIntoParent.transform);
+            GameObject goal = Instantiate(goalPrefab, goalIntroParent.transform.position, Quaternion.identity, goalIntroParent.transform);
+            goal.transform.SetParent(goalIntroParent.transform);
             // установить изображение и текст количество целей
             GoalPanel panel = goal.GetComponent<GoalPanel>();
             panel.thisSprite = levelGoals[i].goalSprite;
             panel.thisString = "0/" + levelGoals[i].numberNeeded;
 
             // создать панель целей на доске
-            GameObject gameGoal = Instantiate(goalPrefab, goalGameParent.transform.position, Quaternion.identity);
+            GameObject gameGoal = Instantiate(goalPrefab, goalGameParent.transform.position, Quaternion.identity, goalIntroParent.transform);
             gameGoal.transform.SetParent(goalGameParent.transform);
             panel = gameGoal.GetComponent<GoalPanel>();
             currentGoals.Add(panel); // vid 40
@@ -46,6 +49,11 @@ public class GoalManager : MonoBehaviour
     // цели карты
     public void UpdateGoals() // vid 40
     {
+        // цикл проходится по массиву levelGoals и проверяет достигло ли текущее количество собранных токенос с целевым
+        // если в одном из эллементов массива levelGoals это условие было соблюдено то счётчик goalsCompleted прибавляет единицу
+        // эт означает что в одном из эллементов массива условие было солюдено и больше это эллемент проверяться не будет
+        // как только все условия во всех эллементах будут соблюдены счётчик goalsCompleted станет равен levelGoals.Length
+        // это создаст ивент успешного выполения задания
         int goalsCompleted = default;
         for (int i = 0; i < levelGoals.Length; i++)
         {
@@ -59,7 +67,7 @@ public class GoalManager : MonoBehaviour
                                                    + levelGoals[i].numberNeeded;
             }
         }
-        if (goalsCompleted >= levelGoals.Length) // Победа
+        if (goalsCompleted >= levelGoals.Length) // Победа  // создать ивент
         {
             if (EndGame != null)
             {
@@ -82,13 +90,37 @@ public class GoalManager : MonoBehaviour
         }
     }
 
+    // метод достиженяи целей
+    public void GetGoal()
+    {
+        if (board != null)
+        {
+            if (board.world != null)
+            {
+                if (board.level < board.world.levels.Length)
+                {
+                    if (board.world.levels[board.level] != null)
+                    {
+                        levelGoals = board.world.levels[board.level].levelGoals;
+                        // очень важная часть// установка нулевых значений в поле SO numberCollected иначе SO (Level) не обновит свои значения
+                        for (int i = 0; i < levelGoals.Length; i++)
+                        {
+                            levelGoals[i].numberCollected = 0;
+                        }
+                    } 
+                }
+            }
+        }
+    }
     private void Awake()
     {
         EndGame = FindObjectOfType<EndGameManager>();
+        board = FindObjectOfType<Board>();
     }
 
     void Start()
     {
+        GetGoal();
         SetupGoals();
     }
     

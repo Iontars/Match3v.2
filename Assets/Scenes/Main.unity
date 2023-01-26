@@ -623,7 +623,7 @@ GameObject:
   - component: {fileID: 306528221}
   - component: {fileID: 306528222}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Game Intro Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -862,7 +862,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bed0e1b8ece7d49bc8fb2351343bc078, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 157361b8ec4d84e72880892924773b3d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1065,8 +1065,8 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 4
   m_Spacing: 30
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 1
@@ -1208,9 +1208,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraOffset: -10
-  aspectRatio: 0.4615
   pudding: 1
-  yOffset: 1
+  yOffset: 0
 --- !u!1 &597840263
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,10 +1244,10 @@ RectTransform:
   m_Father: {fileID: 279536261}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.07421907, y: 0.108651824}
+  m_AnchorMin: {x: 0.05934762, y: 0.11020242}
   m_AnchorMax: {x: 0.94200003, y: 0.41279757}
-  m_AnchoredPosition: {x: -5.470001, y: 1.5}
-  m_SizeDelta: {x: 12.75, y: 4.7599945}
+  m_AnchoredPosition: {x: 0.02999878, y: 1}
+  m_SizeDelta: {x: 1.75, y: 5.7599945}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &597840265
 MonoBehaviour:
@@ -1307,8 +1306,8 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 4
   m_Spacing: 60
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
@@ -1439,9 +1438,9 @@ MonoBehaviour:
     goalSprite: {fileID: 21300000, guid: bee7a49d1ba314b309550bb8e7cda055, type: 3}
     MatchValue: Green Dot
   currentGoals: []
-  goalPrefab: {fileID: 5027942956795496727, guid: 87353e8281eae4dc4848152d3e21bccf,
+  goalPrefab: {fileID: 5027942956795496727, guid: 4c42dadd4e7d5c84eb9bcf990b6f7971,
     type: 3}
-  goalIntoParent: {fileID: 597840263}
+  goalIntroParent: {fileID: 597840263}
   goalGameParent: {fileID: 518866349}
 --- !u!1 &748994288
 GameObject:
@@ -2355,6 +2354,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1152643200}
   - component: {fileID: 1152643201}
+  - component: {fileID: 1152643202}
   m_Layer: 0
   m_Name: EndGameManager
   m_TagString: Untagged
@@ -2369,7 +2369,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1152643199}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2398,6 +2398,19 @@ MonoBehaviour:
   tryAgainPanel: {fileID: 1531068467}
   counter: {fileID: 818685375}
   currentCounterValue: 0
+--- !u!114 &1152643202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1152643199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 679a90dc51e7a1e4fadaca6158dab564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneToLoad: Splash
 --- !u!1 &1179307189
 GameObject:
   m_ObjectHideFlags: 0
@@ -2652,8 +2665,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 22820894232954bb88e21f2c5425616d, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2753,7 +2766,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1298588938}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1152643202}
+        m_TargetAssemblyTypeName: BackToSplash, Assembly-CSharp
+        m_MethodName: LoseOK
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1298588938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2948,10 +2973,10 @@ RectTransform:
   m_Father: {fileID: 1749545899}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.123}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 1.4599991}
+  m_SizeDelta: {x: 0, y: -2.92}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1508217113
 MonoBehaviour:
@@ -2966,7 +2991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2976,7 +3001,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 60
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 100
@@ -3123,7 +3148,7 @@ GameObject:
   - component: {fileID: 1562925339}
   m_Layer: 0
   m_Name: Board
-  m_TagString: Untagged
+  m_TagString: Board
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3141,7 +3166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   world: {fileID: 11400000, guid: c6bae184ebc5b45989041782252617dc, type: 2}
-  level: 1
+  level: 3
   currentState: 1
   width: 7
   height: 10
@@ -3335,8 +3360,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 204}
-  m_SizeDelta: {x: 350, y: 120}
+  m_AnchoredPosition: {x: -0.000011444, y: 217}
+  m_SizeDelta: {x: 385.87, y: 170.82}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1749545900
 MonoBehaviour:
@@ -3414,9 +3439,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 21300000, guid: 5b3f932c81feecb46a3c8247fb0ab181, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -3595,7 +3620,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1924976838}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1152643202}
+        m_TargetAssemblyTypeName: BackToSplash, Assembly-CSharp
+        m_MethodName: WinOK
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1924976838
 MonoBehaviour:
   m_ObjectHideFlags: 0
