@@ -26,7 +26,7 @@ public class ConfirmPanel : MonoBehaviour
 
     public void Cancel()
     {
-        gameObject.SetActive(false);
+        gameObject.SetActive(false); // выключает сам объект
     }
 
     public void Play()
@@ -38,8 +38,14 @@ public class ConfirmPanel : MonoBehaviour
 
     void ActivateStars() // дублирующий метод из LevelButton !!! ИСПРАВИТЬ
     {
+        for (int i = 0; i < 3; i++)
+        {
+            // обновляет панель подтверждения выключая звёзды
+            stars[i].enabled = false;
+        }
         for (int i = 0; i < starsActive; i++)
         {
+            // включает звёзды в соответствии с данными из базы
             stars[i].enabled = true;
         }
     }
@@ -48,6 +54,7 @@ public class ConfirmPanel : MonoBehaviour
     {
         if (gameData != null)
         {
+            // перелдача информации из базы
             starsActive = gameData.saveData.stars[level - 1];
             highScore = gameData.saveData.highScores[level - 1];          
         }
@@ -71,6 +78,7 @@ public class ConfirmPanel : MonoBehaviour
         LoadData();
         ActivateStars();
         SetText();
+        print(starsActive);
     }
 
     void Update()
