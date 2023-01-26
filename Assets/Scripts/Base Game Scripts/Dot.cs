@@ -43,8 +43,11 @@ public class Dot : MonoBehaviour
     {
         endGameManager = FindObjectOfType<EndGameManager>();
         findMatches = FindObjectOfType<FindMatches>();
-        hintManager = FindObjectOfType<HintManager>();
-        board = FindObjectOfType<Board>();       
+        //hintManager = FindObjectOfType<HintManager>();
+        // СДЕЛАТЬ ТАКУЮ СИСТЕМУ ПОИСКЕ ПОМПОНЕНТОВ ВЕЗДЕ
+        hintManager = GameObject.FindGameObjectWithTag("Board").GetComponent<HintManager>(); ;
+        GameObject.FindGameObjectWithTag("Board").TryGetComponent(out board);
+        //board = FindObjectOfType<Board>();       
     }
 
     void Start()

@@ -84,4 +84,9 @@ public class GameData : MonoBehaviour
     {
         Save();
     }
+
+    private void OnApplicationQuit()
+    {
+        Save();
+    }
 }
