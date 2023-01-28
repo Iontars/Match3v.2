@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//  по русски
 public enum GameState{wait, move, win, lose, pause} // состояние используется для блокировки повторного свайпа пока токены движутся и меняет состояние игры
 
 public enum TileKind {Breakable, Blank, Normal } // состояние тайлов, говорящще о том занял ли тайл или нет
