@@ -236,11 +236,11 @@ public class Board : MonoBehaviour
                 {
                     continue;
                 }
-                if (thisDot.column == nextDot.column && thisDot.CompareTag(nextDot.tag)) // перейти на компонентную систему заменив теги
+                if (thisDot.column == nextDot.column && nextDot.CompareTag(thisDot.tag)) // перейти на компонентную систему заменив теги
                 {
                     columnMatch++;
                 }
-                if (thisDot.row == nextDot.row && thisDot.CompareTag(nextDot.tag)) // перейти на компонентную систему заменив теги
+                if (thisDot.row == nextDot.row && nextDot.CompareTag(thisDot.tag)) // перейти на компонентную систему заменив теги
                 {
                     rowMatch++;
                 }
@@ -285,11 +285,81 @@ public class Board : MonoBehaviour
         */
     }
 
+
+    // проверить какой тип бонуса создать при совпадениях
     private void CheckToMakeBombs()
     {
         // Скольк осовпадений за раз находится в списке FindMatches.currentMatches
         if (findMatches.currentMatches.Count > 3)
         {
+            // какой тип срвпадений?
+            int typeOfMatch = ColumnOrRow();
+            if (typeOfMatch == 1)
+            {
+                // Создать цветную бомбу
+                // Текущая точка совпала ?
+                if (currentDot != null)
+                {
+                    if (currentDot.isMatched)
+                    {
+                        if (!currentDot.isColorBomb)
+                        {
+                            currentDot.isMatched = false;
+                            currentDot.MakeColorBomb();
+                        }
+                    }
+                    else
+                    {
+                        if (currentDot.otherDot != null)
+                        {
+                            Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
+                            if (otherDot.isMatched)
+                            {
+                                if (!otherDot.isColorBomb)
+                                {
+                                    otherDot.isMatched = false;
+                                    otherDot.MakeColorBomb();
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+            else if (typeOfMatch == 2)
+            {
+                // Создать Звезду
+                if (currentDot != null)
+                {
+                    if (currentDot.isMatched)
+                    {
+                        if (!currentDot.isAjacentBomb)
+                        {
+                            currentDot.isMatched = false;
+                            currentDot.MakeAjacentBomb();
+                        }
+                    }
+                    else
+                    {
+                        if (currentDot.otherDot != null)
+                        {
+                            Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
+                            if (otherDot.isMatched)
+                            {
+                                if (!otherDot.isAjacentBomb)
+                                {
+                                    otherDot.isMatched = false;
+                                    otherDot.MakeAjacentBomb();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (typeOfMatch == 3)
+            {
+                findMatches.CheckBombs();
+            }
 
         }
 
@@ -531,8 +601,8 @@ public class Board : MonoBehaviour
 
     IEnumerator FillBoardCo()
     {
-        yield return new WaitForSeconds(refillDelay); // и подождать
         RefillBoard(); // заполнить досу токенами после первого совпадения
+        yield return new WaitForSeconds(refillDelay); // и подождать
         // каскад совпадений
         while (MatchesOnBoard()) // пока есть каскад совпадений, ждать wait
         {
