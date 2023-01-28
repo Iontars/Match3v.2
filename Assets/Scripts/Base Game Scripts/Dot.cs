@@ -257,29 +257,42 @@ public class Dot : MonoBehaviour
 
     public void MakeRowBomb()
     {
-        isRowBomb = true;
-        GameObject arrow = Instantiate(rowArrow, transform.position, Quaternion.identity);
-        arrow.transform.parent = this.transform;
+        if (!isColumnBomb && !isColorBomb && !isAjacentBomb)
+        {
+            isRowBomb = true;
+            GameObject arrow = Instantiate(rowArrow, transform.position, Quaternion.identity);
+            arrow.transform.parent = this.transform;
+        }
+        
     }
 
     public void MakeColumnBomb()
     {
-        isColumnBomb = true;
-        GameObject arrow = Instantiate(columnArrow, transform.position, Quaternion.identity);
-        arrow.transform.parent = this.transform;
+        if (!isRowBomb && !isColorBomb && !isAjacentBomb)
+        {
+            isColumnBomb = true;
+            GameObject arrow = Instantiate(columnArrow, transform.position, Quaternion.identity);
+            arrow.transform.parent = this.transform;
+        }
     }
 
     public void MakeColorBomb()
     {
-        isColorBomb = true;
-        GameObject color = Instantiate(colorBomb, transform.position, Quaternion.identity);
-        color.transform.parent = this.transform;
-        gameObject.tag = "Color";
+        if (!isColumnBomb && !isRowBomb && !isAjacentBomb)
+        {
+            isColorBomb = true;
+            GameObject color = Instantiate(colorBomb, transform.position, Quaternion.identity);
+            color.transform.parent = this.transform;
+            gameObject.tag = "Color";
+        }
     }
     public void MakeAjacentBomb()
     {
-        isAjacentBomb = true;
-        GameObject marker = Instantiate(ajacentMarker, transform.position, Quaternion.identity);
-        marker.transform.parent = this.transform;
+        if (!isColumnBomb && !isColorBomb && !isRowBomb)
+        {
+            isAjacentBomb = true;
+            GameObject marker = Instantiate(ajacentMarker, transform.position, Quaternion.identity);
+            marker.transform.parent = this.transform;
+        }
     }
 }
