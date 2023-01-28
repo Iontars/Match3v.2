@@ -262,27 +262,6 @@ public class Board : MonoBehaviour
             }          
         }
         return 0;
-        /*
-        int numberHorizontal = 0;
-        int numberVertical = 0;
-        Dot firstPiece = findMatches.currentMatches[0].GetComponent<Dot>();
-        if (firstPiece != null)
-        {
-            foreach (GameObject currentPieces in findMatches.currentMatches)
-            {
-                Dot dot = currentPieces.GetComponent<Dot>();
-                if (dot.row == firstPiece.row)
-                {
-                    numberHorizontal++;
-                }
-                if (dot.column == firstPiece.column)
-                {
-                    numberVertical++;
-                }
-            }
-        }
-        return (numberVertical == 5 || numberHorizontal == 5);
-        */
     }
 
     private void CheckToMakeBombs()
