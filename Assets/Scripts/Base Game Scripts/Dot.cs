@@ -15,6 +15,7 @@ public class Dot : MonoBehaviour
     public int targetX, targetY;[Space]
     [HideInInspector]public bool isMatched = false;
 
+    Animator animator;
     EndGameManager endGameManager;
     FindMatches findMatches;
     Board board;
@@ -38,11 +39,17 @@ public class Dot : MonoBehaviour
     public GameObject columnArrow;
     public GameObject colorBomb;
 
+    [Header("Animator Stuff")]
+    Animator anim;
+    float shineDelay;
+    float shineDelaySeconds;
+
 
     void Awake()
     {
         endGameManager = FindObjectOfType<EndGameManager>();
         findMatches = FindObjectOfType<FindMatches>();
+        anim = GetComponent<Animator>();
         //hintManager = FindObjectOfType<HintManager>();
         // СДЕЛАТЬ ТАКУЮ СИСТЕМУ ПОИСКЕ ПОМПОНЕНТОВ ВЕЗДЕ
         hintManager = GameObject.FindGameObjectWithTag("Board").GetComponent<HintManager>(); ;
@@ -56,6 +63,21 @@ public class Dot : MonoBehaviour
         isColumnBomb = false;
         isRowBomb = false;
         isAjacentBomb = false;
+        shineDelay= Random.Range(2,5); // так как точки создаются часто то рандомное значение можно задать единожды в конструкторе Start
+        shineDelaySeconds = shineDelay;
+    }
+
+    IEnumerator StartShine()
+    {
+        anim.SetBool("Shine", true);
+        yield return null; // подождать 1 кадр
+        anim.SetBool("Shine", false);
+
+    }
+
+    public void PopAnimation()
+    {
+        anim.SetBool("Popped", true);
     }
 
     //проверка на возврат токенов на начальые места если нет совпадений
@@ -105,6 +127,12 @@ public class Dot : MonoBehaviour
 
     private void OnMouseDown()
     {
+        // анимация прикосновения
+        if (anim != null)
+        {
+            anim.SetBool("Touched", true);
+        }
+
         // отношение к уничтожении подсказки
         if (hintManager != null)
         {
@@ -119,6 +147,12 @@ public class Dot : MonoBehaviour
 
     private void OnMouseUp()
     {
+        // анимация прикосновения
+        if (anim != null)
+        {
+            anim.SetBool("Touched", false);
+        }
+
         if (board.currentState == GameState.move)
         {
             finalTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
@@ -160,6 +194,14 @@ public class Dot : MonoBehaviour
 
     void Update()
     {
+        // создание рандомных интервалов запуска анимации, можно использовать для других целей
+        shineDelaySeconds -= Time.deltaTime;
+        if (shineDelaySeconds <= 0)
+        {
+            shineDelaySeconds = shineDelay;
+            StartCoroutine(nameof(StartShine));
+        }
+
         targetX = column;
         targetY = row;
 

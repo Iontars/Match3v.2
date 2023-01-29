@@ -343,7 +343,7 @@ public class Board : MonoBehaviour
 
     }
 
-    // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод
+    // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод/ партикл взрыва
     void DestroyMatchesAt(int colunm, int row)
     {
         if (allDots[colunm,row].GetComponent<Dot>().isMatched)
@@ -378,7 +378,8 @@ public class Board : MonoBehaviour
                 allDots[colunm, row].transform.position.y,
                 allDots[colunm, row].transform.position.z - 1), Quaternion.identity);
             Destroy(particle, .3f);
-            Destroy(allDots[colunm, row]);
+            allDots[colunm,row].GetComponent<Dot>().PopAnimation();
+            Destroy(allDots[colunm, row], .3f); // Фактическое уничтожение совпавших бомб
             scoreManager.IncreaseScore(basePieceValue * streakValue); // добавление очков на табло
             allDots[colunm, row] = null;
             

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4965848078894036841}
   - component: {fileID: -4283827262392545148}
   - component: {fileID: 7886792987344821826}
+  - component: {fileID: 1110153940}
   m_Layer: 0
   m_Name: Green Dot
   m_TagString: Green Dot
@@ -32,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4965848078894036841
 SpriteRenderer:
@@ -136,3 +137,23 @@ MonoBehaviour:
     type: 3}
   colorBomb: {fileID: 3397042784682528872, guid: e307cb9bfd53e9941b3849ac334f9390,
     type: 3}
+--- !u!95 &1110153940
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380217878639168106}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 71c6c3304e9cafc4d8ca93da85e1e717, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
