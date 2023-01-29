@@ -373,12 +373,12 @@ public class Board : MonoBehaviour
 
             soundManager?.PlayRandomDestroyNoise(); // звук ломания токена
 
-            GameObject particle = Instantiate(destroyEffect, new Vector3( // анимация взрыва
+            GameObject particle = Instantiate(destroyEffect, new Vector3( // анимация взрыва партиклом
                 allDots[colunm, row].transform.position.x,
                 allDots[colunm, row].transform.position.y,
                 allDots[colunm, row].transform.position.z - 1), Quaternion.identity);
             Destroy(particle, .3f);
-            allDots[colunm,row].GetComponent<Dot>().PopAnimation();
+            allDots[colunm,row].GetComponent<Dot>().PopAnimation(); // анимация спрайта
             Destroy(allDots[colunm, row], .3f); // Фактическое уничтожение совпавших бомб
             scoreManager.IncreaseScore(basePieceValue * streakValue); // добавление очков на табло
             allDots[colunm, row] = null;
