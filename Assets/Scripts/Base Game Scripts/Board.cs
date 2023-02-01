@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public enum GameState{wait, move, win, lose, pause} // состояние используется для блокировки повторного свайпа пока токены движутся и меняет состояние игры
 
 public enum TileKind {Breakable, Blank, Normal } // состояние тайлов, говорящще о том занял ли тайл или нет
@@ -262,27 +261,6 @@ public class Board : MonoBehaviour
             }          
         }
         return 0;
-        /*
-        int numberHorizontal = 0;
-        int numberVertical = 0;
-        Dot firstPiece = findMatches.currentMatches[0].GetComponent<Dot>();
-        if (firstPiece != null)
-        {
-            foreach (GameObject currentPieces in findMatches.currentMatches)
-            {
-                Dot dot = currentPieces.GetComponent<Dot>();
-                if (dot.row == firstPiece.row)
-                {
-                    numberHorizontal++;
-                }
-                if (dot.column == firstPiece.column)
-                {
-                    numberVertical++;
-                }
-            }
-        }
-        return (numberVertical == 5 || numberHorizontal == 5);
-        */
     }
 
 
@@ -363,79 +341,9 @@ public class Board : MonoBehaviour
 
         }
 
-        /*
-        if (findMatches.currentMatches.Count == 4 || findMatches.currentMatches.Count == 7)
-        {
-            findMatches.CheckBombs();
-        }
-        if (findMatches.currentMatches.Count == 5 || findMatches.currentMatches.Count == 8)
-        {
-            if (ColumnOrRow())
-            {
-                // Создать цветную бомбу
-                // Текущая точка совпала ?
-                if (currentDot != null)
-                {
-                    if (currentDot.isMatched)
-                    {
-                        if (!currentDot.isColorBomb)
-                        {
-                            currentDot.isMatched = false;
-                            currentDot.MakeColorBomb();
-                        }
-                    }
-                    else
-                    {
-                        if (currentDot.otherDot != null)
-                        {
-                            Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
-                            if (otherDot.isMatched)
-                            {
-                                if (!otherDot.isColorBomb)
-                                {
-                                    otherDot.isMatched = false;
-                                    otherDot.MakeColorBomb();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // Создать Звезду
-                if (currentDot != null)
-                {
-                    if (currentDot.isMatched)
-                    {
-                        if (!currentDot.isAjacentBomb)
-                        {
-                            currentDot.isMatched = false;
-                            currentDot.MakeAjacentBomb();
-                        }
-                    }
-                    else
-                    {
-                        if (currentDot.otherDot != null)
-                        {
-                            Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
-                            if (otherDot.isMatched)
-                            {
-                                if (!otherDot.isAjacentBomb)
-                                {
-                                    otherDot.isMatched = false;
-                                    otherDot.MakeAjacentBomb();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        */
     }
 
-    // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод
+    // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод/ партикл взрыва
     void DestroyMatchesAt(int colunm, int row)
     {
         if (allDots[colunm,row].GetComponent<Dot>().isMatched)
@@ -465,12 +373,13 @@ public class Board : MonoBehaviour
 
             soundManager?.PlayRandomDestroyNoise(); // звук ломания токена
 
-            GameObject particle = Instantiate(destroyEffect, new Vector3( // анимация взрыва
+            GameObject particle = Instantiate(destroyEffect, new Vector3( // анимация взрыва партиклом
                 allDots[colunm, row].transform.position.x,
                 allDots[colunm, row].transform.position.y,
                 allDots[colunm, row].transform.position.z - 1), Quaternion.identity);
             Destroy(particle, .3f);
-            Destroy(allDots[colunm, row]);
+            allDots[colunm,row].GetComponent<Dot>().PopAnimation(); // анимация спрайта
+            Destroy(allDots[colunm, row], .3f); // Фактическое уничтожение совпавших бомб
             scoreManager.IncreaseScore(basePieceValue * streakValue); // добавление очков на табло
             allDots[colunm, row] = null;
             

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5731547117976469394}
   - component: {fileID: -1995102859215141852}
   - component: {fileID: 5759648443096073844}
+  - component: {fileID: 2133685458}
   m_Layer: 0
   m_Name: Salat Dot
   m_TagString: Salat Dot
@@ -75,12 +76,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 63ce927ec6e254b0abb10a620a896abf, type: 3}
-  m_Color: {r: 0.650757, g: 0.8396226, b: 0.40792987, a: 1}
+  m_Sprite: {fileID: 1167761295, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 4.93, y: 4.97}
+  m_Size: {x: 0.8064516, y: 0.8064516}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -136,3 +137,23 @@ MonoBehaviour:
     type: 3}
   colorBomb: {fileID: 3397042784682528872, guid: e307cb9bfd53e9941b3849ac334f9390,
     type: 3}
+--- !u!95 &2133685458
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3222974119019145949}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e75992dc29a684140b56ff55caf71428, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
