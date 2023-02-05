@@ -11,7 +11,8 @@ Build folder/[Ll]ibraries/
 Match3game_BurstDebugInformation_DoNotShip/
 /[Bb]uilds/
 /[Ll]ogs/
-/[Uu]serSettings
+/UserSettings/
+/[Uu]serSettings/
 /[Mm]emoryCaptures/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
