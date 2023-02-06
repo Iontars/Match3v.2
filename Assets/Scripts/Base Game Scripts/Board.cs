@@ -492,8 +492,6 @@ public class Board : MonoBehaviour
                     maxIterations = 0;
 
                     GameObject piece = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity);
-                    //piece.transform.parent = transform;
-                    //piece.name = "( " + i + ", " + j + " )";
                     allDots[i, j] = piece;
                     piece.GetComponent<Dot>().row = j; // новые токены ползут сверху вниз
                     piece.GetComponent<Dot>().column = i; // новые токены ползут сверху вниз
