@@ -317,8 +317,11 @@ public class Board : MonoBehaviour
                         Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
                         if (otherDot.isMatched && otherDot.tag == typeOfMatch.color)
                         {
-                            otherDot.isMatched = false;
-                            otherDot.MakeColorBomb();
+                            if (!currentDot.isAjacentBomb)
+                            {
+                                otherDot.isMatched = false;
+                                otherDot.MakeAjacentBomb();
+                            }
                         }
                     }
                 }
@@ -338,8 +341,11 @@ public class Board : MonoBehaviour
                         Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
                         if (otherDot.isMatched && otherDot.tag == typeOfMatch.color)
                         {
-                            otherDot.isMatched = false;
-                            otherDot.MakeAjacentBomb();
+                            if (!currentDot.isAjacentBomb)
+                            {
+                                otherDot.isMatched = false;
+                                otherDot.MakeAjacentBomb(); 
+                            }
                         }
                     }
                 }

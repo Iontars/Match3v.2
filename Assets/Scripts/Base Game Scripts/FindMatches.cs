@@ -95,7 +95,7 @@ public class FindMatches : MonoBehaviour
     // проверка на совпадения токенов
     IEnumerator FindAllMatchesCo()
     {
-        // yield return new WaitForSeconds(.2f); 
+        //yield return new WaitForSeconds(.2f); 
         yield return null;
         for (int i = 0; i < board.width; i++)
         {

@@ -133,10 +133,10 @@ public class Dot : MonoBehaviour
     private void OnMouseDown()
     {
         // анимация прикосновения
-        if (anim != null)
+        /*if (anim != null)
         {
             anim.SetBool("Touched", true);
-        }
+        }*/
 
         // отношение к уничтожении подсказки
         if (hintManager != null)
@@ -153,10 +153,10 @@ public class Dot : MonoBehaviour
     private void OnMouseUp()
     {
         // анимация прикосновения
-        if (anim != null)
+        /*if (anim != null)
         {
             anim.SetBool("Touched", false);
-        }
+        }*/
 
         if (board.currentState == GameState.move)
         {
