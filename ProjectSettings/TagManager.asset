@@ -11,6 +11,8 @@ TagManager:
   - Color
   - Blue Dot
   - Breakable
+  - Pink Dot
+  - Salat Dot
   layers:
   - Default
   - TransparentFX
