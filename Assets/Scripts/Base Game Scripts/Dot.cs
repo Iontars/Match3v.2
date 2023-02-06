@@ -96,7 +96,7 @@ public class Dot : MonoBehaviour
         }
         //
 
-        yield return new WaitForSeconds(.5f); // задержка для того что бы отработал глупыей код в апдейте // перестроить зависимости
+        yield return new WaitForSeconds(.7f); // задержка для того что бы отработал глупыей код в апдейте // перестроить зависимости
 
         if (otherDot != null)
         {
@@ -109,9 +109,10 @@ public class Dot : MonoBehaviour
                 row = previousRow;
                 column = previousColumn;
 
-                yield return new WaitForSeconds(.5f);
+                yield return new WaitForSeconds(.7f);
                 board.currentDot = null;
                 board.currentState = GameState.move;
+                print("isState " + board.currentState);
             }
             //cсовпадение произошло // создать ивент?
             else
@@ -173,6 +174,7 @@ public class Dot : MonoBehaviour
             Mathf.Abs(finalTouchPosition.x - firstTouchPosition.x) > swipeResist)
         {
             board.currentState = GameState.wait; // перевод игры в режим ожидания
+            print("isState " + board.currentState);
             swipeAngle = Mathf.Atan2(finalTouchPosition.y - firstTouchPosition.y, finalTouchPosition.x - firstTouchPosition.x) * 180/ Mathf.PI;
             MovePicies();
             board.currentDot = this;
@@ -180,6 +182,7 @@ public class Dot : MonoBehaviour
         else
         {
             board.currentState = GameState.move;
+            print("isState " + board.currentState);
         }
     }
 
@@ -286,6 +289,7 @@ public class Dot : MonoBehaviour
         {
             // нельзя двигаться так как соседнего тайла не существвут
             board.currentState = GameState.move; // сброс машины состояний
+            print("isState " + board.currentState);
         }
     }
 
@@ -317,6 +321,7 @@ public class Dot : MonoBehaviour
         else
         {
             board.currentState = GameState.move;
+            print("isState " + board.currentState);
         }
     }
 

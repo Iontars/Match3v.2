@@ -104,6 +104,7 @@ public class Board : MonoBehaviour
     void Start()
     {
         currentState = GameState.pause; // игра начинается с состояния паузы !!!!!!!!!!!!
+        print("isState " + currentState);
         SetUp();
     }
 
@@ -453,7 +454,7 @@ public class Board : MonoBehaviour
     }
 
     //распознавание пустых мест на доске
-    IEnumerator DecreaseRowCo()
+    /*IEnumerator DecreaseRowCo()
     {
         int nullCount = 0;
         for (int i = 0; i < width; i++)
@@ -474,7 +475,7 @@ public class Board : MonoBehaviour
         }
         yield return new WaitForSeconds(refillDelay * 0.5f);
         StartCoroutine(nameof(FillBoardCo));
-    }
+    }*/
 
     // заполнение пустых ячеек
     void RefillBoard()
@@ -528,8 +529,8 @@ public class Board : MonoBehaviour
 
     IEnumerator FillBoardCo()
     {
-        yield return new WaitForSeconds(refillDelay); // и подождать // задержка перед созданием новых токенов
         RefillBoard(); // заполнить досу токенами после первого совпадения
+        yield return new WaitForSeconds(refillDelay); // и подождать // задержка перед созданием новых токенов
         // каскад совпадений
         while (MatchesOnBoard()) // пока есть каскад совпадений, ждать wait
         {
@@ -540,6 +541,7 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(1.5f * refillDelay); // нужно дождаться заполнения доски прежде чем проверить поэтому увеличиваем время
         }
         _findMatches.currentMatches.Clear(); // Имеет отношенеи к бонусам vid 50 (32 min)
+
         yield return new WaitForSeconds(refillDelay);
 
         if (IsDeadlocked()) // проверка на наличие того что на доске больше нельзя создать совпадений
@@ -549,6 +551,7 @@ public class Board : MonoBehaviour
         if (!MatchesOnBoard())
         {
             currentState = GameState.move;
+            print("isState " + currentState);
             _streakValue = 1;
         }
     }

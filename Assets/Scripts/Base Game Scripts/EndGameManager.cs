@@ -91,6 +91,7 @@ public class EndGameManager : MonoBehaviour
     {
         youWinPanel.SetActive(true);
         board.currentState = GameState.win;
+        print("isState " + board.currentState);
         counter.text = "" + (currentCounterValue = 0);
         FadePanelController fadePanelController = FindObjectOfType<FadePanelController>();
         fadePanelController.GameOver();
@@ -102,7 +103,7 @@ public class EndGameManager : MonoBehaviour
         // ?добавить ивент на поражение
         tryAgainPanel.SetActive(true);
         board.currentState = GameState.lose;
-        print("Yoy Lose");
+        print("isState " + board.currentState);
         counter.text = "" + (currentCounterValue = 0);
         FadePanelController fadePanelController = FindObjectOfType<FadePanelController>();
         fadePanelController.GameOver();
@@ -122,7 +123,7 @@ public class EndGameManager : MonoBehaviour
             timerSeconds -= Time.deltaTime;
             if (timerSeconds <= 0)
             {
-                Debug.Log(" still active");
+                //Debug.Log(" still active");
                 DecreaseCountervalue(); 
                 timerSeconds = 1;
             }
