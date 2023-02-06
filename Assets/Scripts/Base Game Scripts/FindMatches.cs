@@ -81,7 +81,7 @@ public class FindMatches : MonoBehaviour
         {
             currentMatches.Add(dot);
         }
-        dot.GetComponent<Dot>().isMatched = true;
+        dot.GetComponent<Dot>().isMatched = true; // отмечает точку попавшую в список как isMatched, что позволяет уничтожать ряд совпадений
     }
 
     private void GetNearbyPieces(GameObject dot1, GameObject dot2, GameObject dot3)
@@ -94,9 +94,9 @@ public class FindMatches : MonoBehaviour
 
     // проверка на совпадения токенов
     IEnumerator FindAllMatchesCo()
-    {       
-        yield return new WaitForSeconds(.2f);
-        
+    {
+        // yield return new WaitForSeconds(.2f); 
+        yield return null;
         for (int i = 0; i < board.width; i++)
         {
             for (int j = 0; j < board.height; j++)
@@ -123,7 +123,7 @@ public class FindMatches : MonoBehaviour
                                     currentMatches.Union(isColumnBomb(leftDotDot, rightDotDot, currentDotDot));
                                     currentMatches.Union(isAdjacentBomb(leftDotDot, rightDotDot, currentDotDot));
                                      
-                                    GetNearbyPieces(leftDot, rightDot, currentDot);
+                                    GetNearbyPieces(leftDot, rightDot, currentDot); // если все соседние точки олинаковые то передаём их в метод добавлящий их в список в котором они будут отмечены как isMatched
                                 }
                             }
                         }
@@ -237,32 +237,33 @@ public class FindMatches : MonoBehaviour
         return dots;
     }
 
-    public void CheckBombs()
+    public void CheckBombs(MatchType matchType)
     {
         // игрок что то передвигает ?
         if (board.currentDot != null)
         {
             // передвигаимая фигура совпадает ?
-            if (board.currentDot.isMatched)
+            if (board.currentDot.isMatched && board.currentDot.tag == matchType.color) // board.currentDot.tag == matchType.color особо не нужно
             {
                 // сделать токен не разрушаимым
                 board.currentDot.isMatched = false;
 
+                //в зависимости от сделанного направления свайпа спавним тип строковой бомбы // лучше изначально напсиать направление свайпа в переменную что бы не дублировать код
                 if ((board.currentDot.swipeAngle > - 45 && board.currentDot.swipeAngle <= 45)||
                     (board.currentDot.swipeAngle < -135 && board.currentDot.swipeAngle >= 135))
                 {
-                    board.currentDot.MakeRowBomb();
+                    board.currentDot.MakeColumnBomb();
                 }
                 else
                 {
-                    board.currentDot.MakeColumnBomb();
+                    board.currentDot.MakeRowBomb();                   
                 }
             }
             // другой токен совпадает ?
             else if (board.currentDot.otherDot != null)
             {
                 Dot othetDot = board.currentDot.otherDot.GetComponent<Dot>();
-                if (othetDot.isMatched)
+                if (othetDot.isMatched && othetDot.tag == matchType.color)
                 {
                     othetDot.isMatched = false;
 

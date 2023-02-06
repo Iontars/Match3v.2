@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
 
-public enum GameType
+public enum GameType // тип игнры на карте, на количество ходов или на время
 {
     Moves, Time
 }
