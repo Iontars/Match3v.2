@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
 public enum GameState{wait, move, win, lose, pause} // состояние используется для блокировки повторного свайпа пока токены движутся и меняет состояние игры
@@ -16,17 +15,12 @@ public class TileType // класс хранящйи в себе информа�
 }
 
 [System.Serializable]
-public class MatchType // хранит в семе типы совпадений // vid 50 (15.00) // (2) убрать эту глупость
+public class MatchType
 {
     public int type;
     public string color;
-
-    public MatchType(int type, string color)
-    {
-        this.type = type;
-        this.color = color;
-    }
 }
+
 
 /// <summary>
 /// Постороение игрового поля, создание токенов, поиск различных совпадений, уничтожение токенов, звук токенов,
@@ -51,22 +45,22 @@ public class Board : MonoBehaviour
     public GameObject destroyEffect;
 
     [Header("Layout")]
-    private BackgroundTile[,] _breakableTiles; // массив с ломающимися плитками на доске
-    private bool[,] _blankSpaces; // массив с зарезервированными местами на доске
-    public GameObject[,] allDots; // массив со всеми игровыми точками на доске
     public TileType[] boardLayout;
-
-    [Header("Match Stuff")]
-    private FindMatches _findMatches;
-    private int _streakValue = 1; // стрик каскада совпадений
-    private ScoreManager _scoreManager;
-    private SoundManager _soundManager;
-    private GoalManager _goalManager; // vid 40
-    public MatchType matchType;
+    private bool[,] blankSpaces; // массив с зарезервированными местами на доске
+    private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске
+    public GameObject[,] allDots; // массив со всеми игровыми точками на доске
     public Dot currentDot; // запись в скрипте Dot метод CalculateAngle
-    public int basePieceValue = 5; // сколько очков стоит Тайл
+    FindMatches findMatches;
+    public int basePieceValue = 5;
+    int streakValue = 1;
+    ScoreManager scoreManager;
+    SoundManager soundManager;
+    public MatchType matchType;
+
+    GoalManager goalManager; // vid 40
     public int[] scoreGoals; // сколько нужно набрать очков для различных успехов на карте, 1 звезда 2000 очков 2 звезды 4000 очков итд
-    public float refillDelay = .7f;
+
+    public float refillDelay = 0.7f;
 
     private void Awake()
     {
@@ -92,19 +86,18 @@ public class Board : MonoBehaviour
             }
         }
         
-        _scoreManager = FindObjectOfType<ScoreManager>();
-        _goalManager = FindObjectOfType<GoalManager>();
-        _soundManager = FindObjectOfType<SoundManager>();
-        _blankSpaces = new bool[width, height];
-        _findMatches = FindObjectOfType<FindMatches>();
-        _breakableTiles = new BackgroundTile[width, height];       
+        scoreManager = FindObjectOfType<ScoreManager>();
+        goalManager = FindObjectOfType<GoalManager>();
+        soundManager = FindObjectOfType<SoundManager>();
+        blankSpaces = new bool[width, height];
+        findMatches = FindObjectOfType<FindMatches>();
+        breakableTiles = new BackgroundTile[width, height];       
         allDots = new GameObject[width, height];
     }
 
     void Start()
     {
         currentState = GameState.pause; // игра начинается с состояния паузы !!!!!!!!!!!!
-        print("isState " + currentState);
         SetUp();
     }
 
@@ -116,7 +109,7 @@ public class Board : MonoBehaviour
             // мы не проверям позицию зарезервированного места, мы проверяем Emum позицию в массиве перечислений
             if (boardLayout[i].tileKind == TileKind.Blank ) // если место пустое
             {
-                _blankSpaces[boardLayout[i].x, boardLayout[i].y] = true; // запистаь в булевй массив позицию пустого места и сделать true
+                blankSpaces[boardLayout[i].x, boardLayout[i].y] = true; // запистаь в булевй массив позицию пустого места и сделать true
             }
         }
     }
@@ -133,7 +126,7 @@ public class Board : MonoBehaviour
                 // заспавнить ломающуюся плитку
                 Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y); // вот здесь мы получаем координаты указанные в инспекоре по позициям x и y
                 GameObject tile = Instantiate(breakebleTilePrefab, tempPosition, Quaternion.identity);
-                _breakableTiles[boardLayout[i].x, boardLayout[i].y] = tile.GetComponent<BackgroundTile>();
+                breakableTiles[boardLayout[i].x, boardLayout[i].y] = tile.GetComponent<BackgroundTile>();
 
             }
         }
@@ -149,7 +142,7 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
 
-                if (!_blankSpaces[i, j]) // проверка на пустое место на доске/если false создаёт тайл на доске
+                if (!blankSpaces[i, j]) // проверка на пустое место на доске/если false создаёт тайл на доске
                 {
                     Vector2 tempPosition = new Vector2(i, j);
                     Vector2 tilePosition = new Vector2(i, j);
@@ -229,33 +222,33 @@ public class Board : MonoBehaviour
         return false;
     }
 
-    private MatchType ColumnOrRow() // изменено Vid 50 (16 min)
+    private MatchType ColumnOrRow()
     {
         // создать копию FindMatches.currentMatches
-        List<GameObject> matchCopy = _findMatches.currentMatches as List<GameObject>; // as Важно изучить
-        matchType = new(0,"");
-        //matchType.type = 0;
-        //matchType.color = "";
+        List<GameObject> matchCopy = findMatches.currentMatches as List<GameObject>; // as Важно изучить
+
+        matchType.type = 0;
+        matchType.color = "";
 
         // Просмотреть список и решить нужно ли делать бомбу
         for (int i = 0; i < matchCopy.Count; i++)
         {
             // сохраним текущую точку
             Dot thisDot = matchCopy[i].GetComponent<Dot>();
-            string color = matchCopy[i].tag; // (2)
-            int column = thisDot.column;
-            int row = thisDot.row;
+            string color = matchCopy[i].tag;
+            //int column = thisDot.column;
+            //int row = thisDot.row;
             int columnMatch = default;
             int rowMatch = default;
             // просмотреть остальные соседние точки и сравнить
             for (int j = 0; j < matchCopy.Count; j++)
             {
-                Dot nextDot = matchCopy[j].GetComponent<Dot>();
+                Dot nextDot = matchCopy[j]?.GetComponent<Dot>();
                 if (thisDot == nextDot)
                 {
-                    continue; // точка сравнивается саса с собой // убрать улучшить
+                    continue;
                 }
-                if (thisDot.column == nextDot.column && nextDot.tag == color) // перейти на компонентную систему заменив теги // (2)убрать эту глупость
+                if (thisDot.column == nextDot.column && nextDot.tag == color) // перейти на компонентную систему заменив теги
                 {
                     columnMatch++;
                 }
@@ -267,28 +260,27 @@ public class Board : MonoBehaviour
             //return 3 если колонки или строки совпали
             //return 2 если бомба уничтожающая соседние тайлы
             //return 1 если цветная бомба
-            // глупое прокидывание количества совпадений через магические числа в метод CheckToMakeBombs(), надо сделлать енам
             if (columnMatch == 4 || rowMatch == 4) //  сравниваем с числом меньше фактического так как не учитываем сами себя
             {
                 matchType.type = 1;
                 matchType.color = color;
                 return matchType;
             }
-            else if (columnMatch == 2 && rowMatch == 2)
+            if (columnMatch == 2 && rowMatch == 2)
             {
                 matchType.type = 2;
                 matchType.color = color;
                 return matchType;
             }
-            else if (columnMatch == 3 || rowMatch == 3)
+            if (columnMatch == 3 || rowMatch == 3)
             {
                 matchType.type = 3;
                 matchType.color = color;
                 return matchType;
             }          
         }
-        //matchType.type = 0;
-        //matchType.color = "";
+        matchType.type = 0;
+        matchType.color = "";
         return matchType;
     }
 
@@ -297,43 +289,18 @@ public class Board : MonoBehaviour
     private void CheckToMakeBombs()
     {
         // Скольк осовпадений за раз находится в списке FindMatches.currentMatches
-        if (_findMatches.currentMatches.Count > 3)
+        if (findMatches.currentMatches.Count > 3)
         {
             // какой тип срвпадений?
             MatchType typeOfMatch = ColumnOrRow();
             if (typeOfMatch.type == 1)
             {
-                
-                // Создать цветную бомбу
-                // Текущая точка совпала ?
+                //Make a color bomb
+                //is the current dot matched?
                 if (currentDot != null && currentDot.isMatched && currentDot.tag == typeOfMatch.color)
                 {
                     currentDot.isMatched = false;
                     currentDot.MakeColorBomb();
-                }
-                else // возможная проблема отличие кода Vid 50 (33 min)
-                {
-                    if (currentDot.otherDot != null)
-                    {
-                        Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
-                        if (otherDot.isMatched && otherDot.tag == typeOfMatch.color)
-                        {
-                            if (!currentDot.isAjacentBomb)
-                            {
-                                otherDot.isMatched = false;
-                                otherDot.MakeAjacentBomb();
-                            }
-                        }
-                    }
-                }
-            }
-            else if (typeOfMatch.type == 2)
-            {               
-                // Создать Звезду
-                if (currentDot != null && currentDot.isMatched && currentDot.tag == typeOfMatch.color)
-                {
-                    currentDot.isMatched = false;
-                    currentDot.MakeAjacentBomb();
                 }
                 else
                 {
@@ -342,47 +309,66 @@ public class Board : MonoBehaviour
                         Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
                         if (otherDot.isMatched && otherDot.tag == typeOfMatch.color)
                         {
-                            if (!currentDot.isAjacentBomb)
-                            {
-                                otherDot.isMatched = false;
-                                otherDot.MakeAjacentBomb(); 
-                            }
+                            otherDot.isMatched = false;
+                            otherDot.MakeColorBomb();
                         }
+                    }
+                }
+            }
+            else if (typeOfMatch.type == 2)
+            {
+                //Make a adjacent bomb
+                //is the current dot matched?
+                if (currentDot != null && currentDot.isMatched && currentDot.tag == typeOfMatch.color)
+                {
+                    currentDot.isMatched = false;
+                    currentDot.MakeAjacentBomb();
+                }
+                else if (currentDot.otherDot != null)
+                {
+                    Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
+                    if (otherDot.isMatched && otherDot.tag == typeOfMatch.color)
+                    {
+                        otherDot.isMatched = false;
+                        otherDot.MakeAjacentBomb();
                     }
                 }
             }
             else if (typeOfMatch.type == 3)
             {
-                _findMatches.CheckBombs(typeOfMatch);
+                findMatches.CheckBombs(typeOfMatch); // если в совпадениях 3 токена то смотрим только лишь на линейные бомбы
             }
         }
     }
-
     // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод/ партикл взрыва
     void DestroyMatchesAt(int colunm, int row)
     {
         if (allDots[colunm,row].GetComponent<Dot>().isMatched)
         {
-            
+            // сколько эллементов в Списке currentMatches ?
+            if (findMatches.currentMatches.Count >=4)
+            {
+                CheckToMakeBombs();
+            }
             // нужно ли разбивать ломающуюся плитку
-            if (_breakableTiles[colunm, row] != null)
+            if (breakableTiles[colunm, row] != null)
             {
                 // если это нанесёт 1 единицу урона
-                _breakableTiles[colunm, row].TakeDamage(1);
-                if (_breakableTiles[colunm, row].hitPoints <= 0)
+                breakableTiles[colunm, row].TakeDamage(1);
+                if (breakableTiles[colunm, row].hitPoints <= 0)
                 {
-                    _breakableTiles[colunm, row] = null; // удаляем из массива ломающийся токен
+                    breakableTiles[colunm, row] = null; // удаляем из массива ломающийся токен
                 }
             }
 
             // vid 40 // сравниваем ломающуюся плитку на предмет цели уровня
-            if (_goalManager != null)
+            if (goalManager != null)
             {
-                _goalManager.CompareGoal(allDots[colunm, row].tag.ToString());
-                _goalManager.UpdateGoals();
+                goalManager.CompareGoal(allDots[colunm, row].tag.ToString());
+                goalManager.UpdateGoals();
             }
 
-            _soundManager?.PlayRandomDestroyNoise(); // звук ломания токена
+            soundManager?.PlayRandomDestroyNoise(); // звук ломания токена
 
             GameObject particle = Instantiate(destroyEffect, new Vector3( // анимация взрыва партиклом
                 allDots[colunm, row].transform.position.x,
@@ -390,8 +376,8 @@ public class Board : MonoBehaviour
                 allDots[colunm, row].transform.position.z - 1), Quaternion.identity);
             Destroy(particle, .3f);
             allDots[colunm,row].GetComponent<Dot>().PopAnimation(); // анимация спрайта
-            Destroy(allDots[colunm, row], .3f); // Фактическое уничтожение совпавших бомб
-            _scoreManager.IncreaseScore(basePieceValue * _streakValue); // добавление очков на табло
+            Destroy(allDots[colunm, row], .2f); // Фактическое уничтожение совпавших бомб
+            scoreManager.IncreaseScore(basePieceValue * streakValue); // добавление очков на табло
             allDots[colunm, row] = null;
             
         }
@@ -403,12 +389,11 @@ public class Board : MonoBehaviour
         // сколько эллементов в Списке currentMatches ?
         // как только мы проверили что в списке совпадений существует 4 или более совпадений мы сразу проверяем какую бомбу можно создать и 
         // очищаем список совпадений в избежании повторных сравнений в процессе больших каскадов и больших цепочек совпадений
-        if (_findMatches.currentMatches.Count >= 4)
+        if (findMatches.currentMatches.Count >= 4)
         {
             CheckToMakeBombs();
         }
-        _findMatches.currentMatches.Clear(); // очистить список которых хранит в себе объекты совпавших точек
-
+        findMatches.currentMatches.Clear();
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
@@ -419,7 +404,7 @@ public class Board : MonoBehaviour
                 }
             }
         }
-
+        findMatches.currentMatches.Clear();
         StartCoroutine(nameof(DecreaseRowCo2));
     }
 
@@ -431,7 +416,7 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 // не зарезервировано ли место внутри доски?
-                if (!_blankSpaces[i,j] && allDots[i,j] == null)
+                if (!blankSpaces[i,j] && allDots[i,j] == null)
                 {
                     // проверка доски
                     for (int k = j + 1; k < height; k++)
@@ -449,33 +434,9 @@ public class Board : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds(refillDelay * 0.5f); // задержка перез взрывом совпадений
+        yield return new WaitForSeconds(refillDelay * 0.5f); // не трогать, задержка перед появлением новых токенов
         StartCoroutine(nameof(FillBoardCo));
     }
-
-    //распознавание пустых мест на доске
-    /*IEnumerator DecreaseRowCo()
-    {
-        int nullCount = 0;
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                if (allDots[i, j] == null)
-                {
-                    nullCount++;
-                }
-                else if (nullCount > 0)
-                {
-                    allDots[i, j].GetComponent<Dot>().row -= nullCount;
-                    allDots[i, j] = null;
-                }
-            }
-            nullCount = 0;
-        }
-        yield return new WaitForSeconds(refillDelay * 0.5f);
-        StartCoroutine(nameof(FillBoardCo));
-    }*/
 
     // заполнение пустых ячеек
     void RefillBoard()
@@ -484,10 +445,10 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                if (allDots[i,j] == null && !_blankSpaces[i,j]) // проверка в том числе на зарезервированные места на доске
+                if (allDots[i,j] == null && !blankSpaces[i,j]) // проверка в том числе на зарезервированные места на доске
                 {
                     Vector2 tempPosition = new Vector2(i, j + offSet);
-                    int dotToUse = Random.Range(0, dots.Length); // пул из массива с цветными токенами // можно добавит ьещё один массив с бонусами
+                    int dotToUse = Random.Range(0, dots.Length); 
 
                     //фикс проблемы когда при каскаде можно было передвиграть фгуры вручную
                     int maxIterations = 0;
@@ -498,7 +459,9 @@ public class Board : MonoBehaviour
                     }
                     maxIterations = 0;
 
-                    GameObject piece = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity);
+                    GameObject piece = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity); // пул из массива с цветными токенами // можно добавит ьещё один массив с бонусами
+                    piece.transform.parent = transform;
+                    piece.name = "( " + i + ", " + j + " )";
                     allDots[i, j] = piece;
                     piece.GetComponent<Dot>().row = j; // новые токены ползут сверху вниз
                     piece.GetComponent<Dot>().column = i; // новые токены ползут сверху вниз
@@ -510,7 +473,6 @@ public class Board : MonoBehaviour
     //постоянный скан доски на наличие совпадений
     bool MatchesOnBoard()
     {
-        _findMatches.FindAllMatches(); // зачем
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
@@ -530,18 +492,18 @@ public class Board : MonoBehaviour
     IEnumerator FillBoardCo()
     {
         RefillBoard(); // заполнить досу токенами после первого совпадения
-        yield return new WaitForSeconds(refillDelay); // и подождать // задержка перед созданием новых токенов
+        yield return new WaitForSeconds(refillDelay); // и подождать
         // каскад совпадений
         while (MatchesOnBoard()) // пока есть каскад совпадений, ждать wait
         {
-            _streakValue ++; // серия совпадений
+            streakValue ++; // серия совпадений
             //currentState = GameState.wait;
-            print(_streakValue);
+            print(streakValue);
             DestroyMatches(); // вызов этого метода должен быть раньше задержки
-            yield return new WaitForSeconds(1.5f * refillDelay); // нужно дождаться заполнения доски прежде чем проверить поэтому увеличиваем время
+            //yield return new WaitForSeconds(1.5f * refillDelay); // нужно дождаться заполнения доски прежде чем проверить поэтому увеличиваем время
+            yield break;
         }
-        _findMatches.currentMatches.Clear(); // Имеет отношенеи к бонусам vid 50 (32 min)
-
+        findMatches.currentMatches.Clear(); // Имеет отношенеи к бонусам
         yield return new WaitForSeconds(refillDelay);
 
         if (IsDeadlocked()) // проверка на наличие того что на доске больше нельзя создать совпадений
@@ -551,8 +513,7 @@ public class Board : MonoBehaviour
         if (!MatchesOnBoard())
         {
             currentState = GameState.move;
-            print("isState " + currentState);
-            _streakValue = 1;
+            streakValue = 1;
         }
     }
 
@@ -669,18 +630,16 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 //если место не зарезервировано
-                if (!_blankSpaces[i,j])
+                if (!blankSpaces[i,j])
                 {
                     // Выбрать слуайное число
                     int pieceToUse = Random.Range(0, newBoard.Count);
-
                     //вызов проверки на совпадение при создании доски (не должно быть готовых совпадений)
                     int maxIterations = 0;
                     while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100)
                     {
                         pieceToUse = Random.Range(0, newBoard.Count);
                         maxIterations++;
-                        //Debug.Log(maxIterations);
                     }
                     // контенер для токена
                     Dot piece = newBoard[pieceToUse].GetComponent<Dot>();
@@ -702,6 +661,7 @@ public class Board : MonoBehaviour
             // рекурсивный вызов
             ShuffleBorad();
         }
+        
     }
 
     private void Update()

@@ -95,8 +95,8 @@ public class FindMatches : MonoBehaviour
     // проверка на совпадения токенов
     IEnumerator FindAllMatchesCo()
     {
-        //yield return new WaitForSeconds(.2f); 
-        yield return null;
+        //yield return new WaitForSeconds(.2f);
+        yield return null;   
         for (int i = 0; i < board.width; i++)
         {
             for (int j = 0; j < board.height; j++)
@@ -123,7 +123,7 @@ public class FindMatches : MonoBehaviour
                                     currentMatches.Union(isColumnBomb(leftDotDot, rightDotDot, currentDotDot));
                                     currentMatches.Union(isAdjacentBomb(leftDotDot, rightDotDot, currentDotDot));
                                      
-                                    GetNearbyPieces(leftDot, rightDot, currentDot); // если все соседние точки олинаковые то передаём их в метод добавлящий их в список в котором они будут отмечены как isMatched
+                                    GetNearbyPieces(leftDot, rightDot, currentDot); // если все соседние точки одинаковые то передаём их в метод добавлящий их в список в котором они будут отмечены как isMatched
                                 }
                             }
                         }
@@ -243,38 +243,38 @@ public class FindMatches : MonoBehaviour
         if (board.currentDot != null)
         {
             // передвигаимая фигура совпадает ?
-            if (board.currentDot.isMatched && board.currentDot.tag == matchType.color) // board.currentDot.tag == matchType.color особо не нужно
+            if (board.currentDot.isMatched && board.currentDot.tag == matchType.color)
             {
                 // сделать токен не разрушаимым
                 board.currentDot.isMatched = false;
 
                 //в зависимости от сделанного направления свайпа спавним тип строковой бомбы // лучше изначально напсиать направление свайпа в переменную что бы не дублировать код
                 if ((board.currentDot.swipeAngle > - 45 && board.currentDot.swipeAngle <= 45)||
-                    (board.currentDot.swipeAngle < -135 && board.currentDot.swipeAngle >= 135))
+                    (board.currentDot.swipeAngle < -135 || board.currentDot.swipeAngle >= 135))
                 {
-                    board.currentDot.MakeColumnBomb();
+                    board.currentDot.MakeRowBomb();
                 }
                 else
                 {
-                    board.currentDot.MakeRowBomb();                   
+                    board.currentDot.MakeColumnBomb();
                 }
             }
             // другой токен совпадает ?
             else if (board.currentDot.otherDot != null)
             {
-                Dot othetDot = board.currentDot.otherDot.GetComponent<Dot>();
-                if (othetDot.isMatched && othetDot.tag == matchType.color)
+                Dot otherDot = board.currentDot.otherDot.GetComponent<Dot>();
+                if (otherDot.isMatched && otherDot.tag == matchType.color)
                 {
-                    othetDot.isMatched = false;
+                    otherDot.isMatched = false;
 
                     if ((board.currentDot.swipeAngle > -45 && board.currentDot.swipeAngle <= 45) ||
-                        (board.currentDot.swipeAngle < -135 && board.currentDot.swipeAngle >= 135))
+                        (board.currentDot.swipeAngle < -135 || board.currentDot.swipeAngle >= 135))
                     {
-                        othetDot.MakeRowBomb();
+                        otherDot.MakeRowBomb();
                     }
                     else
                     {
-                        othetDot.MakeColumnBomb();
+                        otherDot.MakeColumnBomb();
                     }
                 }
             }

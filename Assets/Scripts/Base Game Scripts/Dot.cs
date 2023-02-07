@@ -21,8 +21,8 @@ public class Dot : MonoBehaviour
     Board board;
     HintManager hintManager;
     [HideInInspector]public GameObject otherDot;
-    Vector2 firstTouchPosition = Vector2.zero;
-    Vector2 finalTouchPosition = Vector2.zero;
+    Vector2 firstTouchPosition;
+    Vector2 finalTouchPosition;
     Vector2 tempPosition;
 
     [Header("Swipe Stuff")]
@@ -96,23 +96,20 @@ public class Dot : MonoBehaviour
         }
         //
 
-        yield return new WaitForSeconds(.7f); // задержка для того что бы отработал глупыей код в апдейте // перестроить зависимости
+        yield return new WaitForSeconds(.5f); // задержка для того что бы отработал глупыей код в апдейте // перестроить зависимости
 
         if (otherDot != null)
         {
             //cсовпадение не произошло // создать ивент?
             if (!isMatched && !otherDot.GetComponent<Dot>().isMatched)
             {
-                // токены поползут в свои старые позиции
-                otherDot.GetComponent<Dot>().row = row; 
+                otherDot.GetComponent<Dot>().row = row;
                 otherDot.GetComponent<Dot>().column = column;
                 row = previousRow;
                 column = previousColumn;
-
-                yield return new WaitForSeconds(.7f);
+                yield return new WaitForSeconds(.5f);
                 board.currentDot = null;
                 board.currentState = GameState.move;
-                print("isState " + board.currentState);
             }
             //cсовпадение произошло // создать ивент?
             else
@@ -122,8 +119,7 @@ public class Dot : MonoBehaviour
                 {
                     endGameManager.DecreaseCountervalue();
                 }
-
-                // уничтожаем все точки отчеренные как IsMatch 
+                // уничтожаем все точки отмеенных как IsMatch 
                 board?.DestroyMatches();                
             }
         }
@@ -134,10 +130,10 @@ public class Dot : MonoBehaviour
     private void OnMouseDown()
     {
         // анимация прикосновения
-        /*if (anim != null)
+        if (anim != null)
         {
             anim.SetBool("Touched", true);
-        }*/
+        }
 
         // отношение к уничтожении подсказки
         if (hintManager != null)
@@ -154,16 +150,17 @@ public class Dot : MonoBehaviour
     private void OnMouseUp()
     {
         // анимация прикосновения
-        /*if (anim != null)
+        if (anim != null)
         {
             anim.SetBool("Touched", false);
-        }*/
+        }
 
         if (board.currentState == GameState.move)
         {
             finalTouchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
             CalculateAngle();
         }
+
     }
 
     // расчёт радианы угла направления
@@ -173,8 +170,7 @@ public class Dot : MonoBehaviour
         if (Mathf.Abs(finalTouchPosition.y - firstTouchPosition.y) > swipeResist ||
             Mathf.Abs(finalTouchPosition.x - firstTouchPosition.x) > swipeResist)
         {
-            board.currentState = GameState.wait; // перевод игры в режим ожидания
-            print("isState " + board.currentState);
+            board.currentState = GameState.wait;
             swipeAngle = Mathf.Atan2(finalTouchPosition.y - firstTouchPosition.y, finalTouchPosition.x - firstTouchPosition.x) * 180/ Mathf.PI;
             MovePicies();
             board.currentDot = this;
@@ -182,7 +178,6 @@ public class Dot : MonoBehaviour
         else
         {
             board.currentState = GameState.move;
-            print("isState " + board.currentState);
         }
     }
 
@@ -219,32 +214,32 @@ public class Dot : MonoBehaviour
         {
             //StartCoroutine(DelayFallingByX()); // корутина тормозит основной поток и у свайпа появляетс делей равный делею корутины , придумать асинх
             tempPosition = new Vector2(targetX, transform.position.y);
-            transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);
-            //создать глобальную переменную для опрелеления скорости токена вместо 11f
+            // создать глобальную переменную для опрелеления скорости токена вместо 11f
+            transform.position = Vector2.Lerp(transform.position, tempPosition, 10 * Time.deltaTime);           
             if (board.allDots[column, row] != gameObject)// падение токенов после уничтожения совпавших
             {
                 board.allDots[column, row] = gameObject;
-                findMatches.FindAllMatches();
             }
+            findMatches.FindAllMatches();
         }
         else
         {
             tempPosition = new Vector2(targetX, transform.position.y);
-            transform.position = tempPosition;
+            transform.position = tempPosition;           
         }
 
-        if (Mathf.Abs(targetY - transform.position.y) > .1f)
+        if (Mathf.Abs(targetY - transform.position.y) >.1f)
         {
             //StartCoroutine(DelayFallingByY()); // корутина тормозит основной поток и у свайпа появляетс делей равный делею корутины , придумать асинх
+            // НАДО РЕАЛИЗОВАТЬ КОРУТИНУ ЧТО БЫ ПОСЛЕ ВЗРЫВА ТОКЕНЫ НЕ ПАДАЛИ СРАЗУ
             tempPosition = new Vector2(transform.position.x, targetY);
-            transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);
             // создать глобальную переменную для опрелеления скорости токена вместо 11f
-            if (board.allDots[column, row] != gameObject)
+            transform.position = Vector2.Lerp(transform.position, tempPosition, 10 * Time.deltaTime);           
+            if (board.allDots[column, row] != gameObject)// падение токенов после уничтожения совпавших
             {
-                board.allDots[column, row] = gameObject; // перезаписать точку в новоую позицию после свайпа, иначе останется дубликат
-                findMatches.FindAllMatches();
+                board.allDots[column, row] = gameObject;
             }
-
+            findMatches.FindAllMatches();
         }
         else
         {
@@ -253,9 +248,8 @@ public class Dot : MonoBehaviour
         }
     }
 
-
     // самострой, необходимо проанализировать и улучшить
-    IEnumerator DelayFallingByX()
+    /*IEnumerator DelayFallingByX()
     {
         yield return new WaitForSeconds(.2f);
         tempPosition = new Vector2(targetX, transform.position.y);
@@ -265,11 +259,10 @@ public class Dot : MonoBehaviour
     {
         yield return new WaitForSeconds(.2f);
         tempPosition = new Vector2(transform.position.x, targetY);
-        transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);     
-    }
+        transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);
+    }*/
 
-
-    // метод косвено выполняющий перемещение точек, меняет позиции точек местами что в апдейте заставляет из двигаться к новым позициям
+    // метод фактически выполняющий перемещение точек
     void MovePiecesActual(Vector2 direction)
     {
         otherDot = board.allDots[column + (int)direction.x, row + (int)direction.y];
@@ -289,7 +282,6 @@ public class Dot : MonoBehaviour
         {
             // нельзя двигаться так как соседнего тайла не существвут
             board.currentState = GameState.move; // сброс машины состояний
-            print("isState " + board.currentState);
         }
     }
 
@@ -321,7 +313,7 @@ public class Dot : MonoBehaviour
         else
         {
             board.currentState = GameState.move;
-            print("isState " + board.currentState);
+
         }
     }
 
