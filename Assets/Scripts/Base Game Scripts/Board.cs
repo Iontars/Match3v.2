@@ -51,7 +51,7 @@ public class Board : MonoBehaviour
     GoalManager goalManager; // vid 40
     public int[] scoreGoals; // сколько нужно набрать очков для различных успехов на карте, 1 звезда 2000 очков 2 звезды 4000 очков итд
 
-    public float refillDelay = 0.5f;
+    public float refillDelay = 0.7f;
 
     private void Awake()
     {
