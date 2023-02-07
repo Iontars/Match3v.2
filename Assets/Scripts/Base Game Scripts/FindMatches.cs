@@ -81,7 +81,7 @@ public class FindMatches : MonoBehaviour
         {
             currentMatches.Add(dot);
         }
-        dot.GetComponent<Dot>().isMatched = true;
+        dot.GetComponent<Dot>().isMatched = true; // отмечает точку попавшую в список как isMatched, что позволяет уничтожать ряд совпадений
     }
 
     private void GetNearbyPieces(GameObject dot1, GameObject dot2, GameObject dot3)
@@ -123,7 +123,7 @@ public class FindMatches : MonoBehaviour
                                     currentMatches.Union(isColumnBomb(leftDotDot, rightDotDot, currentDotDot));
                                     currentMatches.Union(isAdjacentBomb(leftDotDot, rightDotDot, currentDotDot));
                                      
-                                    GetNearbyPieces(leftDot, rightDot, currentDot);
+                                    GetNearbyPieces(leftDot, rightDot, currentDot); // если все соседние точки одинаковые то передаём их в метод добавлящий их в список в котором они будут отмечены как isMatched
                                 }
                             }
                         }
@@ -248,6 +248,7 @@ public class FindMatches : MonoBehaviour
                 // сделать токен не разрушаимым
                 board.currentDot.isMatched = false;
 
+                //в зависимости от сделанного направления свайпа спавним тип строковой бомбы // лучше изначально напсиать направление свайпа в переменную что бы не дублировать код
                 if ((board.currentDot.swipeAngle > - 45 && board.currentDot.swipeAngle <= 45)||
                     (board.currentDot.swipeAngle < -135 && board.currentDot.swipeAngle >= 135))
                 {
