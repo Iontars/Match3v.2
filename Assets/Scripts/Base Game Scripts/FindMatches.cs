@@ -252,11 +252,11 @@ public class FindMatches : MonoBehaviour
                 if ((board.currentDot.swipeAngle > - 45 && board.currentDot.swipeAngle <= 45)||
                     (board.currentDot.swipeAngle < -135 || board.currentDot.swipeAngle >= 135))
                 {
-                    board.currentDot.MakeRowBomb();
+                    board.currentDot.MakeColumnBomb();
                 }
                 else
                 {
-                    board.currentDot.MakeColumnBomb();
+                    board.currentDot.MakeRowBomb();
                 }
             }
             // другой токен совпадает ?
