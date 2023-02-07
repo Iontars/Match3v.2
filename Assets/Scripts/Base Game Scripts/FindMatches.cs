@@ -237,20 +237,20 @@ public class FindMatches : MonoBehaviour
         return dots;
     }
 
-    public void CheckBombs()
+    public void CheckBombs(MatchType matchType)
     {
         // игрок что то передвигает ?
         if (board.currentDot != null)
         {
             // передвигаимая фигура совпадает ?
-            if (board.currentDot.isMatched)
+            if (board.currentDot.isMatched && board.currentDot.tag == matchType.color)
             {
                 // сделать токен не разрушаимым
                 board.currentDot.isMatched = false;
 
                 //в зависимости от сделанного направления свайпа спавним тип строковой бомбы // лучше изначально напсиать направление свайпа в переменную что бы не дублировать код
                 if ((board.currentDot.swipeAngle > - 45 && board.currentDot.swipeAngle <= 45)||
-                    (board.currentDot.swipeAngle < -135 && board.currentDot.swipeAngle >= 135))
+                    (board.currentDot.swipeAngle < -135 || board.currentDot.swipeAngle >= 135))
                 {
                     board.currentDot.MakeRowBomb();
                 }
@@ -262,19 +262,19 @@ public class FindMatches : MonoBehaviour
             // другой токен совпадает ?
             else if (board.currentDot.otherDot != null)
             {
-                Dot othetDot = board.currentDot.otherDot.GetComponent<Dot>();
-                if (othetDot.isMatched)
+                Dot otherDot = board.currentDot.otherDot.GetComponent<Dot>();
+                if (otherDot.isMatched && otherDot.tag == matchType.color)
                 {
-                    othetDot.isMatched = false;
+                    otherDot.isMatched = false;
 
                     if ((board.currentDot.swipeAngle > -45 && board.currentDot.swipeAngle <= 45) ||
-                        (board.currentDot.swipeAngle < -135 && board.currentDot.swipeAngle >= 135))
+                        (board.currentDot.swipeAngle < -135 || board.currentDot.swipeAngle >= 135))
                     {
-                        othetDot.MakeRowBomb();
+                        otherDot.MakeRowBomb();
                     }
                     else
                     {
-                        othetDot.MakeColumnBomb();
+                        otherDot.MakeColumnBomb();
                     }
                 }
             }
