@@ -262,26 +262,33 @@ public class Dot : MonoBehaviour
         transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);
     }*/
 
-    // метод фактически выполняющий перемещение точек
+    // метод косвенно выполняющий перемещение точек // меняет позиции тайлов и те автоматически просто хоят твернуться на новые позиции, тупо
     void MovePiecesActual(Vector2 direction)
     {
         otherDot = board.allDots[column + (int)direction.x, row + (int)direction.y];
         previousRow = row;
         previousColumn = column;
 
-        if (otherDot != null) // проверка на зарезервировнные пустые тайлы внутри доски // 
+        // тайлам не присвоятся новые значеняи позиций если в позиции стартового тайла висит лок тайл, либо в конечной позиции тайла тоже висит лок тайл
+        if (board.lockTiles[column, row] == null && board.lockTiles[column + (int)direction.x, row + (int)direction.y] == null)
         {
-            // можно двигаться так как соседний тайл существует
-            otherDot.GetComponent<Dot>().column += -1 * (int)direction.x;
-            otherDot.GetComponent<Dot>().row += -1 * (int)direction.y;
-            column += (int)direction.x;
-            row += (int)direction.y;
-            StartCoroutine(nameof(CheckMoveCo));
+            if (otherDot != null) // проверка на зарезервировнные пустые тайлы внутри доски // 
+            {
+                // можно двигаться так как соседний тайл существует
+                otherDot.GetComponent<Dot>().column += -1 * (int)direction.x;
+                otherDot.GetComponent<Dot>().row += -1 * (int)direction.y;
+                column += (int)direction.x;
+                row += (int)direction.y;
+                StartCoroutine(nameof(CheckMoveCo));
+            }
+            else
+            {
+                board.currentState = GameState.move; // сброс машины состояний после неудавшегося свайпа
+            }
         }
         else
         {
-            // нельзя двигаться так как соседнего тайла не существвут
-            board.currentState = GameState.move; // сброс машины состояний
+            board.currentState = GameState.move; // сброс машины состояний после неудавшегося свайпа
         }
     }
 

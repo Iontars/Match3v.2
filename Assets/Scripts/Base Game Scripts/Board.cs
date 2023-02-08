@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum GameState{wait, move, win, lose, pause} // состояние используется для блокировки повторного свайпа пока токены движутся и меняет состояние игры
 
-public enum TileKind {Breakable, Blank, Normal } // состояние тайлов, говорящще о том занял ли тайл или нет
+public enum TileKind {Breakable, Blank, Normal, Lock, Concrete, Slime } // состояние тайлов, говорящще о том занял ли тайл или нет
 
 [System.Serializable]
 public class TileType // класс хранящйи в себе информацию о том занят ли тайл или нет
@@ -41,13 +41,15 @@ public class Board : MonoBehaviour
     [Header("Prefabs")]
     public GameObject tilePrefab;
     public GameObject breakebleTilePrefab;
+    public GameObject lockTilePrefab;
     public GameObject[] dots;
     public GameObject destroyEffect;
 
     [Header("Layout")]
     public TileType[] boardLayout;
     private bool[,] blankSpaces; // массив с зарезервированными местами на доске
-    private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске
+    private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске содержит компоненты
+    public BackgroundTile[,] lockTiles; // publick becouse need accces from dataScript
     public GameObject[,] allDots; // массив со всеми игровыми точками на доске
     public Dot currentDot; // запись в скрипте Dot метод CalculateAngle
     FindMatches findMatches;
@@ -91,7 +93,8 @@ public class Board : MonoBehaviour
         soundManager = FindObjectOfType<SoundManager>();
         blankSpaces = new bool[width, height];
         findMatches = FindObjectOfType<FindMatches>();
-        breakableTiles = new BackgroundTile[width, height];       
+        breakableTiles = new BackgroundTile[width, height];
+        lockTiles = new BackgroundTile[width, height];       
         allDots = new GameObject[width, height];
     }
 
@@ -132,11 +135,29 @@ public class Board : MonoBehaviour
         }
     }
 
+    private void GenerateLockTiles()
+    {
+        // просмотреть все плитки назначенные на ломающиеся в классе TileType
+        for (int i = 0; i < boardLayout.Length; i++)
+        {
+            // если по данному адресу прописана лок плитка
+            if (boardLayout[i].tileKind == TileKind.Lock)
+            {
+                // заспавнить лок плитку
+                Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y); // вот здесь мы получаем координаты указанные в инспекоре по позициям x и y
+                GameObject tile = Instantiate(lockTilePrefab, tempPosition, Quaternion.identity);
+                lockTiles[boardLayout[i].x, boardLayout[i].y] = tile.GetComponent<BackgroundTile>();
+
+            }
+        }
+    }
+
     //создание доски
     void SetUp()
     {
         GenerateBlankSpaces(); // перед созданием тайлов на доске, создаём зарезервированные места
         GenerateBreakableTiles(); // генерация ломающихся плиток
+        GenerateLockTiles();
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
@@ -340,7 +361,7 @@ public class Board : MonoBehaviour
             }
         }
     }
-    // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод/ партикл взрыва
+    // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод/ партикл взрыва / урон бонусным тайлам
     void DestroyMatchesAt(int colunm, int row)
     {
         if (allDots[colunm,row].GetComponent<Dot>().isMatched)
@@ -351,13 +372,23 @@ public class Board : MonoBehaviour
                 CheckToMakeBombs();
             }
             // нужно ли разбивать ломающуюся плитку
-            if (breakableTiles[colunm, row] != null)
+            if (breakableTiles[colunm, row] != null) //  если в данной позиции есть ломающаяся плитка
             {
                 // если это нанесёт 1 единицу урона
                 breakableTiles[colunm, row].TakeDamage(1);
                 if (breakableTiles[colunm, row].hitPoints <= 0)
                 {
                     breakableTiles[colunm, row] = null; // удаляем из массива ломающийся токен
+                }
+            }
+
+            if (lockTiles[colunm, row] != null)
+            {
+                // если это нанесёт 1 единицу урона
+                lockTiles[colunm, row].TakeDamage(1);
+                if (lockTiles[colunm, row].hitPoints <= 0)
+                {
+                    lockTiles[colunm, row] = null; // удаляем из массива ломающийся токен
                 }
             }
 

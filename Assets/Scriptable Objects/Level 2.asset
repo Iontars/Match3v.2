@@ -17,10 +17,10 @@ MonoBehaviour:
   boardLayout:
   - x: 0
     y: 0
-    tileKind: 1
+    tileKind: 3
   - x: 6
     y: 0
-    tileKind: 1
+    tileKind: 3
   - x: 0
     y: 8
     tileKind: 1
@@ -37,14 +37,14 @@ MonoBehaviour:
     counterValue: 500
   levelGoals:
   - numberNeeded: 100
-    numberCollected: 59
+    numberCollected: 3
     goalSprite: {fileID: 185662926, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Red Dot
   - numberNeeded: 100
-    numberCollected: 51
+    numberCollected: 0
     goalSprite: {fileID: 1840675294, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Pink Dot
   - numberNeeded: 100
-    numberCollected: 45
+    numberCollected: 3
     goalSprite: {fileID: -140318929, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Orange Dot

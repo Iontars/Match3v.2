@@ -19,7 +19,7 @@ public class BackgroundTile : MonoBehaviour
         MakeLighter();
     }
     
-    void MakeLighter()
+    void MakeLighter() // изменение цвета фоновой плитки п мере получения урона
     {
         Color color = sprite.color;
         float newAlfa = color.a * .5f;
@@ -35,7 +35,7 @@ public class BackgroundTile : MonoBehaviour
             {
                 goalManager.CompareGoal(gameObject.tag);
                 goalManager.UpdateGoals();
-                Debug.LogError("Breakable tile was destroyed");
+                print("Breakable tile was destroyed");
             }
             Destroy(gameObject);
         }
