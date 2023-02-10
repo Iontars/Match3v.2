@@ -14,6 +14,9 @@ TagManager:
   - Pink Dot
   - Salat Dot
   - Board
+  - Concrete
+  - Chocolate
+  - Lock
   layers:
   - Default
   - TransparentFX

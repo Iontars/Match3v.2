@@ -38,21 +38,24 @@ public class FindMatches : MonoBehaviour
         }
         return currentDots;
     }
-
+    // изменено объеснено Vid 52.1 19 min
     private List<GameObject> isRowBomb(Dot dot1, Dot dot2, Dot dot3)
     {
         List<GameObject> currentDots = new List<GameObject>();
         if (dot1.isRowBomb)
         {
             currentMatches.Union(GetRowPieces(dot1.row));
+            board.BombRow(dot1.row); // связано с уничтожением бетона, обращаемся к точке в массиве горизонтальных бомб и прозваниваем в 4 направления на наличие бетона рядом
         }
         if (dot2.isRowBomb)
         {
             currentMatches.Union(GetRowPieces(dot2.row));
+            board.BombRow(dot2.row);
         }
         if (dot3.isRowBomb)
         {
             currentMatches.Union(GetRowPieces(dot3.row));
+            board.BombRow(dot3.row);
         }
         return currentDots;
     }
@@ -63,14 +66,17 @@ public class FindMatches : MonoBehaviour
         if (dot1.isColumnBomb)
         {
             currentMatches.Union(GetColumnPieces(dot1.column));
+            board.BombColumn(dot1.column);
         }
         if (dot2.isColumnBomb)
         {
             currentMatches.Union(GetColumnPieces(dot2.column));
+            board.BombColumn(dot1.column);
         }
         if (dot3.isColumnBomb)
         {
             currentMatches.Union(GetColumnPieces(dot3.column));
+            board.BombColumn(dot1.column);
         }
         return currentDots;
     }
