@@ -3186,6 +3186,8 @@ MonoBehaviour:
     type: 3}
   lockTilePrefab: {fileID: 4965823762063354325, guid: 443b5aeb040544b17ae62e91aea79a87,
     type: 3}
+  concreteTilePrefab: {fileID: 6038585207017962441, guid: 6bd01e4601198449a8e36c79af0c5358,
+    type: 3}
   dots:
   - {fileID: 6602495750976175007, guid: 5fce1479c2edba54d9525be058e1c3d1, type: 3}
   - {fileID: 380217878639168106, guid: 626dad3cdd87a174e85bdf3fc6d75b7f, type: 3}

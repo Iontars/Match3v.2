@@ -42,6 +42,7 @@ public class Board : MonoBehaviour
     public GameObject tilePrefab;
     public GameObject breakebleTilePrefab;
     public GameObject lockTilePrefab;
+    public GameObject concreteTilePrefab;
     public GameObject[] dots;
     public GameObject destroyEffect;
 
@@ -50,6 +51,7 @@ public class Board : MonoBehaviour
     private bool[,] blankSpaces; // массив с зарезервированными местами на доске
     private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске содержит компоненты
     public BackgroundTile[,] lockTiles; // publick becouse need accces from dataScript
+    private BackgroundTile[,] concreteTiles;
     public GameObject[,] allDots; // массив со всеми игровыми точками на доске
     public Dot currentDot; // запись в скрипте Dot метод CalculateAngle
     FindMatches findMatches;
@@ -94,7 +96,8 @@ public class Board : MonoBehaviour
         blankSpaces = new bool[width, height];
         findMatches = FindObjectOfType<FindMatches>();
         breakableTiles = new BackgroundTile[width, height];
-        lockTiles = new BackgroundTile[width, height];       
+        lockTiles = new BackgroundTile[width, height];
+        concreteTiles = new BackgroundTile[width, height];
         allDots = new GameObject[width, height];
     }
 
@@ -152,18 +155,36 @@ public class Board : MonoBehaviour
         }
     }
 
+    private void GenerateConcreteTiles()
+    {
+        // просмотреть все плитки назначенные на ломающиеся в классе TileType
+        for (int i = 0; i < boardLayout.Length; i++)
+        {
+            // если по данному адресу прописана лок плитка
+            if (boardLayout[i].tileKind == TileKind.Concrete)
+            {
+                // заспавнить лок плитку
+                Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y); // вот здесь мы получаем координаты указанные в инспекоре по позициям x и y
+                GameObject tile = Instantiate(concreteTilePrefab, tempPosition, Quaternion.identity);
+                concreteTiles[boardLayout[i].x, boardLayout[i].y] = tile.GetComponent<BackgroundTile>();
+
+            }
+        }
+    }
+
     //создание доски
     void SetUp()
     {
         GenerateBlankSpaces(); // перед созданием тайлов на доске, создаём зарезервированные места
         GenerateBreakableTiles(); // генерация ломающихся плиток
         GenerateLockTiles();
+        GenerateConcreteTiles();
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
 
-                if (!blankSpaces[i, j]) // проверка на пустое место на доске/если false создаёт тайл на доске
+                if (!blankSpaces[i, j] && !concreteTiles[i,j]) // проверка на пустое место/бетонное место на доске/если false создаёт тайл на доске
                 {
                     Vector2 tempPosition = new Vector2(i, j);
                     Vector2 tilePosition = new Vector2(i, j);
@@ -371,6 +392,8 @@ public class Board : MonoBehaviour
             {
                 CheckToMakeBombs();
             }
+
+            //эти уничтожения работают потому что они находятся на одной позиции с токеном, с бетоной стеной ест ьотдельный класс DamageConcrete
             // нужно ли разбивать ломающуюся плитку
             if (breakableTiles[colunm, row] != null) //  если в данной позиции есть ломающаяся плитка
             {
@@ -391,6 +414,8 @@ public class Board : MonoBehaviour
                     lockTiles[colunm, row] = null; // удаляем из массива ломающийся токен
                 }
             }
+
+            DamageConcrete(colunm, row); // урон по соседним от isMatched бомбам
 
             // vid 40 // сравниваем ломающуюся плитку на предмет цели уровня
             if (goalManager != null)
@@ -437,6 +462,57 @@ public class Board : MonoBehaviour
         }
         findMatches.currentMatches.Clear();
         StartCoroutine(nameof(DecreaseRowCo2));
+    }
+
+    // урон по соседним бетонным стенам
+    private void DamageConcrete(int column, int row)
+    {
+        // проверка есть ли бетонная стена слева от токена, смотрим только позиции отличные от нуля так как левее границы поля не может быть бетонной стены
+        if (column > 0)
+        {
+            if (concreteTiles[column - 1, row] != null)
+            {
+                concreteTiles[column - 1, row].TakeDamage(1);
+                if (concreteTiles[column - 1, row].hitPoints <= 0)
+                {
+                    concreteTiles[column - 1, row] = null; // удаляем из массива ломающийся токен
+                }
+            }
+        }
+        // проверка есть ли бетонная стена справа от токена
+        if (column < width - 1)
+        {
+            if (concreteTiles[column + 1, row] != null)
+            {
+                concreteTiles[column + 1, row].TakeDamage(1);
+                if (concreteTiles[column + 1, row].hitPoints <= 0)
+                {
+                    concreteTiles[column + 1, row] = null; // удаляем из массива ломающийся токен
+                }
+            }
+        }
+        if (row > 0)
+        {
+            if (concreteTiles[column, row - 1] != null)
+            {
+                concreteTiles[column, row - 1].TakeDamage(1);
+                if (concreteTiles[column, row - 1].hitPoints <= 0)
+                {
+                    concreteTiles[column, row - 1] = null; // удаляем из массива ломающийся токен
+                }
+            }
+        }
+        if (row < height - 1)
+        {
+            if (concreteTiles[column, row + 1] != null)
+            {
+                concreteTiles[column, row + 1].TakeDamage(1);
+                if (concreteTiles[column, row + 1].hitPoints <= 0)
+                {
+                    concreteTiles[column, row + 1] = null; // удаляем из массива ломающийся токен
+                }
+            }
+        }
     }
 
     // продвинутое распознавание пустых мест на доске

@@ -12,21 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2249442d61c6456db7b927b9bebf5fa, type: 3}
   m_Name: Level 2
   m_EditorClassIdentifier: 
-  width: 7
+  width: 8
   height: 9
   boardLayout:
   - x: 0
     y: 0
-    tileKind: 3
+    tileKind: 1
   - x: 6
     y: 0
-    tileKind: 3
+    tileKind: 1
   - x: 0
     y: 8
     tileKind: 1
   - x: 6
     y: 8
     tileKind: 1
+  - x: 3
+    y: 3
+    tileKind: 4
+  - x: 3
+    y: 4
+    tileKind: 4
+  - x: 3
+    y: 5
+    tileKind: 4
+  - x: 4
+    y: 3
+    tileKind: 4
+  - x: 4
+    y: 4
+    tileKind: 4
+  - x: 4
+    y: 5
+    tileKind: 4
   dots:
   - {fileID: 851745900852720794, guid: ff92602f56e93984c92de6fefbe04a61, type: 3}
   - {fileID: 851745900852720794, guid: 6bec68f4a3ef68242a6eff67dd4a42e5, type: 3}
@@ -37,7 +55,7 @@ MonoBehaviour:
     counterValue: 500
   levelGoals:
   - numberNeeded: 100
-    numberCollected: 3
+    numberCollected: 0
     goalSprite: {fileID: 185662926, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Red Dot
   - numberNeeded: 100
@@ -45,6 +63,6 @@ MonoBehaviour:
     goalSprite: {fileID: 1840675294, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Pink Dot
   - numberNeeded: 100
-    numberCollected: 3
+    numberCollected: 0
     goalSprite: {fileID: -140318929, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Orange Dot
