@@ -28,21 +28,21 @@ MonoBehaviour:
   scoreGoals: 64000000
   endGameRequirements:
     gameType: 1
-    counterValue: 50
+    counterValue: 500
   levelGoals:
   - numberNeeded: 10
-    numberCollected: 0
+    numberCollected: 6
     goalSprite: {fileID: 1108514850, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Blue Dot
   - numberNeeded: 10
-    numberCollected: 3
+    numberCollected: 9
     goalSprite: {fileID: -140318929, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Orange Dot
   - numberNeeded: 10
-    numberCollected: 0
+    numberCollected: 11
     goalSprite: {fileID: 185662926, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Red Dot
   - numberNeeded: 10
-    numberCollected: 0
+    numberCollected: 9
     goalSprite: {fileID: 1167761295, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Salat Dot

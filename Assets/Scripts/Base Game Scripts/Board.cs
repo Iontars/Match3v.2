@@ -14,6 +14,14 @@ public class TileType // класс хранящйи в себе информа�
     public TileKind tileKind;
 }
 
+[System.Serializable]
+public class MatchType
+{
+    public int type;
+    public string color;
+}
+
+
 /// <summary>
 /// Постороение игрового поля, создание токенов, поиск различных совпадений, уничтожение токенов, звук токенов,
 /// добавление очков за токены, распознавание пустых мест а так же границы доски, перезаполнение доски.
@@ -47,6 +55,7 @@ public class Board : MonoBehaviour
     int streakValue = 1;
     ScoreManager scoreManager;
     SoundManager soundManager;
+    public MatchType matchType;
 
     GoalManager goalManager; // vid 40
     public int[] scoreGoals; // сколько нужно набрать очков для различных успехов на карте, 1 звезда 2000 очков 2 звезды 4000 очков итд
@@ -213,33 +222,37 @@ public class Board : MonoBehaviour
         return false;
     }
 
-    private int ColumnOrRow()
+    private MatchType ColumnOrRow()
     {
         // создать копию FindMatches.currentMatches
         List<GameObject> matchCopy = findMatches.currentMatches as List<GameObject>; // as Важно изучить
+
+        matchType.type = 0;
+        matchType.color = "";
 
         // Просмотреть список и решить нужно ли делать бомбу
         for (int i = 0; i < matchCopy.Count; i++)
         {
             // сохраним текущую точку
             Dot thisDot = matchCopy[i].GetComponent<Dot>();
-            int column = thisDot.column;
-            int row = thisDot.row;
+            string color = matchCopy[i].tag;
+            //int column = thisDot.column;
+            //int row = thisDot.row;
             int columnMatch = default;
             int rowMatch = default;
             // просмотреть остальные соседние точки и сравнить
             for (int j = 0; j < matchCopy.Count; j++)
             {
-                Dot nextDot = matchCopy[j].GetComponent<Dot>();
+                Dot nextDot = matchCopy[j]?.GetComponent<Dot>();
                 if (thisDot == nextDot)
                 {
                     continue;
                 }
-                if (thisDot.column == nextDot.column && nextDot.CompareTag(thisDot.tag)) // перейти на компонентную систему заменив теги
+                if (thisDot.column == nextDot.column && nextDot.tag == color) // перейти на компонентную систему заменив теги
                 {
                     columnMatch++;
                 }
-                if (thisDot.row == nextDot.row && nextDot.CompareTag(thisDot.tag)) // перейти на компонентную систему заменив теги
+                if (thisDot.row == nextDot.row && nextDot.tag == color) // перейти на компонентную систему заменив теги
                 {
                     rowMatch++;
                 }
@@ -249,18 +262,26 @@ public class Board : MonoBehaviour
             //return 1 если цветная бомба
             if (columnMatch == 4 || rowMatch == 4) //  сравниваем с числом меньше фактического так как не учитываем сами себя
             {
-                return 1;
+                matchType.type = 1;
+                matchType.color = color;
+                return matchType;
             }
             if (columnMatch == 2 && rowMatch == 2)
             {
-                return 2;
+                matchType.type = 2;
+                matchType.color = color;
+                return matchType;
             }
             if (columnMatch == 3 || rowMatch == 3)
             {
-                return 3;
+                matchType.type = 3;
+                matchType.color = color;
+                return matchType;
             }          
         }
-        return 0;
+        matchType.type = 0;
+        matchType.color = "";
+        return matchType;
     }
 
 
@@ -271,78 +292,54 @@ public class Board : MonoBehaviour
         if (findMatches.currentMatches.Count > 3)
         {
             // какой тип срвпадений?
-            int typeOfMatch = ColumnOrRow();
-            if (typeOfMatch == 1)
+            MatchType typeOfMatch = ColumnOrRow();
+            if (typeOfMatch.type == 1)
             {
-                // Создать цветную бомбу
-                // Текущая точка совпала ?
-                if (currentDot != null)
+                //Make a color bomb
+                //is the current dot matched?
+                if (currentDot != null && currentDot.isMatched && currentDot.tag == typeOfMatch.color)
                 {
-                    if (currentDot.isMatched)
-                    {
-                        if (!currentDot.isColorBomb)
-                        {
-                            currentDot.isMatched = false;
-                            currentDot.MakeColorBomb();
-                        }
-                    }
-                    else
-                    {
-                        if (currentDot.otherDot != null)
-                        {
-                            Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
-                            if (otherDot.isMatched)
-                            {
-                                if (!otherDot.isColorBomb)
-                                {
-                                    otherDot.isMatched = false;
-                                    otherDot.MakeColorBomb();
-                                }
-                            }
-                        }
-                    }
+                    currentDot.isMatched = false;
+                    currentDot.MakeColorBomb();
                 }
-                
-            }
-            else if (typeOfMatch == 2)
-            {
-                // Создать Звезду
-                if (currentDot != null)
+                else
                 {
-                    if (currentDot.isMatched)
+                    if (currentDot.otherDot != null)
                     {
-                        if (!currentDot.isAjacentBomb)
+                        Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
+                        if (otherDot.isMatched && otherDot.tag == typeOfMatch.color)
                         {
-                            currentDot.isMatched = false;
-                            currentDot.MakeAjacentBomb();
-                        }
-                    }
-                    else
-                    {
-                        if (currentDot.otherDot != null)
-                        {
-                            Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
-                            if (otherDot.isMatched)
-                            {
-                                if (!otherDot.isAjacentBomb)
-                                {
-                                    otherDot.isMatched = false;
-                                    otherDot.MakeAjacentBomb();
-                                }
-                            }
+                            otherDot.isMatched = false;
+                            otherDot.MakeColorBomb();
                         }
                     }
                 }
             }
-            else if (typeOfMatch == 3)
+            else if (typeOfMatch.type == 2)
             {
-                findMatches.CheckBombs();
+                //Make a adjacent bomb
+                //is the current dot matched?
+                if (currentDot != null && currentDot.isMatched && currentDot.tag == typeOfMatch.color)
+                {
+                    currentDot.isMatched = false;
+                    currentDot.MakeAjacentBomb();
+                }
+                else if (currentDot.otherDot != null)
+                {
+                    Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
+                    if (otherDot.isMatched && otherDot.tag == typeOfMatch.color)
+                    {
+                        otherDot.isMatched = false;
+                        otherDot.MakeAjacentBomb();
+                    }
+                }
             }
-
+            else if (typeOfMatch.type == 3)
+            {
+                findMatches.CheckBombs(typeOfMatch); // если в совпадениях 3 токена то смотрим только лишь на линейные бомбы
+            }
         }
-
     }
-
     // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод/ партикл взрыва
     void DestroyMatchesAt(int colunm, int row)
     {
@@ -379,7 +376,7 @@ public class Board : MonoBehaviour
                 allDots[colunm, row].transform.position.z - 1), Quaternion.identity);
             Destroy(particle, .3f);
             allDots[colunm,row].GetComponent<Dot>().PopAnimation(); // анимация спрайта
-            Destroy(allDots[colunm, row], .3f); // Фактическое уничтожение совпавших бомб
+            Destroy(allDots[colunm, row], .2f); // Фактическое уничтожение совпавших бомб
             scoreManager.IncreaseScore(basePieceValue * streakValue); // добавление очков на табло
             allDots[colunm, row] = null;
             
@@ -387,8 +384,16 @@ public class Board : MonoBehaviour
     }
 
     // вызов Уничтожение совпавших токенов
-    public void DestroyMatches()
+    public void DestroyMatches() // зачем так сложно в 500 обёрток // оптимизировать. объеденить с методом DestroyMatchesAt
     {
+        // сколько эллементов в Списке currentMatches ?
+        // как только мы проверили что в списке совпадений существует 4 или более совпадений мы сразу проверяем какую бомбу можно создать и 
+        // очищаем список совпадений в избежании повторных сравнений в процессе больших каскадов и больших цепочек совпадений
+        if (findMatches.currentMatches.Count >= 4)
+        {
+            CheckToMakeBombs();
+        }
+        findMatches.currentMatches.Clear();
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
@@ -429,31 +434,7 @@ public class Board : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds(refillDelay * 0.5f);
-        StartCoroutine(nameof(FillBoardCo));
-    }
-
-    //распознавание пустых мест на доске
-    IEnumerator DecreaseRowCo()
-    {
-        int nullCount = 0;
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                if (allDots[i, j] == null)
-                {
-                    nullCount++;
-                }
-                else if (nullCount > 0)
-                {
-                    allDots[i, j].GetComponent<Dot>().row -= nullCount;
-                    allDots[i, j] = null;
-                }
-            }
-            nullCount = 0;
-        }
-        yield return new WaitForSeconds(refillDelay * 0.5f);
+        yield return new WaitForSeconds(refillDelay * 0.5f); // не трогать, задержка перед появлением новых токенов
         StartCoroutine(nameof(FillBoardCo));
     }
 
@@ -467,7 +448,7 @@ public class Board : MonoBehaviour
                 if (allDots[i,j] == null && !blankSpaces[i,j]) // проверка в том числе на зарезервированные места на доске
                 {
                     Vector2 tempPosition = new Vector2(i, j + offSet);
-                    int dotToUse = Random.Range(0, dots.Length); // пул из массива с цветными токенами // можно добавит ьещё один массив с бонусами
+                    int dotToUse = Random.Range(0, dots.Length); 
 
                     //фикс проблемы когда при каскаде можно было передвиграть фгуры вручную
                     int maxIterations = 0;
@@ -478,9 +459,9 @@ public class Board : MonoBehaviour
                     }
                     maxIterations = 0;
 
-                    GameObject piece = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity);
-                    //piece.transform.parent = transform;
-                    //piece.name = "( " + i + ", " + j + " )";
+                    GameObject piece = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity); // пул из массива с цветными токенами // можно добавит ьещё один массив с бонусами
+                    piece.transform.parent = transform;
+                    piece.name = "( " + i + ", " + j + " )";
                     allDots[i, j] = piece;
                     piece.GetComponent<Dot>().row = j; // новые токены ползут сверху вниз
                     piece.GetComponent<Dot>().column = i; // новые токены ползут сверху вниз
@@ -519,7 +500,8 @@ public class Board : MonoBehaviour
             //currentState = GameState.wait;
             print(streakValue);
             DestroyMatches(); // вызов этого метода должен быть раньше задержки
-            yield return new WaitForSeconds(1.5f * refillDelay); // нужно дождаться заполнения доски прежде чем проверить поэтому увеличиваем время
+            //yield return new WaitForSeconds(1.5f * refillDelay); // нужно дождаться заполнения доски прежде чем проверить поэтому увеличиваем время
+            yield break;
         }
         findMatches.currentMatches.Clear(); // Имеет отношенеи к бонусам
         yield return new WaitForSeconds(refillDelay);
@@ -652,14 +634,12 @@ public class Board : MonoBehaviour
                 {
                     // Выбрать слуайное число
                     int pieceToUse = Random.Range(0, newBoard.Count);
-
                     //вызов проверки на совпадение при создании доски (не должно быть готовых совпадений)
                     int maxIterations = 0;
                     while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100)
                     {
                         pieceToUse = Random.Range(0, newBoard.Count);
                         maxIterations++;
-                        //Debug.Log(maxIterations);
                     }
                     // контенер для токена
                     Dot piece = newBoard[pieceToUse].GetComponent<Dot>();
@@ -681,6 +661,7 @@ public class Board : MonoBehaviour
             // рекурсивный вызов
             ShuffleBorad();
         }
+        
     }
 
     private void Update()
