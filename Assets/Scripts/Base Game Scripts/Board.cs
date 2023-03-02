@@ -28,7 +28,7 @@ public class MatchType
 /// </summary>
 public class Board : MonoBehaviour
 {
-    [Header("SO Sfuff")]
+    [Header("SO Stuff")]
     public World world;
     public int level;
     public GameState currentState = GameState.move; // ?Рудимент
