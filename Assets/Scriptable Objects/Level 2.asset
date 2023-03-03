@@ -45,6 +45,12 @@ MonoBehaviour:
   - x: 4
     y: 5
     tileKind: 1
+  - x: 6
+    y: 5
+    tileKind: 5
+  - x: 7
+    y: 5
+    tileKind: 5
   dots:
   - {fileID: 851745900852720794, guid: ff92602f56e93984c92de6fefbe04a61, type: 3}
   - {fileID: 851745900852720794, guid: 6bec68f4a3ef68242a6eff67dd4a42e5, type: 3}
@@ -56,11 +62,11 @@ MonoBehaviour:
     counterValue: 500
   levelGoals:
   - numberNeeded: 100
-    numberCollected: 12
+    numberCollected: 0
     goalSprite: {fileID: 185662926, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Red Dot
   - numberNeeded: 100
-    numberCollected: 3
+    numberCollected: 0
     goalSprite: {fileID: 1840675294, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Pink Dot
   - numberNeeded: 100
@@ -68,6 +74,6 @@ MonoBehaviour:
     goalSprite: {fileID: -140318929, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Orange Dot
   - numberNeeded: 4
-    numberCollected: 2
+    numberCollected: 0
     goalSprite: {fileID: 21300000, guid: b51a22c55ede14427a296189a03a7750, type: 3}
     MatchValue: Concrete

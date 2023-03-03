@@ -17,6 +17,7 @@ TagManager:
   - Concrete
   - Chocolate
   - Lock
+  - Slime
   layers:
   - Default
   - TransparentFX

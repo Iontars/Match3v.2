@@ -40,9 +40,10 @@ public class Board : MonoBehaviour
 
     [Header("Prefabs")]
     public GameObject tilePrefab;
-    public GameObject breakebleTilePrefab;
+    public GameObject breakableTilePrefab;
     public GameObject lockTilePrefab;
     public GameObject concreteTilePrefab;
+    public GameObject slimePiecePrefab;
     public GameObject[] dots;
     public GameObject destroyEffect;
 
@@ -52,6 +53,7 @@ public class Board : MonoBehaviour
     private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске содержит компоненты
     public BackgroundTile[,] lockTiles; // publick becouse need accces from dataScript
     private BackgroundTile[,] concreteTiles;
+    private BackgroundTile[,] slimeTiles;
     public GameObject[,] allDots; // массив со всеми игровыми точками на доске
     public Dot currentDot; // запись в скрипте Dot метод CalculateAngle
     FindMatches findMatches;
@@ -63,6 +65,7 @@ public class Board : MonoBehaviour
 
     GoalManager goalManager; // vid 40
     public int[] scoreGoals; // сколько нужно набрать очков для различных успехов на карте, 1 звезда 2000 очков 2 звезды 4000 очков итд
+    private bool _makeSlime = true;
 
     public float refillDelay = 0.7f;
 
@@ -98,6 +101,7 @@ public class Board : MonoBehaviour
         breakableTiles = new BackgroundTile[width, height];
         lockTiles = new BackgroundTile[width, height];
         concreteTiles = new BackgroundTile[width, height];
+        slimeTiles = new BackgroundTile[width, height];
         allDots = new GameObject[width, height];
     }
 
@@ -131,7 +135,7 @@ public class Board : MonoBehaviour
             {
                 // заспавнить ломающуюся плитку
                 Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y); // вот здесь мы получаем координаты указанные в инспекоре по позициям x и y
-                GameObject tile = Instantiate(breakebleTilePrefab, tempPosition, Quaternion.identity);
+                GameObject tile = Instantiate(breakableTilePrefab, tempPosition, Quaternion.identity);
                 breakableTiles[boardLayout[i].x, boardLayout[i].y] = tile.GetComponent<BackgroundTile>();
 
             }
@@ -171,6 +175,23 @@ public class Board : MonoBehaviour
             }
         }
     }
+    
+    private void GenerateSlimeTiles()
+    {
+        // просмотреть все плитки назначенные на ломающиеся в классе TileType
+        for (int i = 0; i < boardLayout.Length; i++)
+        {
+            // если по данному адресу прописана лок плитка
+            if (boardLayout[i].tileKind == TileKind.Slime)
+            {
+                // заспавнить лок плитку
+                Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y); // вот здесь мы получаем координаты указанные в инспекоре по позициям x и y
+                GameObject tile = Instantiate(slimePiecePrefab, tempPosition, Quaternion.identity);
+                slimeTiles[boardLayout[i].x, boardLayout[i].y] = tile.GetComponent<BackgroundTile>();
+
+            }
+        }
+    }
 
     //создание доски
     void SetUp()
@@ -179,6 +200,7 @@ public class Board : MonoBehaviour
         GenerateBreakableTiles(); // генерация ломающихся плиток
         GenerateLockTiles();
         GenerateConcreteTiles();
+        GenerateSlimeTiles();
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
@@ -398,7 +420,10 @@ public class Board : MonoBehaviour
             }
 
             DamageConcrete(colunm, row); // урон по соседним от isMatched бомбам
-
+            DamageSlime(colunm, row); // урон по соседним от isMatched слаймам
+            CheckToMakeSlime();
+            
+            
             // vid 40 // сравниваем ломающуюся плитку на предмет цели уровня
             if (goalManager != null)
             {
@@ -552,6 +577,61 @@ public class Board : MonoBehaviour
             }
         }
     }
+    
+    // урон по соседним слайм стенам
+    private void DamageSlime(int column, int row)
+    {
+        // проверка есть ли бетонная стена слева от токена, смотрим только позиции отличные от нуля так как левее границы поля не может быть бетонной стены
+        if (column > 0)
+        {
+            if (slimeTiles[column - 1, row] != null)
+            {
+                slimeTiles[column - 1, row].TakeDamage(1);
+                if (slimeTiles[column - 1, row].hitPoints <= 0)
+                {
+                    slimeTiles[column - 1, row] = null; // удаляем из массива ломающийся токен
+                }
+                _makeSlime = false;
+            }
+        }
+        // проверка есть ли бетонная стена справа от токена
+        if (column < width - 1)
+        {
+            if (slimeTiles[column + 1, row] != null)
+            {
+                slimeTiles[column + 1, row].TakeDamage(1);
+                if (slimeTiles[column + 1, row].hitPoints <= 0)
+                {
+                    slimeTiles[column + 1, row] = null; // удаляем из массива ломающийся токен
+                }
+                _makeSlime = false;
+            }
+        }
+        if (row > 0)
+        {
+            if (slimeTiles[column, row - 1] != null)
+            {
+                slimeTiles[column, row - 1].TakeDamage(1);
+                if (slimeTiles[column, row - 1].hitPoints <= 0)
+                {
+                    slimeTiles[column, row - 1] = null; // удаляем из массива ломающийся токен
+                }
+                _makeSlime = false;
+            }
+        }
+        if (row < height - 1)
+        {
+            if (slimeTiles[column, row + 1] != null)
+            {
+                slimeTiles[column, row + 1].TakeDamage(1);
+                if (slimeTiles[column, row + 1].hitPoints <= 0)
+                {
+                    slimeTiles[column, row + 1] = null; // удаляем из массива ломающийся токен
+                }
+                _makeSlime = false;
+            }
+        }
+    }
 
     // продвинутое распознавание пустых мест на доске
     IEnumerator DecreaseRowCo2()
@@ -561,7 +641,7 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 // не зарезервировано ли место внутри доски? работает в совокупности с методом RefillBoard() и таким же условием в нем
-                if (!blankSpaces[i,j] && allDots[i,j] == null && !concreteTiles[i, j])
+                if (!blankSpaces[i,j] && allDots[i,j] == null && !concreteTiles[i, j] && !slimeTiles[i,j])
                 {
                     // проверка доски
                     for (int k = j + 1; k < height; k++)
@@ -607,9 +687,26 @@ public class Board : MonoBehaviour
         if (!MatchesOnBoard())
         {
             currentState = GameState.move;
+            _makeSlime = true;
             streakValue = 1;
         }
     }
+
+    private void CheckToMakeSlime()
+    {
+        // проверить массив слаймов
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (slimeTiles[i,j] != null && _makeSlime)
+                {
+                    // вызвать другой метод для создания нового слайма
+                }
+            }
+        }
+    }
+    
 
     // заполнение пустых ячеек
     void RefillBoard()
@@ -618,7 +715,7 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                if (allDots[i,j] == null && !blankSpaces[i,j] && !concreteTiles[i, j]) // проверка в том числе на зарезервированные места на доске
+                if (allDots[i,j] == null && !blankSpaces[i,j] && !concreteTiles[i, j] && !slimeTiles[i, j]) // проверка в том числе на зарезервированные места на доске
                 {
                     Vector2 tempPosition = new Vector2(i, j + offSet);
                     int dotToUse = Random.Range(0, dots.Length); 
@@ -785,7 +882,7 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 //если место не зарезервировано
-                if (!blankSpaces[i,j] && !concreteTiles[i,j])
+                if (!blankSpaces[i,j] && !concreteTiles[i,j] && !concreteTiles[i, j])
                 {
                     // Выбрать слуайное число
                     int pieceToUse = Random.Range(0, newBoard.Count);
