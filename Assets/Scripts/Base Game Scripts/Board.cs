@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public enum GameState{wait, move, win, lose, pause} // состояние используется для блокировки повторного свайпа пока токены движутся и меняет состояние игры
 
@@ -206,7 +208,7 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
 
-                if (!blankSpaces[i, j] && !concreteTiles[i,j]) // проверка на пустое место/бетонное место на доске/если false создаёт тайл на доске
+                if (!blankSpaces[i, j] && !concreteTiles[i,j] && !slimeTiles[i,j]) // проверка на пустое место/бетонное место на доске/если false создаёт тайл на доске
                 {
                     Vector2 tempPosition = new Vector2(i, j);
                     Vector2 tilePosition = new Vector2(i, j);
@@ -680,6 +682,7 @@ public class Board : MonoBehaviour
         findMatches.currentMatches.Clear(); // Имеет отношенеи к бонусам
         yield return new WaitForSeconds(refillDelay);
 
+        CheckToMakeSlime();
         if (IsDeadlocked()) // проверка на наличие того что на доске больше нельзя создать совпадений
         {
             ShuffleBorad();
@@ -692,6 +695,8 @@ public class Board : MonoBehaviour
         }
     }
 
+    #region Slime
+
     private void CheckToMakeSlime()
     {
         // проверить массив слаймов
@@ -702,11 +707,60 @@ public class Board : MonoBehaviour
                 if (slimeTiles[i,j] != null && _makeSlime)
                 {
                     // вызвать другой метод для создания нового слайма
+                    MakeNewSlime();
                 }
             }
         }
     }
-    
+
+    //проверка на соседнюю бомбу vid 53 (19) связано со слаймами
+    private Vector2 CheckForAdjacent(int column, int row)
+    {
+        
+        if (allDots[column + 1, row] && column < width -1)
+        {
+            return Vector2.right;
+        }
+        if (allDots[column - 1, row] && column > 0)
+        {
+            return Vector2.left;
+        }
+        if (allDots[column, row + 1] && row < height -1)
+        {
+            return Vector2.up;
+        }
+        if (allDots[column, row - 1] && row > 0)
+        {
+            return Vector2.down;
+        }
+        return Vector2.zero;
+    }
+
+    private void MakeNewSlime() // vid 53 (27 min)
+    {
+        bool slime = false;
+        int loops = 0; //  что бы не попасть в вечную проверку
+        while (!slime && loops < 200)
+        {
+            int newX = Random.Range(0, width);
+            int newY = Random.Range(0, height);
+            if (slimeTiles[newX, newY]) // проверяем есть ли по даному индексу массива плитка слайма
+            {
+                Vector2 adjacent = CheckForAdjacent(newX, newY);
+                print(allDots[newX + 1, newY]);
+                if (adjacent != Vector2.zero)
+                {
+                    Destroy(allDots[newX + (int)adjacent.x, newY + (int)adjacent.y]);
+                    Vector2 tempPosition = new Vector2(newX + (int)adjacent.x, newY + (int)adjacent.y);
+                    GameObject tile = Instantiate(slimePiecePrefab, tempPosition, Quaternion.identity);
+                    slimeTiles[newX + (int)adjacent.x, newY + (int)adjacent.y] = tile.GetComponent<BackgroundTile>();
+                    slime = true;
+                }
+            }
+            loops++;
+        }
+    }
+    #endregion
 
     // заполнение пустых ячеек
     void RefillBoard()
