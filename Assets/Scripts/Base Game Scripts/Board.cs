@@ -667,6 +667,29 @@ public class Board : MonoBehaviour
 
     IEnumerator FillBoardCo()
     {
+        //yield return new WaitForSeconds(refillDelay);
+        //RefillBoard();
+        //yield return new WaitForSeconds(refillDelay);
+        //while (MatchesOnBoard())
+        //{
+        //    streakValue++;
+        //    DestroyMatches();
+        //    yield break;
+        //}
+        //currentDot = null;
+        //CheckToMakeSlime();
+        //if (IsDeadlocked())
+        //{
+        //    StartCoroutine(nameof(ShuffleBorad));
+        //}
+        //yield return new WaitForSeconds(refillDelay);
+        //Debug.Log("Done Refilling");
+        //System.GC.Collect();
+        //if (currentState != GameState.pause)
+        //    currentState = GameState.move;
+        //_makeSlime = true;
+        //streakValue = 1;
+
         RefillBoard(); // заполнить досу токенами после первого совпадения
         yield return new WaitForSeconds(refillDelay); // и подождать
         // каскад совпадений
@@ -680,9 +703,10 @@ public class Board : MonoBehaviour
             yield break;
         }
         findMatches.currentMatches.Clear(); // Имеет отношенеи к бонусам
+        CheckToMakeSlime();
         yield return new WaitForSeconds(refillDelay);
 
-        CheckToMakeSlime();
+
         if (IsDeadlocked()) // проверка на наличие того что на доске больше нельзя создать совпадений
         {
             ShuffleBorad();
@@ -707,7 +731,9 @@ public class Board : MonoBehaviour
                 if (slimeTiles[i,j] != null && _makeSlime)
                 {
                     // вызвать другой метод для создания нового слайма
+                    Debug.LogError("Slime");
                     MakeNewSlime();
+                    return;
                 }
             }
         }
@@ -716,20 +742,20 @@ public class Board : MonoBehaviour
     //проверка на соседнюю бомбу vid 53 (19) связано со слаймами
     private Vector2 CheckForAdjacent(int column, int row)
     {
-        
-        if (allDots[column + 1, row] && column < width -1)
+
+        if (column < width - 1 && allDots[column + 1, row])
         {
             return Vector2.right;
         }
-        if (allDots[column - 1, row] && column > 0)
+        if (column > 0 && allDots[column - 1, row])
         {
             return Vector2.left;
         }
-        if (allDots[column, row + 1] && row < height -1)
+        if (row < height - 1 && allDots[column, row + 1])
         {
             return Vector2.up;
         }
-        if (allDots[column, row - 1] && row > 0)
+        if (row > 0 && allDots[column, row - 1])
         {
             return Vector2.down;
         }
@@ -747,7 +773,6 @@ public class Board : MonoBehaviour
             if (slimeTiles[newX, newY]) // проверяем есть ли по даному индексу массива плитка слайма
             {
                 Vector2 adjacent = CheckForAdjacent(newX, newY);
-                print(allDots[newX + 1, newY]);
                 if (adjacent != Vector2.zero)
                 {
                     Destroy(allDots[newX + (int)adjacent.x, newY + (int)adjacent.y]);
@@ -918,13 +943,66 @@ public class Board : MonoBehaviour
 
     void ShuffleBorad()
     {
+        //yield return new WaitForSeconds(0.5f);
+        ////Create a list of game objects
+        //List<GameObject> newBoard = new List<GameObject>();
+        ////Add every piece to this list
+        //for (int i = 0; i < width; i++)
+        //{
+        //    for (int j = 0; j < height; j++)
+        //    {
+        //        if (allDots[i, j] != null)
+        //        {
+        //            newBoard.Add(allDots[i, j]);
+        //        }
+        //    }
+        //}
+        //yield return new WaitForSeconds(0.5f);
+        ////for every spot on the board. . . 
+        //for (int i = 0; i < width; i++)
+        //{
+        //    for (int j = 0; j < height; j++)
+        //    {
+        //        //if this spot shouldn't be blank
+        //        if (!blankSpaces[i, j] && !concreteTiles[i, j] && !slimeTiles[i, j])
+        //        {
+        //            //Pick a random number
+        //            int pieceToUse = Random.Range(0, newBoard.Count);
+
+        //            //Assign the column to the piece
+        //            int maxIterations = 0;
+
+        //            while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100)
+        //            {
+        //                pieceToUse = Random.Range(0, newBoard.Count);
+        //                maxIterations++;
+        //            }
+        //            //Make a container for the piece
+        //            Dot piece = newBoard[pieceToUse].GetComponent<Dot>();
+        //            maxIterations = 0;
+        //            piece.column = i;
+        //            //Assign the row to the piece
+        //            piece.row = j;
+        //            //Fill in the dots array with this new piece
+        //            allDots[i, j] = newBoard[pieceToUse];
+        //            //Remove it from the list
+        //            newBoard.Remove(newBoard[pieceToUse]);
+        //        }
+        //    }
+        //}
+        ////Check if it's still deadlocked
+        //if (IsDeadlocked())
+        //{
+        //    StartCoroutine(ShuffleBorad());
+        //}
+
         List<GameObject> newBoard = new List<GameObject>();
         // добавить каждый активный токен в новый Лист
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                if (allDots[i,j] != null) // не берём зарезервированные места на доске
+                if (allDots[i, j] != null) // не берём зарезервированные места на доске
                 {
                     newBoard.Add(allDots[i, j]);
                 }
@@ -936,7 +1014,7 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 //если место не зарезервировано
-                if (!blankSpaces[i,j] && !concreteTiles[i,j] && !concreteTiles[i, j])
+                if (!blankSpaces[i, j] && !concreteTiles[i, j] && !concreteTiles[i, j])
                 {
                     // Выбрать слуайное число
                     int pieceToUse = Random.Range(0, newBoard.Count);
@@ -973,7 +1051,7 @@ public class Board : MonoBehaviour
             // рекурсивный вызов
             ShuffleBorad();
         }
-        
+
     }
 
     private void Update()

@@ -45,11 +45,11 @@ MonoBehaviour:
   - x: 4
     y: 5
     tileKind: 1
-  - x: 6
-    y: 5
+  - x: 4
+    y: 1
     tileKind: 5
-  - x: 7
-    y: 5
+  - x: 5
+    y: 1
     tileKind: 5
   dots:
   - {fileID: 851745900852720794, guid: ff92602f56e93984c92de6fefbe04a61, type: 3}

@@ -18,7 +18,7 @@ public class BackgroundTile : MonoBehaviour
         hitPoints -= damage;
         MakeLighter();
     }
-    
+
     void MakeLighter() // изменение цвета фоновой плитки п мере получения урона
     {
         Color color = sprite.color;
