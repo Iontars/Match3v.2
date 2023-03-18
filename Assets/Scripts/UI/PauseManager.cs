@@ -19,28 +19,25 @@ public class PauseManager : MonoBehaviour
     public Image soundButton;
     public Sprite musicOnSprite;
     public Sprite musicOffSprite;
+    private SoundManager sound; // убрать здесь ему не место
     private void Awake()
     {
+        sound = FindObjectOfType<SoundManager>();
+        _board = GameObject.FindWithTag("Board").GetComponent<Board>();
+    }
+
+    private void Start()
+    {
         // в PlayerPrefs ключ "Sound" для звука, 0 - mute, 1 - unmute
+        pausePanel.SetActive(false);
         if (PlayerPrefs.HasKey("Sound"))
         {
             soundButton.sprite = PlayerPrefs.GetInt("Sound") == 0 ? musicOffSprite : musicOnSprite;
-            
-            // if (PlayerPrefs.GetInt("Sound") == 0)
-            // {
-            //     soundButton.sprite = musicOffSprite;
-            // }
-            // if (PlayerPrefs.GetInt("Sound") == 1)
-            // {
-            //     soundButton.sprite = musicOnSprite;
-            // }
         }
         else
         {
             soundButton.sprite = musicOnSprite;
         }
-        pausePanel.SetActive(false);
-        _board = GameObject.FindWithTag("Board").GetComponent<Board>();
     }
 
     public void PauseGame()
@@ -55,31 +52,28 @@ public class PauseManager : MonoBehaviour
 
     public void SoundButton()
     {
-        print(PlayerPrefs.GetInt("Sound"));
         if (PlayerPrefs.HasKey("Sound"))
         {
             if (PlayerPrefs.GetInt("Sound") == 0)
             {
                 soundButton.sprite = musicOnSprite;
                 PlayerPrefs.SetInt("Sound", 1);
+                sound.AdjustValue();
             }
             else
             {
                 soundButton.sprite = musicOffSprite;
                 PlayerPrefs.SetInt("Sound", 0);
+                sound.AdjustValue();
             }
         }
         else
         {
             soundButton.sprite = musicOffSprite;
             PlayerPrefs.SetInt("Sound", 1);
+            sound.AdjustValue();
         }
     }
-    private void Start()
-    {
-        
-    }
-
 
     private void Update()
     {
