@@ -48,7 +48,7 @@ public class Board : MonoBehaviour
     public GameObject slimePiecePrefab;
     public GameObject[] dots;
     public GameObject destroyEffect;
-
+    
     [Header("Layout")]
     public TileType[] boardLayout;
     private bool[,] blankSpaces; // массив с зарезервированными местами на доске
