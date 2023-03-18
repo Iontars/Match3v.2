@@ -428,7 +428,7 @@ public class Board : MonoBehaviour
                 goalManager.UpdateGoals();
             }
 
-            soundManager?.PlayRandomDestroyNoise(); // звук ломания токена
+            soundManager.PlayRandomDestroyNoise(); // звук ломания токена
 
             GameObject particle = Instantiate(destroyEffect, new Vector3( // анимация взрыва партиклом
                 allDots[colunm, row].transform.position.x,
@@ -662,56 +662,56 @@ public class Board : MonoBehaviour
 
     IEnumerator FillBoardCo()
     {
-        //yield return new WaitForSeconds(refillDelay);
-        //RefillBoard();
-        //yield return new WaitForSeconds(refillDelay);
-        //while (MatchesOnBoard())
-        //{
-        //    streakValue++;
-        //    DestroyMatches();
-        //    yield break;
-        //}
-        //currentDot = null;
-        //CheckToMakeSlime();
-        //if (IsDeadlocked())
-        //{
-        //    StartCoroutine(nameof(ShuffleBorad));
-        //}
-        //yield return new WaitForSeconds(refillDelay);
-        //Debug.Log("Done Refilling");
-        //System.GC.Collect();
-        //if (currentState != GameState.pause)
-        //    currentState = GameState.move;
-        //_makeSlime = true;
-        //streakValue = 1;
-
-        RefillBoard(); // заполнить досу токенами после первого совпадения
-        yield return new WaitForSeconds(refillDelay); // и подождать
-        // каскад совпадений
-        while (MatchesOnBoard()) // пока есть каскад совпадений, ждать wait
+        yield return new WaitForSeconds(refillDelay);
+        RefillBoard();
+        yield return new WaitForSeconds(refillDelay);
+        while (MatchesOnBoard())
         {
-            streakValue++; // серия совпадений
-            //currentState = GameState.wait;
-            print(streakValue);
-            DestroyMatches(); // вызов этого метода должен быть раньше задержки
-            //yield return new WaitForSeconds(1.5f * refillDelay); // нужно дождаться заполнения доски прежде чем проверить поэтому увеличиваем время
+            streakValue++;
+            DestroyMatches();
             yield break;
         }
-        findMatches.currentMatches.Clear(); // Имеет отношенеи к бонусам
+        currentDot = null;
         CheckToMakeSlime();
+        if (IsDeadlocked())
+        {
+            StartCoroutine(nameof(ShuffleBorad));
+        }
         yield return new WaitForSeconds(refillDelay);
-
-
-        if (IsDeadlocked()) // проверка на наличие того что на доске больше нельзя создать совпадений
-        {
-            ShuffleBorad();
-        }
-        if (!MatchesOnBoard())
-        {
+        Debug.Log("Done Refilling");
+        System.GC.Collect();
+        if (currentState != GameState.pause) // vid 55 (9 min)
             currentState = GameState.move;
-            _makeSlime = true;
-            streakValue = 1;
-        }
+        _makeSlime = true;
+        streakValue = 1;
+
+        // RefillBoard(); // заполнить досу токенами после первого совпадения
+        // yield return new WaitForSeconds(refillDelay); // и подождать
+        // // каскад совпадений
+        // while (MatchesOnBoard()) // пока есть каскад совпадений, ждать wait
+        // {
+        //     streakValue++; // серия совпадений
+        //     //currentState = GameState.wait;
+        //     print(streakValue);
+        //     DestroyMatches(); // вызов этого метода должен быть раньше задержки
+        //     //yield return new WaitForSeconds(1.5f * refillDelay); // нужно дождаться заполнения доски прежде чем проверить поэтому увеличиваем время
+        //     yield break;
+        // }
+        // findMatches.currentMatches.Clear(); // Имеет отношенеи к бонусам
+        // CheckToMakeSlime();
+        // yield return new WaitForSeconds(refillDelay);
+        //
+        //
+        // if (IsDeadlocked()) // проверка на наличие того что на доске больше нельзя создать совпадений
+        // {
+        //     ShuffleBorad();
+        // }
+        // if (!MatchesOnBoard())
+        // {
+        //     currentState = GameState.move;
+        //     _makeSlime = true;
+        //     streakValue = 1;
+        // }
     }
 
     #region Slime
