@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2249442d61c6456db7b927b9bebf5fa, type: 3}
   m_Name: Level 3
   m_EditorClassIdentifier: 
-  width: 6
-  height: 6
+  width: 7
+  height: 7
   boardLayout:
   - x: 0
     y: 0
@@ -25,24 +25,20 @@ MonoBehaviour:
   - {fileID: 380217878639168106, guid: 626dad3cdd87a174e85bdf3fc6d75b7f, type: 3}
   - {fileID: 1092129758423907793, guid: 8fc9ae9e922b409468be77874941f554, type: 3}
   - {fileID: 2205036190841030540, guid: 156afdf7791a33f49b79eda7f8470c40, type: 3}
-  scoreGoals: 64000000
+  scoreGoals: f4010000e8030000d0070000
   endGameRequirements:
     gameType: 1
     counterValue: 500
   levelGoals:
-  - numberNeeded: 10
-    numberCollected: 6
+  - numberNeeded: 2
+    numberCollected: 3
     goalSprite: {fileID: 1108514850, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Blue Dot
-  - numberNeeded: 10
-    numberCollected: 9
+  - numberNeeded: 2
+    numberCollected: 0
     goalSprite: {fileID: -140318929, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Orange Dot
-  - numberNeeded: 10
-    numberCollected: 11
+  - numberNeeded: 2
+    numberCollected: 0
     goalSprite: {fileID: 185662926, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Red Dot
-  - numberNeeded: 10
-    numberCollected: 9
-    goalSprite: {fileID: 1167761295, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
-    MatchValue: Salat Dot

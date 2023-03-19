@@ -38,7 +38,7 @@ public class GameData : MonoBehaviour
 
     private void Start()
     {
-        
+        print(Application.persistentDataPath + PlayerPrefsStorage.pathToSaveFile);
     }
 
     public void Save()

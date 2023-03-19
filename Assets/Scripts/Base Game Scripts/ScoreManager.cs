@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,22 +11,56 @@ public class ScoreManager : MonoBehaviour
     public int score;
     public Image scoreBar;
     GameData gameData;
+    private int numberStars;
 
     public void IncreaseScore(int AmountToIncrease)
     {
         score += AmountToIncrease;
+        for (int i = 0; i < board.scoreGoals.Length; i++)
+        {
+            if (score > board.scoreGoals[i] && numberStars < i + 1)
+            {
+                numberStars++;
+            }
+        }
         if (gameData != null)
         {
             int highScore = gameData.saveData.highScores[board.level];
             if (highScore < score)
             {
                 gameData.saveData.highScores[board.level] = score;
+                //gameData.saveData.stars[board.level] = numberStars;
+            }
 
+            var currentStars = gameData.saveData.stars[board.level];
+            if (numberStars > currentStars)
+            {
+                gameData.saveData.stars[board.level] = numberStars;
             }
             gameData.Save();
         }
+        UpdateBar();
     }
+    
+    // private void OnApplicationPause()
+    // {
+    //     if (gameData != null)
+    //     {
+    //         gameData.saveData.stars[board.level] = numberStars;
+    //     }
+    //     gameData.Save();
+    // }
 
+    private void UpdateBar()
+    {
+        scoreText.text = score.ToString();
+        if (board != null && scoreBar != null)
+        {
+            int lenght = board.scoreGoals.Length;
+            scoreBar.fillAmount = (float)score / (float)board?.scoreGoals[board.scoreGoals.Length - 1];
+        }
+    }
+    
 
     void Start()
     {
@@ -35,12 +70,12 @@ public class ScoreManager : MonoBehaviour
 
     void Update()
     {
-        scoreText.text = score.ToString();
-
-        if (scoreBar != null)
-        {
-            //int lenght = board.scoreGoals.Length;
-            scoreBar.fillAmount = (float)score / (float)board?.scoreGoals[board.scoreGoals.Length - 1];
-        }
+        // scoreText.text = score.ToString();
+        //
+        // if (scoreBar != null)
+        // {
+        //     //int lenght = board.scoreGoals.Length;
+        //     scoreBar.fillAmount = (float)score / (float)board?.scoreGoals[board.scoreGoals.Length - 1];
+        // }
     }
 }
