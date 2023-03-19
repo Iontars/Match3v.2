@@ -38,21 +38,24 @@ public class FindMatches : MonoBehaviour
         }
         return currentDots;
     }
-
+    // изменено объеснено Vid 52.1 19 min
     private List<GameObject> isRowBomb(Dot dot1, Dot dot2, Dot dot3)
     {
         List<GameObject> currentDots = new List<GameObject>();
         if (dot1.isRowBomb)
         {
             currentMatches.Union(GetRowPieces(dot1.row));
+            board.BombRow(dot1.row); // связано с уничтожением бетона, обращаемся к точке в массиве горизонтальных бомб и прозваниваем в 4 направления на наличие бетона рядом
         }
         if (dot2.isRowBomb)
         {
             currentMatches.Union(GetRowPieces(dot2.row));
+            board.BombRow(dot2.row);
         }
         if (dot3.isRowBomb)
         {
             currentMatches.Union(GetRowPieces(dot3.row));
+            board.BombRow(dot3.row);
         }
         return currentDots;
     }
@@ -63,14 +66,17 @@ public class FindMatches : MonoBehaviour
         if (dot1.isColumnBomb)
         {
             currentMatches.Union(GetColumnPieces(dot1.column));
+            board.BombColumn(dot1.column);
         }
         if (dot2.isColumnBomb)
         {
             currentMatches.Union(GetColumnPieces(dot2.column));
+            board.BombColumn(dot1.column);
         }
         if (dot3.isColumnBomb)
         {
             currentMatches.Union(GetColumnPieces(dot3.column));
+            board.BombColumn(dot1.column);
         }
         return currentDots;
     }
@@ -81,7 +87,7 @@ public class FindMatches : MonoBehaviour
         {
             currentMatches.Add(dot);
         }
-        dot.GetComponent<Dot>().isMatched = true;
+        dot.GetComponent<Dot>().isMatched = true; // отмечает точку попавшую в список как isMatched, что позволяет уничтожать ряд совпадений
     }
 
     private void GetNearbyPieces(GameObject dot1, GameObject dot2, GameObject dot3)
@@ -123,7 +129,7 @@ public class FindMatches : MonoBehaviour
                                     currentMatches.Union(isColumnBomb(leftDotDot, rightDotDot, currentDotDot));
                                     currentMatches.Union(isAdjacentBomb(leftDotDot, rightDotDot, currentDotDot));
                                      
-                                    GetNearbyPieces(leftDot, rightDot, currentDot);
+                                    GetNearbyPieces(leftDot, rightDot, currentDot); // если все соседние точки одинаковые то передаём их в метод добавлящий их в список в котором они будут отмечены как isMatched
                                 }
                             }
                         }
@@ -237,43 +243,44 @@ public class FindMatches : MonoBehaviour
         return dots;
     }
 
-    public void CheckBombs()
+    public void CheckBombs(MatchType matchType)
     {
         // игрок что то передвигает ?
         if (board.currentDot != null)
         {
             // передвигаимая фигура совпадает ?
-            if (board.currentDot.isMatched)
+            if (board.currentDot.isMatched && board.currentDot.tag == matchType.color)
             {
                 // сделать токен не разрушаимым
                 board.currentDot.isMatched = false;
 
+                //в зависимости от сделанного направления свайпа спавним тип строковой бомбы // лучше изначально напсиать направление свайпа в переменную что бы не дублировать код
                 if ((board.currentDot.swipeAngle > - 45 && board.currentDot.swipeAngle <= 45)||
-                    (board.currentDot.swipeAngle < -135 && board.currentDot.swipeAngle >= 135))
+                    (board.currentDot.swipeAngle < -135 || board.currentDot.swipeAngle >= 135))
                 {
-                    board.currentDot.MakeRowBomb();
+                    board.currentDot.MakeColumnBomb();
                 }
                 else
                 {
-                    board.currentDot.MakeColumnBomb();
+                    board.currentDot.MakeRowBomb();
                 }
             }
             // другой токен совпадает ?
             else if (board.currentDot.otherDot != null)
             {
-                Dot othetDot = board.currentDot.otherDot.GetComponent<Dot>();
-                if (othetDot.isMatched)
+                Dot otherDot = board.currentDot.otherDot.GetComponent<Dot>();
+                if (otherDot.isMatched && otherDot.tag == matchType.color)
                 {
-                    othetDot.isMatched = false;
+                    otherDot.isMatched = false;
 
                     if ((board.currentDot.swipeAngle > -45 && board.currentDot.swipeAngle <= 45) ||
-                        (board.currentDot.swipeAngle < -135 && board.currentDot.swipeAngle >= 135))
+                        (board.currentDot.swipeAngle < -135 || board.currentDot.swipeAngle >= 135))
                     {
-                        othetDot.MakeRowBomb();
+                        otherDot.MakeRowBomb();
                     }
                     else
                     {
-                        othetDot.MakeColumnBomb();
+                        otherDot.MakeColumnBomb();
                     }
                 }
             }

@@ -96,7 +96,7 @@ public class Dot : MonoBehaviour
         }
         //
 
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.5f); // задержка для того что бы отработал глупыей код в апдейте // перестроить зависимости
 
         if (otherDot != null)
         {
@@ -114,10 +114,12 @@ public class Dot : MonoBehaviour
             //cсовпадение произошло // создать ивент?
             else
             {
+                // если режим игры на карте помечен как игра на количество ходов то запустится метод отнимающий один ход
                 if (endGameManager?.requirements.gameType == GameType.Moves)
                 {
                     endGameManager.DecreaseCountervalue();
                 }
+                // уничтожаем все точки отмеенных как IsMatch 
                 board?.DestroyMatches();                
             }
         }
@@ -205,11 +207,15 @@ public class Dot : MonoBehaviour
         targetX = column;
         targetY = row;
 
+        // следующий кусок кода отвечает за передвижение токена после проделанного свайпа, глупо реализация исправить
+        // скорость движения токена к цели после свайпа, та же скорость с которой падают свайпы сверху, глупая реализация переделать
+
         if (Mathf.Abs(targetX - transform.position.x) > .1f)
         {
+            //StartCoroutine(DelayFallingByX()); // корутина тормозит основной поток и у свайпа появляетс делей равный делею корутины , придумать асинх
             tempPosition = new Vector2(targetX, transform.position.y);
             // создать глобальную переменную для опрелеления скорости токена вместо 11f
-            transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);           
+            transform.position = Vector2.Lerp(transform.position, tempPosition, 10 * Time.deltaTime);           
             if (board.allDots[column, row] != gameObject)// падение токенов после уничтожения совпавших
             {
                 board.allDots[column, row] = gameObject;
@@ -224,11 +230,11 @@ public class Dot : MonoBehaviour
 
         if (Mathf.Abs(targetY - transform.position.y) >.1f)
         {
-
+            //StartCoroutine(DelayFallingByY()); // корутина тормозит основной поток и у свайпа появляетс делей равный делею корутины , придумать асинх
             // НАДО РЕАЛИЗОВАТЬ КОРУТИНУ ЧТО БЫ ПОСЛЕ ВЗРЫВА ТОКЕНЫ НЕ ПАДАЛИ СРАЗУ
             tempPosition = new Vector2(transform.position.x, targetY);
             // создать глобальную переменную для опрелеления скорости токена вместо 11f
-            transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);           
+            transform.position = Vector2.Lerp(transform.position, tempPosition, 10 * Time.deltaTime);           
             if (board.allDots[column, row] != gameObject)// падение токенов после уничтожения совпавших
             {
                 board.allDots[column, row] = gameObject;
@@ -242,30 +248,51 @@ public class Dot : MonoBehaviour
         }
     }
 
-    // метод фактически выполняющий перемещение точек
+    // самострой, необходимо проанализировать и улучшить
+    /*IEnumerator DelayFallingByX()
+    {
+        yield return new WaitForSeconds(.2f);
+        tempPosition = new Vector2(targetX, transform.position.y);
+        transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);
+    }
+    IEnumerator DelayFallingByY()
+    {
+        yield return new WaitForSeconds(.2f);
+        tempPosition = new Vector2(transform.position.x, targetY);
+        transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);
+    }*/
+
+    // метод косвенно выполняющий перемещение точек // меняет позиции тайлов и те автоматически просто хоят твернуться на новые позиции, тупо
     void MovePiecesActual(Vector2 direction)
     {
         otherDot = board.allDots[column + (int)direction.x, row + (int)direction.y];
         previousRow = row;
         previousColumn = column;
 
-        if (otherDot != null) // проверка на зарезервировнные пустые тайлы внутри доски // 
+        // тайлам не присвоятся новые значеняи позиций если в позиции стартового тайла висит лок тайл, либо в конечной позиции тайла тоже висит лок тайл
+        if (board.lockTiles[column, row] == null && board.lockTiles[column + (int)direction.x, row + (int)direction.y] == null)
         {
-            // можно двигаться так как соседний тайл существует
-            otherDot.GetComponent<Dot>().column += -1 * (int)direction.x;
-            otherDot.GetComponent<Dot>().row += -1 * (int)direction.y;
-            column += (int)direction.x;
-            row += (int)direction.y;
-            StartCoroutine(nameof(CheckMoveCo));
+            if (otherDot != null) // проверка на зарезервировнные пустые тайлы внутри доски // 
+            {
+                // можно двигаться так как соседний тайл существует
+                otherDot.GetComponent<Dot>().column += -1 * (int)direction.x;
+                otherDot.GetComponent<Dot>().row += -1 * (int)direction.y;
+                column += (int)direction.x;
+                row += (int)direction.y;
+                StartCoroutine(nameof(CheckMoveCo));
+            }
+            else
+            {
+                board.currentState = GameState.move; // сброс машины состояний после неудавшегося свайпа
+            }
         }
         else
         {
-            // нельзя двигаться так как соседнего тайла не существвут
-            board.currentState = GameState.move; // сброс машины состояний
+            board.currentState = GameState.move; // сброс машины состояний после неудавшегося свайпа
         }
     }
 
-    // расчёт направления свайпа
+    // расчёт направления свайпа // лучше записать полученное направление свайпа в переменную, в дальнейшем это поможет избежать дублирования кода и ошибок. енам
     void MovePicies()
     {
         if (swipeAngle > -45 && swipeAngle <= 45 && column < board.width -1 )
