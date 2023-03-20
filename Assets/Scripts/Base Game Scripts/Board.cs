@@ -73,7 +73,7 @@ public class Board : MonoBehaviour
         scoreManager = FindObjectOfType<ScoreManager>();
         goalManager = FindObjectOfType<GoalManager>();
         soundManager = FindObjectOfType<SoundManager>();
-        LoadLevelByNumber();
+        LoadLevelByHisNumber();
         findMatches = FindObjectOfType<FindMatches>();
         breakableTiles = new BackgroundTile[Width, Height];
         lockTiles = new BackgroundTile[Width, Height];
@@ -85,11 +85,11 @@ public class Board : MonoBehaviour
     void Start()
     {
         currentState = GameState.pause; // игра начинается с состояния паузы !!!!!!!!!!!!
-        LoadLevelByNumber();
+        LoadLevelByHisNumber();
         SetUp();
     }
 
-    private void LoadLevelByNumber()
+    private void LoadLevelByHisNumber()
     {
         //загрузка номера уровня переданного из сцены выбора уровней
         if (PlayerPrefs.HasKey(PlayerPrefsStorage.keyCurrentLevel))
