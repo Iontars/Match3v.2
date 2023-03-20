@@ -26,7 +26,8 @@ public class BackgroundTile : MonoBehaviour
         sprite.color = new Color(color.r, color.g, color.b, newAlfa);
     }
 
-    void Update()
+
+    private void CheckForBreakableTokens()
     {
         if (hitPoints <= 0)
         {
@@ -39,5 +40,9 @@ public class BackgroundTile : MonoBehaviour
             }
             Destroy(gameObject);
         }
+    }
+    void Update()
+    {
+        CheckForBreakableTokens();
     }
 }

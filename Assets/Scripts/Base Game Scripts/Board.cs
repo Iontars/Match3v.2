@@ -48,35 +48,57 @@ public class Board : MonoBehaviour
     public GameObject slimePiecePrefab;
     public GameObject[] dots;
     public GameObject destroyEffect;
-    
+
     [Header("Layout")]
-    public TileType[] boardLayout;
     private bool[,] blankSpaces; // массив с зарезервированными местами на доске
     private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске содержит компоненты
-    public BackgroundTile[,] lockTiles; // publick becouse need accces from dataScript
     private BackgroundTile[,] concreteTiles;
     private BackgroundTile[,] slimeTiles;
+    public BackgroundTile[,] lockTiles; // publick becouse need accces from dataScript
+    public TileType[] boardLayout;
     public GameObject[,] allDots; // массив со всеми игровыми точками на доске
-    public Dot currentDot; // запись в скрипте Dot метод CalculateAngle
-    FindMatches findMatches;
-    public int basePieceValue = 5;
-    int streakValue = 1;
-    ScoreManager scoreManager;
+
+    [Header("Match Stuff")]
+    private FindMatches findMatches;
     SoundManager soundManager;
-    public MatchType matchType;
-
+    ScoreManager scoreManager;
     GoalManager goalManager; // vid 40
-    public int[] scoreGoals; // сколько нужно набрать очков для различных успехов на карте, 1 звезда 2000 очков 2 звезды 4000 очков итд
+    int streakValue = 1;
     private bool _makeSlime = true;
-
+    public Dot currentDot; // запись в скрипте Dot метод CalculateAngle
+    public int basePieceValue = 5;
+    public MatchType matchType;
+    public int[] scoreGoals; // сколько нужно набрать очков для различных успехов на карте, 1 звезда 2000 очков 2 звезды 4000 очков итд
     public float refillDelay = 0.7f;
 
     private void Awake()
+    {
+        scoreManager = FindObjectOfType<ScoreManager>();
+        goalManager = FindObjectOfType<GoalManager>();
+        soundManager = FindObjectOfType<SoundManager>();
+        LoadLevelByNumber();
+        findMatches = FindObjectOfType<FindMatches>();
+        breakableTiles = new BackgroundTile[width, height];
+        lockTiles = new BackgroundTile[width, height];
+        concreteTiles = new BackgroundTile[width, height];
+        slimeTiles = new BackgroundTile[width, height];
+        allDots = new GameObject[width, height];
+    }
+
+    void Start()
+    {
+        currentState = GameState.pause; // игра начинается с состояния паузы !!!!!!!!!!!!
+        LoadLevelByNumber();
+        SetUp();
+    }
+
+    private void LoadLevelByNumber()
     {
         //загрузка номера уровня переданного из сцены выбора уровней
         if (PlayerPrefs.HasKey(PlayerPrefsStorage.keyCurrentLevel))
         {
             level = PlayerPrefs.GetInt(PlayerPrefsStorage.keyCurrentLevel);
+
         }
 
         if (world != null)
@@ -91,27 +113,12 @@ public class Board : MonoBehaviour
                     dots = world.levels[level].dots;
                     scoreGoals = world.levels[level].scoreGoals;
                     boardLayout = world.levels[level].boardLayout;
-                } 
+                    blankSpaces = new bool[width, height];
+                }
             }
         }
-        
-        scoreManager = FindObjectOfType<ScoreManager>();
-        goalManager = FindObjectOfType<GoalManager>();
-        soundManager = FindObjectOfType<SoundManager>();
-        blankSpaces = new bool[width, height];
-        findMatches = FindObjectOfType<FindMatches>();
-        breakableTiles = new BackgroundTile[width, height];
-        lockTiles = new BackgroundTile[width, height];
-        concreteTiles = new BackgroundTile[width, height];
-        slimeTiles = new BackgroundTile[width, height];
-        allDots = new GameObject[width, height];
     }
 
-    void Start()
-    {
-        currentState = GameState.pause; // игра начинается с состояния паузы !!!!!!!!!!!!
-        SetUp();
-    }
 
     // Создание пустых/занятых мест на доске, для разнообразия геймплея
     public void GenerateBlankSpaces()
