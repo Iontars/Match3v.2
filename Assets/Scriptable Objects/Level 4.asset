@@ -33,7 +33,7 @@ MonoBehaviour:
     gameType: 1
     counterValue: 100
   levelGoals:
-  - numberNeeded: 30
-    numberCollected: 0
-    goalSprite: {fileID: 1108514850, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
-    MatchValue: Blue Dot
+  - numberNeeded: 10
+    numberCollected: 15
+    goalSprite: {fileID: 185662926, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
+    MatchValue: Red Dot

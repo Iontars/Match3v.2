@@ -1387,7 +1387,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1821102265}
+      - m_Target: {fileID: 270658468}
         m_TargetAssemblyTypeName: GameStartManager, Assembly-CSharp
         m_MethodName: PlayGame
         m_Mode: 1
@@ -2875,6 +2875,7 @@ GameObject:
   - component: {fileID: 270658467}
   - component: {fileID: 270658466}
   - component: {fileID: 270658465}
+  - component: {fileID: 270658468}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2956,6 +2957,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &270658468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270658464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38e3ce1b8825ee343bf056ce41c65bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startPanel: {fileID: 817553757}
+  levelPanel: {fileID: 1637831534}
 --- !u!1 &299117307
 GameObject:
   m_ObjectHideFlags: 0
@@ -4237,7 +4252,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1821102265}
+      - m_Target: {fileID: 270658468}
         m_TargetAssemblyTypeName: GameStartManager, Assembly-CSharp
         m_MethodName: Home
         m_Mode: 1
@@ -12816,7 +12831,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1821102264}
   - component: {fileID: 1821102263}
-  - component: {fileID: 1821102265}
   m_Layer: 0
   m_Name: Game Data
   m_TagString: Untagged
@@ -12855,20 +12869,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1821102265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1821102262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38e3ce1b8825ee343bf056ce41c65bd3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startPanel: {fileID: 817553757}
-  levelPanel: {fileID: 1637831534}
 --- !u!1 &1834041315
 GameObject:
   m_ObjectHideFlags: 0

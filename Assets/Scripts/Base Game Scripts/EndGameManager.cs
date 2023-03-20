@@ -44,11 +44,11 @@ public class EndGameManager : MonoBehaviour
     {
         if (board.world != null)
         {
-            if (board.level < board.world.levels.Length)
+            if (board.Level < board.world.levels.Length)
             {
-                if (board.world.levels[board.level] != null)
+                if (board.world.levels[board.Level] != null)
                 {
-                    requirements = board.world.levels[board.level].endGameRequirements;
+                    requirements = board.world.levels[board.Level].endGameRequirements;
                 } 
             }
         }

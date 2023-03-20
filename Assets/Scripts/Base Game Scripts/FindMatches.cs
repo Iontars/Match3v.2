@@ -103,16 +103,16 @@ public class FindMatches : MonoBehaviour
     {
         //yield return new WaitForSeconds(.2f);
         yield return null;   
-        for (int i = 0; i < board.width; i++)
+        for (int i = 0; i < board.Width; i++)
         {
-            for (int j = 0; j < board.height; j++)
+            for (int j = 0; j < board.Height; j++)
             {
                 GameObject currentDot = board.allDots[i, j];
                 
                 if (currentDot != null)
                 {
                     Dot currentDotDot = currentDot.GetComponent<Dot>();
-                    if (i > 0 && i < board.width - 1)
+                    if (i > 0 && i < board.Width - 1)
                     {
                         GameObject leftDot = board.allDots[i - 1, j];
                         GameObject rightDot = board.allDots[i + 1, j];
@@ -134,7 +134,7 @@ public class FindMatches : MonoBehaviour
                             }
                         }
                     }
-                    if (j > 0 && j < board.height - 1)
+                    if (j > 0 && j < board.Height - 1)
                     {
                         GameObject downDot = board.allDots[i, j - 1];
                         GameObject upDot = board.allDots[i, j + 1];
@@ -165,9 +165,9 @@ public class FindMatches : MonoBehaviour
     // совпадения для цветной бомбы
     public void MatchPiecesOfColor( string color )
     {
-        for (int i = 0; i < board.width; i++)
+        for (int i = 0; i < board.Width; i++)
         {
-            for (int j = 0; j < board.height; j++)
+            for (int j = 0; j < board.Height; j++)
             {
                 // Проверить вызывается ли этот кусок
                 if (board.allDots[i,j] != null)
@@ -190,7 +190,7 @@ public class FindMatches : MonoBehaviour
             for (int j = row - 1; j < row + 1; j++)
             {
                 // находится ли фигура внутри доски
-                if (i >= 0 && i < board.width && j >= 0 && j < board.height)
+                if (i >= 0 && i < board.Width && j >= 0 && j < board.Height)
                 {
                     if (board.allDots[i,j] != null) // проверка на наличие точек вокруг радиуса взрыва, что бы не вызвать ошибку исключения
                     {
@@ -208,7 +208,7 @@ public class FindMatches : MonoBehaviour
     List<GameObject> GetColumnPieces(int column)
     {
         List<GameObject> dots = new List<GameObject>();
-        for (int i = 0; i < board.height; i++)
+        for (int i = 0; i < board.Height; i++)
         {
             if (board.allDots[column,i] != null)
             {
@@ -227,7 +227,7 @@ public class FindMatches : MonoBehaviour
     List<GameObject> GetRowPieces(int row)
     {
         List<GameObject> dots = new List<GameObject>();
-        for (int i = 0; i < board.width; i++)
+        for (int i = 0; i < board.Width; i++)
         {
             if (board.allDots[i, row] != null)
             {

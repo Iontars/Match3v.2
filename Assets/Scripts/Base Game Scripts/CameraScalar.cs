@@ -18,7 +18,7 @@ public class CameraScalar : MonoBehaviour
         board = FindObjectOfType<Board>();
         if (board != null)
         {
-            RepositionCamera(board.width - 1, board.height - 1, cameraOffset);
+            RepositionCamera(board.Width - 1, board.Height - 1, cameraOffset);
         }
     }
 
@@ -26,16 +26,16 @@ public class CameraScalar : MonoBehaviour
     {
         Vector3 tempPosition = new Vector3(x/2, y/2 + yOffset, z);
         transform.position = tempPosition;
-        if (board.width >= board.height)
+        if (board.Width >= board.Height)
         {
             //Camera.main.orthographicSize = board.height / 2 + pudding;
-            Camera.main.orthographicSize = board.height + 1;
+            Camera.main.orthographicSize = board.Height + 1;
             //Debug.LogWarning("ширина доски больше высоты");
         }
         else
         {
             //Camera.main.orthographicSize = (board.width / 2 + pudding) / aspectRatio;
-            Camera.main.orthographicSize = board.width + 1;
+            Camera.main.orthographicSize = board.Width + 1;
             //Debug.LogWarning("высота доски больше ширины");
         }
     }

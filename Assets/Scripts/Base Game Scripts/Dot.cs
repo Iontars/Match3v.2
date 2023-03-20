@@ -295,12 +295,12 @@ public class Dot : MonoBehaviour
     // расчёт направления свайпа // лучше записать полученное направление свайпа в переменную, в дальнейшем это поможет избежать дублирования кода и ошибок. енам
     void MovePicies()
     {
-        if (swipeAngle > -45 && swipeAngle <= 45 && column < board.width -1 )
+        if (swipeAngle > -45 && swipeAngle <= 45 && column < board.Width -1 )
         {
             //свайп вправо
             MovePiecesActual(Vector2.right);
         }
-        else if (swipeAngle > 45 && swipeAngle <= 135 && row < board.height - 1)
+        else if (swipeAngle > 45 && swipeAngle <= 135 && row < board.Height - 1)
         {
             //свайп вверх
             MovePiecesActual(Vector2.up);

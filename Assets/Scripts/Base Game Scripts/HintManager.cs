@@ -20,20 +20,20 @@ public class HintManager : MonoBehaviour
     List<GameObject> FindAllMatces()
     {
         List<GameObject> possibleMoves = new List<GameObject>();
-        for (int i = 0; i < board.width; i++)
+        for (int i = 0; i < board.Width; i++)
         {
-            for (int j = 0; j < board.height; j++)
+            for (int j = 0; j < board.Height; j++)
             {
                 if (board.allDots[i, j] != null)
                 {
-                    if (i < board.width - 1)
+                    if (i < board.Width - 1)
                     {
                         if (board.SwitchAndCheck(i, j, Vector2.right))
                         {
                             possibleMoves.Add(board.allDots[i,j]) ;
                         }
                     }
-                    if (j < board.height - 1)
+                    if (j < board.Height - 1)
                     {
                         if (board.SwitchAndCheck(i, j, Vector2.up))
                         {

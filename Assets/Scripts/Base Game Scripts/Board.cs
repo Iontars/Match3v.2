@@ -23,22 +23,19 @@ public class MatchType
     public string color;
 }
 
-
 /// <summary>
 /// Постороение игрового поля, создание токенов, поиск различных совпадений, уничтожение токенов, звук токенов,
 /// добавление очков за токены, распознавание пустых мест а так же границы доски, перезаполнение доски.
 /// </summary>
 public class Board : MonoBehaviour
 {
-    [Header("SO Stuff")]
     public World world;
-    public int level;
+    public int Level { get; private set; }
     public GameState currentState = GameState.move; // ?Рудимент
 
-    [Header("Board Dimension")]
-    public int width;
-    public int height;
-    public int offSet; // смещает позициаю спавна точек по оси х что позволяет им скользить вниз при появлении
+    private int _offSet = 2; // смещает позициаю спавна точек по оси х что позволяет им скользить вниз при появлении
+    public int Width { get; private set; }
+    public int Height { get; private set; }
 
     [Header("Prefabs")]
     public GameObject tilePrefab;
@@ -50,7 +47,7 @@ public class Board : MonoBehaviour
     public GameObject destroyEffect;
 
     [Header("Layout")]
-    private bool[,] blankSpaces; // массив с зарезервированными местами на доске
+    private bool[,] blankSpaces; // массив соразмерный текущей доске для хранения значений о зарезервированных местах
     private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске содержит компоненты
     private BackgroundTile[,] concreteTiles;
     private BackgroundTile[,] slimeTiles;
@@ -60,16 +57,16 @@ public class Board : MonoBehaviour
 
     [Header("Match Stuff")]
     private FindMatches findMatches;
-    SoundManager soundManager;
-    ScoreManager scoreManager;
-    GoalManager goalManager; // vid 40
-    int streakValue = 1;
+    private SoundManager soundManager;
+    private ScoreManager scoreManager;
+    private GoalManager goalManager; // vid 40
+    private int streakValue = 1;
     private bool _makeSlime = true;
+    private float refillDelay = 0.5f;
     public Dot currentDot; // запись в скрипте Dot метод CalculateAngle
-    public int basePieceValue = 5;
     public MatchType matchType;
+    public int basePieceValue = 5;
     public int[] scoreGoals; // сколько нужно набрать очков для различных успехов на карте, 1 звезда 2000 очков 2 звезды 4000 очков итд
-    public float refillDelay = 0.7f;
 
     private void Awake()
     {
@@ -78,11 +75,11 @@ public class Board : MonoBehaviour
         soundManager = FindObjectOfType<SoundManager>();
         LoadLevelByNumber();
         findMatches = FindObjectOfType<FindMatches>();
-        breakableTiles = new BackgroundTile[width, height];
-        lockTiles = new BackgroundTile[width, height];
-        concreteTiles = new BackgroundTile[width, height];
-        slimeTiles = new BackgroundTile[width, height];
-        allDots = new GameObject[width, height];
+        breakableTiles = new BackgroundTile[Width, Height];
+        lockTiles = new BackgroundTile[Width, Height];
+        concreteTiles = new BackgroundTile[Width, Height];
+        slimeTiles = new BackgroundTile[Width, Height];
+        allDots = new GameObject[Width, Height];
     }
 
     void Start()
@@ -97,122 +94,68 @@ public class Board : MonoBehaviour
         //загрузка номера уровня переданного из сцены выбора уровней
         if (PlayerPrefs.HasKey(PlayerPrefsStorage.keyCurrentLevel))
         {
-            level = PlayerPrefs.GetInt(PlayerPrefsStorage.keyCurrentLevel);
-
+            Level = PlayerPrefs.GetInt(PlayerPrefsStorage.keyCurrentLevel);
         }
 
         if (world != null)
         {
-            if (level < world.levels.Length)
+            if (Level < world.levels.Length)
             {
-                if (world.levels[level] != null)
+                if (world.levels[Level] != null)
                 {
-                    //присваивание значений из выбранного уровня в нашу доску
-                    width = world.levels[level].width;
-                    height = world.levels[level].height;
-                    dots = world.levels[level].dots;
-                    scoreGoals = world.levels[level].scoreGoals;
-                    boardLayout = world.levels[level].boardLayout;
-                    blankSpaces = new bool[width, height];
+                    //копирование значений из выбранного уровня в нашу доску
+                    Width = world.levels[Level].width;
+                    Height = world.levels[Level].height;
+                    dots = world.levels[Level].dots;
+                    scoreGoals = world.levels[Level].scoreGoals;
+                    boardLayout = world.levels[Level].boardLayout;
+                    blankSpaces = new bool[Width, Height];
                 }
             }
         }
     }
 
-
-    // Создание пустых/занятых мест на доске, для разнообразия геймплея
-    public void GenerateBlankSpaces()
+    private void GenerateReservePlaceToken()
     {
         for (int i = 0; i < boardLayout.Length; i++)
         {
-            // мы не проверям позицию зарезервированного места, мы проверяем Emum позицию в массиве перечислений
-            if (boardLayout[i].tileKind == TileKind.Blank ) // если место пустое
+            Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y);
+
+            if (boardLayout[i].tileKind == TileKind.Blank)
             {
-                blankSpaces[boardLayout[i].x, boardLayout[i].y] = true; // запистаь в булевй массив позицию пустого места и сделать true
+                blankSpaces[boardLayout[i].x, boardLayout[i].y] = true;
+            }
+            else if (boardLayout[i].tileKind == TileKind.Slime)
+            {
+                GameObject reserveToken = Instantiate(slimePiecePrefab, tempPosition, Quaternion.identity);
+                slimeTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+            }
+            else if(boardLayout[i].tileKind == TileKind.Breakable)
+            {
+                GameObject reserveToken = Instantiate(breakableTilePrefab, tempPosition, Quaternion.identity);
+                breakableTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+            }
+            else if(boardLayout[i].tileKind == TileKind.Lock)
+            {
+                GameObject reserveToken = Instantiate(lockTilePrefab, tempPosition, Quaternion.identity);
+                lockTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+            }
+            else if(boardLayout[i].tileKind == TileKind.Concrete)
+            {
+                GameObject reserveToken = Instantiate(concreteTilePrefab, tempPosition, Quaternion.identity);
+                concreteTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
             }
         }
     }
 
-    // метод создания ломающихся плиток
-    public void GenerateBreakableTiles()
-    {
-        // просмотреть все плитки назначенные на ломающиеся в классе TileType
-        for (int i = 0; i < boardLayout.Length; i++)
-        {
-            // если по данному адресу прописана ломающаяся плитка
-            if (boardLayout[i].tileKind == TileKind.Breakable)
-            {
-                // заспавнить ломающуюся плитку
-                Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y); // вот здесь мы получаем координаты указанные в инспекоре по позициям x и y
-                GameObject tile = Instantiate(breakableTilePrefab, tempPosition, Quaternion.identity);
-                breakableTiles[boardLayout[i].x, boardLayout[i].y] = tile.GetComponent<BackgroundTile>();
-
-            }
-        }
-    }
-
-    private void GenerateLockTiles()
-    {
-        // просмотреть все плитки назначенные на ломающиеся в классе TileType
-        for (int i = 0; i < boardLayout.Length; i++)
-        {
-            // если по данному адресу прописана лок плитка
-            if (boardLayout[i].tileKind == TileKind.Lock)
-            {
-                // заспавнить лок плитку
-                Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y); // вот здесь мы получаем координаты указанные в инспекоре по позициям x и y
-                GameObject tile = Instantiate(lockTilePrefab, tempPosition, Quaternion.identity);
-                lockTiles[boardLayout[i].x, boardLayout[i].y] = tile.GetComponent<BackgroundTile>();
-
-            }
-        }
-    }
-
-    private void GenerateConcreteTiles()
-    {
-        // просмотреть все плитки назначенные на ломающиеся в классе TileType
-        for (int i = 0; i < boardLayout.Length; i++)
-        {
-            // если по данному адресу прописана лок плитка
-            if (boardLayout[i].tileKind == TileKind.Concrete)
-            {
-                // заспавнить лок плитку
-                Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y); // вот здесь мы получаем координаты указанные в инспекоре по позициям x и y
-                GameObject tile = Instantiate(concreteTilePrefab, tempPosition, Quaternion.identity);
-                concreteTiles[boardLayout[i].x, boardLayout[i].y] = tile.GetComponent<BackgroundTile>();
-
-            }
-        }
-    }
-    
-    private void GenerateSlimeTiles()
-    {
-        // просмотреть все плитки назначенные на ломающиеся в классе TileType
-        for (int i = 0; i < boardLayout.Length; i++)
-        {
-            // если по данному адресу прописана лок плитка
-            if (boardLayout[i].tileKind == TileKind.Slime)
-            {
-                // заспавнить лок плитку
-                Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y); // вот здесь мы получаем координаты указанные в инспекоре по позициям x и y
-                GameObject tile = Instantiate(slimePiecePrefab, tempPosition, Quaternion.identity);
-                slimeTiles[boardLayout[i].x, boardLayout[i].y] = tile.GetComponent<BackgroundTile>();
-
-            }
-        }
-    }
 
     //создание доски
     void SetUp()
     {
-        GenerateBlankSpaces(); // перед созданием тайлов на доске, создаём зарезервированные места
-        GenerateBreakableTiles(); // генерация ломающихся плиток
-        GenerateLockTiles();
-        GenerateConcreteTiles();
-        GenerateSlimeTiles();
-        for (int i = 0; i < width; i++)
+        GenerateReservePlaceToken(); // перед созданием тайлов на доске, создаём зарезервированные места
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
 
                 if (!blankSpaces[i, j] && !concreteTiles[i,j] && !slimeTiles[i,j]) // проверка на пустое место/бетонное место на доске/если false создаёт тайл на доске
@@ -361,7 +304,7 @@ public class Board : MonoBehaviour
     // Vid 51.2 (16 min) как то связано с уничтожением бетона если его задеват горизонтальная бомба
     public void BombRow(int row)
     {
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
             
             if (concreteTiles[i, row])
@@ -377,7 +320,7 @@ public class Board : MonoBehaviour
 
     public void BombColumn(int column)
     {
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
             if (concreteTiles[column, i])
             {
@@ -461,9 +404,9 @@ public class Board : MonoBehaviour
             CheckToMakeBombs();
         }
         findMatches.currentMatches.Clear();
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
                 if (allDots[i,j] != null)
                 {
@@ -547,7 +490,7 @@ public class Board : MonoBehaviour
             }
         }
         // проверка есть ли бетонная стена справа от токена
-        if (column < width - 1)
+        if (column < Width - 1)
         {
             if (concreteTiles[column + 1, row] != null)
             {
@@ -569,7 +512,7 @@ public class Board : MonoBehaviour
                 }
             }
         }
-        if (row < height - 1)
+        if (row < Height - 1)
         {
             if (concreteTiles[column, row + 1] != null)
             {
@@ -599,7 +542,7 @@ public class Board : MonoBehaviour
             }
         }
         // проверка есть ли бетонная стена справа от токена
-        if (column < width - 1)
+        if (column < Width - 1)
         {
             if (slimeTiles[column + 1, row] != null)
             {
@@ -623,7 +566,7 @@ public class Board : MonoBehaviour
                 _makeSlime = false;
             }
         }
-        if (row < height - 1)
+        if (row < Height - 1)
         {
             if (slimeTiles[column, row + 1] != null)
             {
@@ -640,15 +583,15 @@ public class Board : MonoBehaviour
     // продвинутое распознавание пустых мест на доске
     IEnumerator DecreaseRowCo2()
     {
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
                 // не зарезервировано ли место внутри доски? работает в совокупности с методом RefillBoard() и таким же условием в нем
                 if (!blankSpaces[i,j] && allDots[i,j] == null && !concreteTiles[i, j] && !slimeTiles[i,j])
                 {
                     // проверка доски
-                    for (int k = j + 1; k < height; k++)
+                    for (int k = j + 1; k < Height; k++)
                     {
                         // найдена ли точка ?
                         if (allDots[i,k] != null)
@@ -726,9 +669,9 @@ public class Board : MonoBehaviour
     private void CheckToMakeSlime()
     {
         // проверить массив слаймов
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
                 if (slimeTiles[i,j] != null && _makeSlime)
                 {
@@ -745,7 +688,7 @@ public class Board : MonoBehaviour
     private Vector2 CheckForAdjacent(int column, int row)
     {
 
-        if (column < width - 1 && allDots[column + 1, row])
+        if (column < Width - 1 && allDots[column + 1, row])
         {
             return Vector2.right;
         }
@@ -753,7 +696,7 @@ public class Board : MonoBehaviour
         {
             return Vector2.left;
         }
-        if (row < height - 1 && allDots[column, row + 1])
+        if (row < Height - 1 && allDots[column, row + 1])
         {
             return Vector2.up;
         }
@@ -770,8 +713,8 @@ public class Board : MonoBehaviour
         int loops = 0; //  что бы не попасть в вечную проверку
         while (!slime && loops < 200)
         {
-            int newX = Random.Range(0, width);
-            int newY = Random.Range(0, height);
+            int newX = Random.Range(0, Width);
+            int newY = Random.Range(0, Height);
             if (slimeTiles[newX, newY]) // проверяем есть ли по даному индексу массива плитка слайма
             {
                 Vector2 adjacent = CheckForAdjacent(newX, newY);
@@ -792,13 +735,13 @@ public class Board : MonoBehaviour
     // заполнение пустых ячеек
     void RefillBoard()
     {
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
                 if (allDots[i,j] == null && !blankSpaces[i,j] && !concreteTiles[i, j] && !slimeTiles[i, j]) // проверка в том числе на зарезервированные места на доске
                 {
-                    Vector2 tempPosition = new Vector2(i, j + offSet);
+                    Vector2 tempPosition = new Vector2(i, j + _offSet);
                     int dotToUse = Random.Range(0, dots.Length); 
 
                     //фикс проблемы когда при каскаде можно было передвиграть фгуры вручную
@@ -824,9 +767,9 @@ public class Board : MonoBehaviour
     //постоянный скан доски на наличие совпадений
     bool MatchesOnBoard()
     {
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
                 if (allDots[i,j] != null)
                 {
@@ -847,14 +790,14 @@ public class Board : MonoBehaviour
 
     bool CheckForMatches()
     {
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
                 if (allDots[i,j] != null)
                 {
                     // убедиться что проверяемые точки находятся в пределах игрового поля либо не зарезервированны
-                    if (i < width - 2)
+                    if (i < Width - 2)
                     {
                         // проверить существует ли точка справа и на две правее
                         if (allDots[i + 1, j] != null && allDots[i + 2, j] != null)
@@ -867,7 +810,7 @@ public class Board : MonoBehaviour
                             }
                         }
                     }
-                    if (j < height - 2)
+                    if (j < Height - 2)
                     {
                         // проверить существует ли точка выше и на две выше
                         if (allDots[i, j + 1] != null && allDots[i, j + 2] != null)
@@ -903,20 +846,20 @@ public class Board : MonoBehaviour
 
     bool IsDeadlocked() // изменено Vid 52
     {
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
                 if (allDots[i,j] != null)
                 {
-                    if (i < width - 1)
+                    if (i < Width - 1)
                     {
                         if (SwitchAndCheck(i, j, Vector2.right))
                         {
                             return false;
                         }                        
                     }
-                    if (j < height - 1)
+                    if (j < Height - 1)
                     {
                         if (SwitchAndCheck(i, j, Vector2.up))
                         {
@@ -1000,9 +943,9 @@ public class Board : MonoBehaviour
 
         List<GameObject> newBoard = new List<GameObject>();
         // добавить каждый активный токен в новый Лист
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
                 if (allDots[i, j] != null) // не берём зарезервированные места на доске
                 {
@@ -1011,9 +954,9 @@ public class Board : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
                 //если место не зарезервировано
                 if (!blankSpaces[i, j] && !concreteTiles[i, j] && !concreteTiles[i, j])
@@ -1054,10 +997,5 @@ public class Board : MonoBehaviour
             ShuffleBorad();
         }
 
-    }
-
-    private void Update()
-    {
-        
     }
 }

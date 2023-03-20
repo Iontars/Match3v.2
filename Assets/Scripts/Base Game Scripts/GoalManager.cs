@@ -97,11 +97,11 @@ public class GoalManager : MonoBehaviour
         {
             if (board.world != null)
             {
-                if (board.level < board.world.levels.Length)
+                if (board.Level < board.world.levels.Length)
                 {
-                    if (board.world.levels[board.level] != null)
+                    if (board.world.levels[board.Level] != null)
                     {
-                        levelGoals = board.world.levels[board.level].levelGoals;
+                        levelGoals = board.world.levels[board.Level].levelGoals;
                         // очень важная часть// установка нулевых значений в поле SO numberCollected иначе SO (Level) не обновит свои значения
                         for (int i = 0; i < levelGoals.Length; i++)
                         {

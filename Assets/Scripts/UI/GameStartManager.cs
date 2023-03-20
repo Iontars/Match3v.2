@@ -30,15 +30,4 @@ public class GameStartManager : MonoBehaviour
         startPanel.SetActive(true);
         levelPanel.SetActive(false);
     }
-
-    void Start()
-    {
-        
-    }
-
-
-    void Update()
-    {
-        
-    }
 }
