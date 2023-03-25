@@ -12,7 +12,6 @@ namespace Game_Data_Scripts
         public bool[] isActive;
         public int[] highScores;
         public int[] stars;
-
     }
     /// <summary>
     /// Хранение игровых данных

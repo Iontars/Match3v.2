@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Scriptable_Objects;
 using Static_Prefs;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Base_Game_Scripts
@@ -41,12 +42,12 @@ namespace Base_Game_Scripts
         public int Height { get; private set; }
 
         [Header("Prefabs")]
-        public GameObject tilePrefab;
+        public GameObject padTilePrefab; // подложка под токена на доске
         public GameObject breakableTilePrefab;
         public GameObject lockTilePrefab;
         public GameObject concreteTilePrefab;
-        public GameObject slimePiecePrefab;
-        public GameObject[] dots;
+        public GameObject slimeTilePrefab;
+        public GameObject[] currentLevelTokensArray;
         public GameObject destroyEffect;
 
         [Header("Layout")]
@@ -109,7 +110,7 @@ namespace Base_Game_Scripts
                         //копирование значений из выбранного уровня в нашу доску
                         Width = world.levels[Level].width;
                         Height = world.levels[Level].height;
-                        dots = world.levels[Level].dots;
+                        currentLevelTokensArray = world.levels[Level].dots;
                         scoreGoals = world.levels[Level].scoreGoals;
                         boardLayout = world.levels[Level].boardLayout;
                         blankSpaces = new bool[Width, Height];
@@ -130,7 +131,7 @@ namespace Base_Game_Scripts
                 }
                 else if (boardLayout[i].tileKind == TileKind.Slime)
                 {
-                    GameObject reserveToken = Instantiate(slimePiecePrefab, tempPosition, Quaternion.identity);
+                    GameObject reserveToken = Instantiate(slimeTilePrefab, tempPosition, Quaternion.identity);
                     slimeTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
                 }
                 else if(boardLayout[i].tileKind == TileKind.Breakable)
@@ -151,7 +152,6 @@ namespace Base_Game_Scripts
             }
         }
 
-
         //создание доски
         void SetUp()
         {
@@ -165,22 +165,22 @@ namespace Base_Game_Scripts
                     {
                         Vector2 tempPosition = new Vector2(i, j);
                         Vector2 tilePosition = new Vector2(i, j);
-                        GameObject backgroundTile = Instantiate(tilePrefab, tilePosition, Quaternion.identity) as GameObject;
+                        GameObject backgroundTile = Instantiate(padTilePrefab, tilePosition, Quaternion.identity) as GameObject;
                         backgroundTile.transform.parent = transform;
                         backgroundTile.name = "( " + i + ", " + j + " )";
-                        int dotToUse = Random.Range(0, dots.Length);
+                        int dotToUse = Random.Range(0, currentLevelTokensArray.Length);
 
                         //вызов проверки на совпадение при создании доски (не должно быть готовых совпадений)
                         int maxIterations = 0;
-                        while (MatchesAt(i, j, dots[dotToUse]) && maxIterations < 100)
+                        while (MatchesAt(i, j, currentLevelTokensArray[dotToUse]) && maxIterations < 100)
                         {
-                            dotToUse = Random.Range(0, dots.Length);
+                            dotToUse = Random.Range(0, currentLevelTokensArray.Length);
                             maxIterations++;
                             //Debug.Log(maxIterations);
                         }
                         maxIterations = 0;
 
-                        GameObject dot = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity);
+                        GameObject dot = Instantiate(currentLevelTokensArray[dotToUse], tempPosition, Quaternion.identity);
                         dot.GetComponent<Dot>().row = j;
                         dot.GetComponent<Dot>().column = i;
                         dot.transform.parent = transform;
@@ -725,7 +725,7 @@ namespace Base_Game_Scripts
                     {
                         Destroy(allDots[newX + (int)adjacent.x, newY + (int)adjacent.y]);
                         Vector2 tempPosition = new Vector2(newX + (int)adjacent.x, newY + (int)adjacent.y);
-                        GameObject tile = Instantiate(slimePiecePrefab, tempPosition, Quaternion.identity);
+                        GameObject tile = Instantiate(slimeTilePrefab, tempPosition, Quaternion.identity);
                         slimeTiles[newX + (int)adjacent.x, newY + (int)adjacent.y] = tile.GetComponent<BackgroundTile>();
                         slime = true;
                     }
@@ -745,18 +745,18 @@ namespace Base_Game_Scripts
                     if (allDots[i,j] == null && !blankSpaces[i,j] && !concreteTiles[i, j] && !slimeTiles[i, j]) // проверка в том числе на зарезервированные места на доске
                     {
                         Vector2 tempPosition = new Vector2(i, j + _offSet);
-                        int dotToUse = Random.Range(0, dots.Length); 
+                        int dotToUse = Random.Range(0, currentLevelTokensArray.Length); 
 
                         //фикс проблемы когда при каскаде можно было передвиграть фгуры вручную
                         int maxIterations = 0;
-                        while (MatchesAt(i,j, dots[dotToUse]) && maxIterations < 100)
+                        while (MatchesAt(i,j, currentLevelTokensArray[dotToUse]) && maxIterations < 100)
                         {
                             maxIterations++;
-                            dotToUse = Random.Range(0, dots.Length);
+                            dotToUse = Random.Range(0, currentLevelTokensArray.Length);
                         }
                         maxIterations = 0;
 
-                        GameObject piece = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity); // пул из массива с цветными токенами // можно добавит ьещё один массив с бонусами
+                        GameObject piece = Instantiate(currentLevelTokensArray[dotToUse], tempPosition, Quaternion.identity); // пул из массива с цветными токенами // можно добавит ьещё один массив с бонусами
                         piece.transform.parent = transform;
                         piece.name = "( " + i + ", " + j + " )";
                         allDots[i, j] = piece;
