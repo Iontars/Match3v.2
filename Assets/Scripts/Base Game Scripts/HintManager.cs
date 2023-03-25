@@ -25,20 +25,20 @@ namespace Base_Game_Scripts
             {
                 for (int j = 0; j < board.Height; j++)
                 {
-                    if (board.allDots[i, j] != null)
+                    if (board.currentLevelAllTokensArray[i, j] != null)
                     {
                         if (i < board.Width - 1)
                         {
                             if (board.SwitchAndCheck(i, j, Vector2.right))
                             {
-                                possibleMoves.Add(board.allDots[i,j]) ;
+                                possibleMoves.Add(board.currentLevelAllTokensArray[i,j]) ;
                             }
                         }
                         if (j < board.Height - 1)
                         {
                             if (board.SwitchAndCheck(i, j, Vector2.up))
                             {
-                                possibleMoves.Add(board.allDots[i, j]);
+                                possibleMoves.Add(board.currentLevelAllTokensArray[i, j]);
                             }
                         }
                     }

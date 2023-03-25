@@ -217,9 +217,9 @@ namespace Base_Game_Scripts
                 tempPosition = new Vector2(targetX, transform.position.y);
                 // создать глобальную переменную для опрелеления скорости токена вместо 11f
                 transform.position = Vector2.Lerp(transform.position, tempPosition, 10 * Time.deltaTime);           
-                if (board.allDots[column, row] != gameObject)// падение токенов после уничтожения совпавших
+                if (board.currentLevelAllTokensArray[column, row] != gameObject)// падение токенов после уничтожения совпавших
                 {
-                    board.allDots[column, row] = gameObject;
+                    board.currentLevelAllTokensArray[column, row] = gameObject;
                 }
                 findMatches.FindAllMatches();
             }
@@ -236,9 +236,9 @@ namespace Base_Game_Scripts
                 tempPosition = new Vector2(transform.position.x, targetY);
                 // создать глобальную переменную для опрелеления скорости токена вместо 11f
                 transform.position = Vector2.Lerp(transform.position, tempPosition, 10 * Time.deltaTime);           
-                if (board.allDots[column, row] != gameObject)// падение токенов после уничтожения совпавших
+                if (board.currentLevelAllTokensArray[column, row] != gameObject)// падение токенов после уничтожения совпавших
                 {
-                    board.allDots[column, row] = gameObject;
+                    board.currentLevelAllTokensArray[column, row] = gameObject;
                 }
                 findMatches.FindAllMatches();
             }
@@ -266,7 +266,7 @@ namespace Base_Game_Scripts
         // метод косвенно выполняющий перемещение точек // меняет позиции тайлов и те автоматически просто хоят твернуться на новые позиции, тупо
         void MovePiecesActual(Vector2 direction)
         {
-            otherDot = board.allDots[column + (int)direction.x, row + (int)direction.y];
+            otherDot = board.currentLevelAllTokensArray[column + (int)direction.x, row + (int)direction.y];
             previousRow = row;
             previousColumn = column;
 

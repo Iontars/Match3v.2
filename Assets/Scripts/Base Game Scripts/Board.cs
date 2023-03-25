@@ -37,33 +37,33 @@ namespace Base_Game_Scripts
         public int Level { get; private set; }
         public GameState currentState = GameState.Move; // ?Рудимент
 
-        private int _offSet = 2; // смещает позициаю спавна точек по оси х что позволяет им скользить вниз при появлении
+        private readonly int _offSet = 2; // смещает позициаю спавна точек по оси х что позволяет им скользить вниз при появлении
         public int Width { get; private set; }
         public int Height { get; private set; }
 
         [Header("Prefabs")]
+        private GameObject[] _currentLevelUsableTokens; // какие игровые токены будут использоваться на текущей доске
         public GameObject padTilePrefab; // подложка под токена на доске
         public GameObject breakableTilePrefab;
         public GameObject lockTilePrefab;
         public GameObject concreteTilePrefab;
         public GameObject slimeTilePrefab;
-        public GameObject[] currentLevelTokensArray;
         public GameObject destroyEffect;
-
+        
         [Header("Layout")]
-        private bool[,] blankSpaces; // массив соразмерный текущей доске для хранения значений о зарезервированных местах
-        private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске содержит компоненты
-        private BackgroundTile[,] concreteTiles;
-        private BackgroundTile[,] slimeTiles;
+        private bool[,] _blankSpaces; // массив соразмерный текущей доске для хранения значений о зарезервированных местах
+        private BackgroundTile[,] _breakableTiles; // массив с ломающимися плитками на доске содержит компоненты
+        private BackgroundTile[,] _concreteTiles;
+        private BackgroundTile[,] _slimeTiles;
         public BackgroundTile[,] lockTiles; // publick becouse need accces from dataScript
         public TileType[] boardLayout;
-        public GameObject[,] allDots; // массив со всеми игровыми точками на доске
+        public GameObject[,] currentLevelAllTokensArray; // массив со всеми игровыми точками на доске
 
         [Header("Match Stuff")]
-        private FindMatches findMatches;
-        private SoundManager soundManager;
-        private ScoreManager scoreManager;
-        private GoalManager goalManager; // vid 40
+        private FindMatches _findMatches;
+        private SoundManager _soundManager;
+        private ScoreManager _scoreManager;
+        private GoalManager _goalManager; // vid 40
         private int _streakValue = 1;
         private bool _makeSlime = true;
         private readonly float _refillDelay = 0.5f;
@@ -74,19 +74,19 @@ namespace Base_Game_Scripts
 
         private void Awake()
         {
-            scoreManager = FindObjectOfType<ScoreManager>();
-            goalManager = FindObjectOfType<GoalManager>();
-            soundManager = FindObjectOfType<SoundManager>();
+            _scoreManager = FindObjectOfType<ScoreManager>();
+            _goalManager = FindObjectOfType<GoalManager>();
+            _soundManager = FindObjectOfType<SoundManager>();
             LoadLevelByHisNumber();
-            findMatches = FindObjectOfType<FindMatches>();
-            breakableTiles = new BackgroundTile[Width, Height];
+            _findMatches = FindObjectOfType<FindMatches>();
+            _breakableTiles = new BackgroundTile[Width, Height];
             lockTiles = new BackgroundTile[Width, Height];
-            concreteTiles = new BackgroundTile[Width, Height];
-            slimeTiles = new BackgroundTile[Width, Height];
-            allDots = new GameObject[Width, Height];
+            _concreteTiles = new BackgroundTile[Width, Height];
+            _slimeTiles = new BackgroundTile[Width, Height];
+            currentLevelAllTokensArray = new GameObject[Width, Height];
         }
 
-        void Start()
+        private void Start()
         {
             currentState = GameState.Pause; // игра начинается с состояния паузы !!!!!!!!!!!!
             LoadLevelByHisNumber();
@@ -100,114 +100,69 @@ namespace Base_Game_Scripts
             {
                 Level = PlayerPrefs.GetInt(PlayerPrefsStorage.keyCurrentLevel);
             }
-
-            if (world != null)
+            
+            if (world != null && Level < world.levels.Length && world.levels[Level] != null )
             {
-                if (Level < world.levels.Length)
-                {
-                    if (world.levels[Level] != null)
-                    {
-                        //копирование значений из выбранного уровня в нашу доску
-                        Width = world.levels[Level].width;
-                        Height = world.levels[Level].height;
-                        currentLevelTokensArray = world.levels[Level].dots;
-                        scoreGoals = world.levels[Level].scoreGoals;
-                        boardLayout = world.levels[Level].boardLayout;
-                        blankSpaces = new bool[Width, Height];
-                    }
-                }
+                //копирование значений из выбранного уровня в нашу доску
+                Width = world.levels[Level].width;
+                Height = world.levels[Level].height;
+                _currentLevelUsableTokens = world.levels[Level].dots;
+                scoreGoals = world.levels[Level].scoreGoals;
+                boardLayout = world.levels[Level].boardLayout;
+                _blankSpaces = new bool[Width, Height];
             }
         }
 
-        private void GenerateReservePlaceToken()
+        private void GenerateReservesPlaceToken()
         {
-            for (int i = 0; i < boardLayout.Length; i++)
+            foreach (var t in boardLayout)
             {
-                Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y);
+                var tempPosition = new Vector2(t.x, t.y);
 
-                if (boardLayout[i].tileKind == TileKind.Blank)
+                if (t.tileKind == TileKind.Blank)
                 {
-                    blankSpaces[boardLayout[i].x, boardLayout[i].y] = true;
+                    _blankSpaces[t.x, t.y] = true;
                 }
-                else if (boardLayout[i].tileKind == TileKind.Slime)
+                else if (t.tileKind == TileKind.Slime)
                 {
                     GameObject reserveToken = Instantiate(slimeTilePrefab, tempPosition, Quaternion.identity);
-                    slimeTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+                    _slimeTiles[t.x, t.y] = reserveToken.GetComponent<BackgroundTile>();
                 }
-                else if(boardLayout[i].tileKind == TileKind.Breakable)
+                else if(t.tileKind == TileKind.Breakable)
                 {
                     GameObject reserveToken = Instantiate(breakableTilePrefab, tempPosition, Quaternion.identity);
-                    breakableTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+                    _breakableTiles[t.x, t.y] = reserveToken.GetComponent<BackgroundTile>();
                 }
-                else if(boardLayout[i].tileKind == TileKind.Lock)
+                else if(t.tileKind == TileKind.Lock)
                 {
                     GameObject reserveToken = Instantiate(lockTilePrefab, tempPosition, Quaternion.identity);
-                    lockTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+                    lockTiles[t.x, t.y] = reserveToken.GetComponent<BackgroundTile>();
                 }
-                else if(boardLayout[i].tileKind == TileKind.Concrete)
+                else if(t.tileKind == TileKind.Concrete)
                 {
                     GameObject reserveToken = Instantiate(concreteTilePrefab, tempPosition, Quaternion.identity);
-                    concreteTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+                    _concreteTiles[t.x, t.y] = reserveToken.GetComponent<BackgroundTile>();
                 }
             }
         }
-
-        //создание доски
-        void SetUp()
-        {
-            GenerateReservePlaceToken(); // перед созданием тайлов на доске, создаём зарезервированные места
-            for (int i = 0; i < Width; i++)
-            {
-                for (int j = 0; j < Height; j++)
-                {
-
-                    if (!blankSpaces[i, j] && !concreteTiles[i,j] && !slimeTiles[i,j]) // проверка на пустое место/бетонное место на доске/если false создаёт тайл на доске
-                    {
-                        Vector2 tempPosition = new Vector2(i, j);
-                        Vector2 tilePosition = new Vector2(i, j);
-                        GameObject backgroundTile = Instantiate(padTilePrefab, tilePosition, Quaternion.identity) as GameObject;
-                        backgroundTile.transform.parent = transform;
-                        backgroundTile.name = "( " + i + ", " + j + " )";
-                        int dotToUse = Random.Range(0, currentLevelTokensArray.Length);
-
-                        //вызов проверки на совпадение при создании доски (не должно быть готовых совпадений)
-                        int maxIterations = 0;
-                        while (MatchesAt(i, j, currentLevelTokensArray[dotToUse]) && maxIterations < 100)
-                        {
-                            dotToUse = Random.Range(0, currentLevelTokensArray.Length);
-                            maxIterations++;
-                            //Debug.Log(maxIterations);
-                        }
-                        maxIterations = 0;
-
-                        GameObject dot = Instantiate(currentLevelTokensArray[dotToUse], tempPosition, Quaternion.identity);
-                        dot.GetComponent<Dot>().row = j;
-                        dot.GetComponent<Dot>().column = i;
-                        dot.transform.parent = transform;
-                        dot.name = "( " + i + ", " + j + " )";
-                        allDots[i, j] = dot;
-                    }
-                }
-            }
-        }
-
-        //проверка на одинаковые токены при создании доски
-        bool MatchesAt(int colunm, int row, GameObject piece)
+        
+        //проверка на одинаковые токены перед создании доски
+        private bool MatchesAt(int colunm, int row, GameObject piece)
         {
             if (colunm > 1 && row >1 )
             {
-                if (allDots[colunm -1, row] != null && allDots[colunm - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
+                if (currentLevelAllTokensArray[colunm -1, row] != null && currentLevelAllTokensArray[colunm - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
                 {
-                    if (allDots[colunm - 1, row].tag == piece.tag &&
-                        allDots[colunm - 2, row].tag == piece.tag)
+                    if (currentLevelAllTokensArray[colunm - 1, row].tag == piece.tag &&
+                        currentLevelAllTokensArray[colunm - 2, row].tag == piece.tag)
                     {
                         return true;
                     }
                 }
-                if (allDots[colunm, row - 1] != null && allDots[colunm, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
+                if (currentLevelAllTokensArray[colunm, row - 1] != null && currentLevelAllTokensArray[colunm, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
                 {
-                    if (allDots[colunm, row - 1].tag == piece.tag &&
-                        allDots[colunm, row - 2].tag == piece.tag)
+                    if (currentLevelAllTokensArray[colunm, row - 1].tag == piece.tag &&
+                        currentLevelAllTokensArray[colunm, row - 2].tag == piece.tag)
                     {
                         return true;
                     }
@@ -217,10 +172,10 @@ namespace Base_Game_Scripts
             {
                 if (row > 1)
                 {
-                    if (allDots[colunm, row - 1] != null && allDots[colunm, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
+                    if (currentLevelAllTokensArray[colunm, row - 1] != null && currentLevelAllTokensArray[colunm, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
                     {
-                        if (allDots[colunm, row - 1].tag == piece.tag &&
-                            allDots[colunm, row - 2].tag == piece.tag)
+                        if (currentLevelAllTokensArray[colunm, row - 1].tag == piece.tag &&
+                            currentLevelAllTokensArray[colunm, row - 2].tag == piece.tag)
                         {
                             return true;
                         }
@@ -228,10 +183,10 @@ namespace Base_Game_Scripts
                 }
                 if (colunm > 1) //
                 {
-                    if (allDots[colunm - 1, row] != null && allDots[colunm - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
+                    if (currentLevelAllTokensArray[colunm - 1, row] != null && currentLevelAllTokensArray[colunm - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
                     {
-                        if (allDots[colunm - 1, row].tag == piece.tag &&
-                            allDots[colunm - 2, row].tag == piece.tag)
+                        if (currentLevelAllTokensArray[colunm - 1, row].tag == piece.tag &&
+                            currentLevelAllTokensArray[colunm - 2, row].tag == piece.tag)
                         {
                             return true;
                         }
@@ -241,10 +196,49 @@ namespace Base_Game_Scripts
             return false;
         }
 
+        //создание доски
+        private void SetUp()
+        {
+            GenerateReservesPlaceToken(); // перед созданием тайлов на доске, создаём зарезервированные места
+            for (var i = 0; i < Width; i++)
+            {
+                for (var j = 0; j < Height; j++)
+                {
+
+                    if (!_blankSpaces[i, j] && !_concreteTiles[i,j] && !_slimeTiles[i,j]) // проверка на пустое место/бетонное место на доске/если false создаёт тайл на доске
+                    {
+                        Vector2 tempPosition = new Vector2(i, j);
+                        Vector2 tilePosition = new Vector2(i, j);
+                        GameObject backgroundTile = Instantiate(padTilePrefab, tilePosition, Quaternion.identity) as GameObject;
+                        backgroundTile.transform.parent = transform;
+                        backgroundTile.name = "( " + i + ", " + j + " )";
+                        int dotToUse = Random.Range(0, _currentLevelUsableTokens.Length);
+
+                        //вызов проверки на совпадение при создании доски (не должно быть готовых совпадений)
+                        int maxIterations = 0;
+                        while (MatchesAt(i, j, _currentLevelUsableTokens[dotToUse]) && maxIterations < 100)
+                        {
+                            dotToUse = Random.Range(0, _currentLevelUsableTokens.Length);
+                            maxIterations++;
+                            //Debug.Log(maxIterations);
+                        }
+                        maxIterations = 0;
+
+                        GameObject dot = Instantiate(_currentLevelUsableTokens[dotToUse], tempPosition, Quaternion.identity);
+                        dot.GetComponent<Dot>().row = j;
+                        dot.GetComponent<Dot>().column = i;
+                        dot.transform.parent = transform;
+                        dot.name = "( " + i + ", " + j + " )";
+                        currentLevelAllTokensArray[i, j] = dot;
+                    }
+                }
+            }
+        }
+        
         private MatchType ColumnOrRow()
         {
             // создать копию FindMatches.currentMatches
-            List<GameObject> matchCopy = findMatches.currentMatches as List<GameObject>; // as Важно изучить
+            List<GameObject> matchCopy = _findMatches.currentMatches as List<GameObject>; // as Важно изучить
 
             matchType.type = 0;
             matchType.color = "";
@@ -310,12 +304,12 @@ namespace Base_Game_Scripts
             for (int i = 0; i < Width; i++)
             {
             
-                if (concreteTiles[i, row])
+                if (_concreteTiles[i, row])
                 {
-                    concreteTiles[i, row].TakeDamage(1);
-                    if (concreteTiles[i, row].hitPoints <= 0)
+                    _concreteTiles[i, row].TakeDamage(1);
+                    if (_concreteTiles[i, row].hitPoints <= 0)
                     {
-                        concreteTiles[i, row] = null; // удаляем из массива ломающийся токен
+                        _concreteTiles[i, row] = null; // удаляем из массива ломающийся токен
                     }
                 }
             }
@@ -325,12 +319,12 @@ namespace Base_Game_Scripts
         {
             for (int i = 0; i < Width; i++)
             {
-                if (concreteTiles[column, i])
+                if (_concreteTiles[column, i])
                 {
-                    concreteTiles[column, i].TakeDamage(1);
-                    if (concreteTiles[column, i].hitPoints <= 0)
+                    _concreteTiles[column, i].TakeDamage(1);
+                    if (_concreteTiles[column, i].hitPoints <= 0)
                     {
-                        concreteTiles[column, i] = null; // удаляем из массива ломающийся токен
+                        _concreteTiles[column, i] = null; // удаляем из массива ломающийся токен
                     }
                 }
             }
@@ -339,23 +333,23 @@ namespace Base_Game_Scripts
         // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод/ партикл взрыва / урон бонусным тайлам
         void DestroyMatchesAt(int colunm, int row)
         {
-            if (allDots[colunm,row].GetComponent<Dot>().isMatched)
+            if (currentLevelAllTokensArray[colunm,row].GetComponent<Dot>().isMatched)
             {
                 // сколько эллементов в Списке currentMatches ?
-                if (findMatches.currentMatches.Count >=4)
+                if (_findMatches.currentMatches.Count >=4)
                 {
                     CheckToMakeBombs();
                 }
 
                 //эти уничтожения работают потому что они находятся на одной позиции с токеном, с бетоной стеной ест ьотдельный класс DamageConcrete
                 // нужно ли разбивать ломающуюся плитку
-                if (breakableTiles[colunm, row] != null) //  если в данной позиции есть ломающаяся плитка
+                if (_breakableTiles[colunm, row] != null) //  если в данной позиции есть ломающаяся плитка
                 {
                     // если это нанесёт 1 единицу урона
-                    breakableTiles[colunm, row].TakeDamage(1);
-                    if (breakableTiles[colunm, row].hitPoints <= 0)
+                    _breakableTiles[colunm, row].TakeDamage(1);
+                    if (_breakableTiles[colunm, row].hitPoints <= 0)
                     {
-                        breakableTiles[colunm, row] = null; // удаляем из массива ломающийся токен
+                        _breakableTiles[colunm, row] = null; // удаляем из массива ломающийся токен
                     }
                 }
 
@@ -375,23 +369,23 @@ namespace Base_Game_Scripts
             
             
                 // vid 40 // сравниваем ломающуюся плитку на предмет цели уровня
-                if (goalManager != null)
+                if (_goalManager != null)
                 {
-                    goalManager.CompareGoal(allDots[colunm, row].tag.ToString());
-                    goalManager.UpdateGoals();
+                    _goalManager.CompareGoal(currentLevelAllTokensArray[colunm, row].tag.ToString());
+                    _goalManager.UpdateGoals();
                 }
 
-                soundManager.PlayRandomDestroyNoise(); // звук ломания токена
+                _soundManager.PlayRandomDestroyNoise(); // звук ломания токена
 
                 GameObject particle = Instantiate(destroyEffect, new Vector3( // анимация взрыва партиклом
-                    allDots[colunm, row].transform.position.x,
-                    allDots[colunm, row].transform.position.y,
-                    allDots[colunm, row].transform.position.z - 1), Quaternion.identity);
+                    currentLevelAllTokensArray[colunm, row].transform.position.x,
+                    currentLevelAllTokensArray[colunm, row].transform.position.y,
+                    currentLevelAllTokensArray[colunm, row].transform.position.z - 1), Quaternion.identity);
                 Destroy(particle, .3f);
-                allDots[colunm,row].GetComponent<Dot>().PopAnimation(); // анимация спрайта
-                Destroy(allDots[colunm, row], .2f); // Фактическое уничтожение совпавших бомб
-                scoreManager.IncreaseScore(basePieceValue * _streakValue); // добавление очков на табло
-                allDots[colunm, row] = null;
+                currentLevelAllTokensArray[colunm,row].GetComponent<Dot>().PopAnimation(); // анимация спрайта
+                Destroy(currentLevelAllTokensArray[colunm, row], .2f); // Фактическое уничтожение совпавших бомб
+                _scoreManager.IncreaseScore(basePieceValue * _streakValue); // добавление очков на табло
+                currentLevelAllTokensArray[colunm, row] = null;
             
             }
         }
@@ -402,22 +396,22 @@ namespace Base_Game_Scripts
             // сколько эллементов в Списке currentMatches ?
             // как только мы проверили что в списке совпадений существует 4 или более совпадений мы сразу проверяем какую бомбу можно создать и 
             // очищаем список совпадений в избежании повторных сравнений в процессе больших каскадов и больших цепочек совпадений
-            if (findMatches.currentMatches.Count >= 4)
+            if (_findMatches.currentMatches.Count >= 4)
             {
                 CheckToMakeBombs();
             }
-            findMatches.currentMatches.Clear();
+            _findMatches.currentMatches.Clear();
             for (int i = 0; i < Width; i++)
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    if (allDots[i,j] != null)
+                    if (currentLevelAllTokensArray[i,j] != null)
                     {
                         DestroyMatchesAt(i, j);
                     }
                 }
             }
-            findMatches.currentMatches.Clear();
+            _findMatches.currentMatches.Clear();
             StartCoroutine(nameof(DecreaseRowCo2));
         }
 
@@ -425,7 +419,7 @@ namespace Base_Game_Scripts
         private void CheckToMakeBombs()
         {
             // Скольк осовпадений за раз находится в списке FindMatches.currentMatches
-            if (findMatches.currentMatches.Count > 3)
+            if (_findMatches.currentMatches.Count > 3)
             {
                 // какой тип срвпадений?
                 MatchType typeOfMatch = ColumnOrRow();
@@ -472,7 +466,7 @@ namespace Base_Game_Scripts
                 }
                 else if (typeOfMatch.type == 3)
                 {
-                    findMatches.CheckBombs(typeOfMatch); // если в совпадениях 3 токена то смотрим только лишь на линейные бомбы
+                    _findMatches.CheckBombs(typeOfMatch); // если в совпадениях 3 токена то смотрим только лишь на линейные бомбы
                 }
             }
         }
@@ -483,46 +477,46 @@ namespace Base_Game_Scripts
             // проверка есть ли бетонная стена слева от токена, смотрим только позиции отличные от нуля так как левее границы поля не может быть бетонной стены
             if (column > 0)
             {
-                if (concreteTiles[column - 1, row] != null)
+                if (_concreteTiles[column - 1, row] != null)
                 {
-                    concreteTiles[column - 1, row].TakeDamage(1);
-                    if (concreteTiles[column - 1, row].hitPoints <= 0)
+                    _concreteTiles[column - 1, row].TakeDamage(1);
+                    if (_concreteTiles[column - 1, row].hitPoints <= 0)
                     {
-                        concreteTiles[column - 1, row] = null; // удаляем из массива ломающийся токен
+                        _concreteTiles[column - 1, row] = null; // удаляем из массива ломающийся токен
                     }
                 }
             }
             // проверка есть ли бетонная стена справа от токена
             if (column < Width - 1)
             {
-                if (concreteTiles[column + 1, row] != null)
+                if (_concreteTiles[column + 1, row] != null)
                 {
-                    concreteTiles[column + 1, row].TakeDamage(1);
-                    if (concreteTiles[column + 1, row].hitPoints <= 0)
+                    _concreteTiles[column + 1, row].TakeDamage(1);
+                    if (_concreteTiles[column + 1, row].hitPoints <= 0)
                     {
-                        concreteTiles[column + 1, row] = null; // удаляем из массива ломающийся токен
+                        _concreteTiles[column + 1, row] = null; // удаляем из массива ломающийся токен
                     }
                 }
             }
             if (row > 0)
             {
-                if (concreteTiles[column, row - 1] != null)
+                if (_concreteTiles[column, row - 1] != null)
                 {
-                    concreteTiles[column, row - 1].TakeDamage(1);
-                    if (concreteTiles[column, row - 1].hitPoints <= 0)
+                    _concreteTiles[column, row - 1].TakeDamage(1);
+                    if (_concreteTiles[column, row - 1].hitPoints <= 0)
                     {
-                        concreteTiles[column, row - 1] = null; // удаляем из массива ломающийся токен
+                        _concreteTiles[column, row - 1] = null; // удаляем из массива ломающийся токен
                     }
                 }
             }
             if (row < Height - 1)
             {
-                if (concreteTiles[column, row + 1] != null)
+                if (_concreteTiles[column, row + 1] != null)
                 {
-                    concreteTiles[column, row + 1].TakeDamage(1);
-                    if (concreteTiles[column, row + 1].hitPoints <= 0)
+                    _concreteTiles[column, row + 1].TakeDamage(1);
+                    if (_concreteTiles[column, row + 1].hitPoints <= 0)
                     {
-                        concreteTiles[column, row + 1] = null; // удаляем из массива ломающийся токен
+                        _concreteTiles[column, row + 1] = null; // удаляем из массива ломающийся токен
                     }
                 }
             }
@@ -534,12 +528,12 @@ namespace Base_Game_Scripts
             // проверка есть ли бетонная стена слева от токена, смотрим только позиции отличные от нуля так как левее границы поля не может быть бетонной стены
             if (column > 0)
             {
-                if (slimeTiles[column - 1, row] != null)
+                if (_slimeTiles[column - 1, row] != null)
                 {
-                    slimeTiles[column - 1, row].TakeDamage(1);
-                    if (slimeTiles[column - 1, row].hitPoints <= 0)
+                    _slimeTiles[column - 1, row].TakeDamage(1);
+                    if (_slimeTiles[column - 1, row].hitPoints <= 0)
                     {
-                        slimeTiles[column - 1, row] = null; // удаляем из массива ломающийся токен
+                        _slimeTiles[column - 1, row] = null; // удаляем из массива ломающийся токен
                     }
                     _makeSlime = false;
                 }
@@ -547,36 +541,36 @@ namespace Base_Game_Scripts
             // проверка есть ли бетонная стена справа от токена
             if (column < Width - 1)
             {
-                if (slimeTiles[column + 1, row] != null)
+                if (_slimeTiles[column + 1, row] != null)
                 {
-                    slimeTiles[column + 1, row].TakeDamage(1);
-                    if (slimeTiles[column + 1, row].hitPoints <= 0)
+                    _slimeTiles[column + 1, row].TakeDamage(1);
+                    if (_slimeTiles[column + 1, row].hitPoints <= 0)
                     {
-                        slimeTiles[column + 1, row] = null; // удаляем из массива ломающийся токен
+                        _slimeTiles[column + 1, row] = null; // удаляем из массива ломающийся токен
                     }
                     _makeSlime = false;
                 }
             }
             if (row > 0)
             {
-                if (slimeTiles[column, row - 1] != null)
+                if (_slimeTiles[column, row - 1] != null)
                 {
-                    slimeTiles[column, row - 1].TakeDamage(1);
-                    if (slimeTiles[column, row - 1].hitPoints <= 0)
+                    _slimeTiles[column, row - 1].TakeDamage(1);
+                    if (_slimeTiles[column, row - 1].hitPoints <= 0)
                     {
-                        slimeTiles[column, row - 1] = null; // удаляем из массива ломающийся токен
+                        _slimeTiles[column, row - 1] = null; // удаляем из массива ломающийся токен
                     }
                     _makeSlime = false;
                 }
             }
             if (row < Height - 1)
             {
-                if (slimeTiles[column, row + 1] != null)
+                if (_slimeTiles[column, row + 1] != null)
                 {
-                    slimeTiles[column, row + 1].TakeDamage(1);
-                    if (slimeTiles[column, row + 1].hitPoints <= 0)
+                    _slimeTiles[column, row + 1].TakeDamage(1);
+                    if (_slimeTiles[column, row + 1].hitPoints <= 0)
                     {
-                        slimeTiles[column, row + 1] = null; // удаляем из массива ломающийся токен
+                        _slimeTiles[column, row + 1] = null; // удаляем из массива ломающийся токен
                     }
                     _makeSlime = false;
                 }
@@ -591,18 +585,18 @@ namespace Base_Game_Scripts
                 for (int j = 0; j < Height; j++)
                 {
                     // не зарезервировано ли место внутри доски? работает в совокупности с методом RefillBoard() и таким же условием в нем
-                    if (!blankSpaces[i,j] && allDots[i,j] == null && !concreteTiles[i, j] && !slimeTiles[i,j])
+                    if (!_blankSpaces[i,j] && currentLevelAllTokensArray[i,j] == null && !_concreteTiles[i, j] && !_slimeTiles[i,j])
                     {
                         // проверка доски
                         for (int k = j + 1; k < Height; k++)
                         {
                             // найдена ли точка ?
-                            if (allDots[i,k] != null)
+                            if (currentLevelAllTokensArray[i,k] != null)
                             {
                                 // переместить точки в пустое пространство
-                                allDots[i, k].GetComponent<Dot>().row = j;
+                                currentLevelAllTokensArray[i, k].GetComponent<Dot>().row = j;
                                 // установить значение этого места как null
-                                allDots[i, k] = null;
+                                currentLevelAllTokensArray[i, k] = null;
                                 break;
                             }
                         }
@@ -676,7 +670,7 @@ namespace Base_Game_Scripts
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    if (slimeTiles[i,j] != null && _makeSlime)
+                    if (_slimeTiles[i,j] != null && _makeSlime)
                     {
                         // вызвать другой метод для создания нового слайма
                         Debug.LogError("Slime");
@@ -691,19 +685,19 @@ namespace Base_Game_Scripts
         private Vector2 CheckForAdjacent(int column, int row)
         {
 
-            if (column < Width - 1 && allDots[column + 1, row])
+            if (column < Width - 1 && currentLevelAllTokensArray[column + 1, row])
             {
                 return Vector2.right;
             }
-            if (column > 0 && allDots[column - 1, row])
+            if (column > 0 && currentLevelAllTokensArray[column - 1, row])
             {
                 return Vector2.left;
             }
-            if (row < Height - 1 && allDots[column, row + 1])
+            if (row < Height - 1 && currentLevelAllTokensArray[column, row + 1])
             {
                 return Vector2.up;
             }
-            if (row > 0 && allDots[column, row - 1])
+            if (row > 0 && currentLevelAllTokensArray[column, row - 1])
             {
                 return Vector2.down;
             }
@@ -718,15 +712,15 @@ namespace Base_Game_Scripts
             {
                 int newX = Random.Range(0, Width);
                 int newY = Random.Range(0, Height);
-                if (slimeTiles[newX, newY]) // проверяем есть ли по даному индексу массива плитка слайма
+                if (_slimeTiles[newX, newY]) // проверяем есть ли по даному индексу массива плитка слайма
                 {
                     Vector2 adjacent = CheckForAdjacent(newX, newY);
                     if (adjacent != Vector2.zero)
                     {
-                        Destroy(allDots[newX + (int)adjacent.x, newY + (int)adjacent.y]);
+                        Destroy(currentLevelAllTokensArray[newX + (int)adjacent.x, newY + (int)adjacent.y]);
                         Vector2 tempPosition = new Vector2(newX + (int)adjacent.x, newY + (int)adjacent.y);
                         GameObject tile = Instantiate(slimeTilePrefab, tempPosition, Quaternion.identity);
-                        slimeTiles[newX + (int)adjacent.x, newY + (int)adjacent.y] = tile.GetComponent<BackgroundTile>();
+                        _slimeTiles[newX + (int)adjacent.x, newY + (int)adjacent.y] = tile.GetComponent<BackgroundTile>();
                         slime = true;
                     }
                 }
@@ -742,24 +736,24 @@ namespace Base_Game_Scripts
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    if (allDots[i,j] == null && !blankSpaces[i,j] && !concreteTiles[i, j] && !slimeTiles[i, j]) // проверка в том числе на зарезервированные места на доске
+                    if (currentLevelAllTokensArray[i,j] == null && !_blankSpaces[i,j] && !_concreteTiles[i, j] && !_slimeTiles[i, j]) // проверка в том числе на зарезервированные места на доске
                     {
                         Vector2 tempPosition = new Vector2(i, j + _offSet);
-                        int dotToUse = Random.Range(0, currentLevelTokensArray.Length); 
+                        int dotToUse = Random.Range(0, _currentLevelUsableTokens.Length); 
 
                         //фикс проблемы когда при каскаде можно было передвиграть фгуры вручную
                         int maxIterations = 0;
-                        while (MatchesAt(i,j, currentLevelTokensArray[dotToUse]) && maxIterations < 100)
+                        while (MatchesAt(i,j, _currentLevelUsableTokens[dotToUse]) && maxIterations < 100)
                         {
                             maxIterations++;
-                            dotToUse = Random.Range(0, currentLevelTokensArray.Length);
+                            dotToUse = Random.Range(0, _currentLevelUsableTokens.Length);
                         }
                         maxIterations = 0;
 
-                        GameObject piece = Instantiate(currentLevelTokensArray[dotToUse], tempPosition, Quaternion.identity); // пул из массива с цветными токенами // можно добавит ьещё один массив с бонусами
+                        GameObject piece = Instantiate(_currentLevelUsableTokens[dotToUse], tempPosition, Quaternion.identity); // пул из массива с цветными токенами // можно добавит ьещё один массив с бонусами
                         piece.transform.parent = transform;
                         piece.name = "( " + i + ", " + j + " )";
-                        allDots[i, j] = piece;
+                        currentLevelAllTokensArray[i, j] = piece;
                         piece.GetComponent<Dot>().row = j; // новые токены ползут сверху вниз
                         piece.GetComponent<Dot>().column = i; // новые токены ползут сверху вниз
                     }
@@ -774,9 +768,9 @@ namespace Base_Game_Scripts
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    if (allDots[i,j] != null)
+                    if (currentLevelAllTokensArray[i,j] != null)
                     {
-                        if (allDots[i,j].GetComponent<Dot>().isMatched)
+                        if (currentLevelAllTokensArray[i,j].GetComponent<Dot>().isMatched)
                         {
                             return true;
                         }
@@ -797,17 +791,17 @@ namespace Base_Game_Scripts
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    if (allDots[i,j] != null)
+                    if (currentLevelAllTokensArray[i,j] != null)
                     {
                         // убедиться что проверяемые точки находятся в пределах игрового поля либо не зарезервированны
                         if (i < Width - 2)
                         {
                             // проверить существует ли точка справа и на две правее
-                            if (allDots[i + 1, j] != null && allDots[i + 2, j] != null)
+                            if (currentLevelAllTokensArray[i + 1, j] != null && currentLevelAllTokensArray[i + 2, j] != null)
                             {
                                 // потом отказаться от тегов // проверка наличие возможных совпадений вправо при возможном смещении точки
-                                if (allDots[i + 1, j].tag == allDots[i, j].tag &&
-                                    allDots[i + 2, j].tag == allDots[i, j].tag)
+                                if (currentLevelAllTokensArray[i + 1, j].tag == currentLevelAllTokensArray[i, j].tag &&
+                                    currentLevelAllTokensArray[i + 2, j].tag == currentLevelAllTokensArray[i, j].tag)
                                 {
                                     return true;
                                 }
@@ -816,11 +810,11 @@ namespace Base_Game_Scripts
                         if (j < Height - 2)
                         {
                             // проверить существует ли точка выше и на две выше
-                            if (allDots[i, j + 1] != null && allDots[i, j + 2] != null)
+                            if (currentLevelAllTokensArray[i, j + 1] != null && currentLevelAllTokensArray[i, j + 2] != null)
                             {
                                 // потом отказаться от тегов // проверка наличие возможных совпадений вверх при возможном смещении точки
-                                if (allDots[i, j + 1].tag == allDots[i, j].tag &&
-                                    allDots[i, j + 2].tag == allDots[i, j].tag)
+                                if (currentLevelAllTokensArray[i, j + 1].tag == currentLevelAllTokensArray[i, j].tag &&
+                                    currentLevelAllTokensArray[i, j + 2].tag == currentLevelAllTokensArray[i, j].tag)
                                 {
                                     return true;
                                 }
@@ -853,7 +847,7 @@ namespace Base_Game_Scripts
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    if (allDots[i,j] != null)
+                    if (currentLevelAllTokensArray[i,j] != null)
                     {
                         if (i < Width - 1)
                         {
@@ -878,14 +872,14 @@ namespace Base_Game_Scripts
         // изменено Vid 51.1 (8 min)
         void SwitchPieces(int column, int row, Vector2 direction)
         {
-            if (allDots[column + (int)direction.x, row + (int)direction.y] != null)
+            if (currentLevelAllTokensArray[column + (int)direction.x, row + (int)direction.y] != null)
             {
                 // взять второй токен и сохранить его в holder
-                GameObject holder = allDots[column + (int)direction.x, row + (int)direction.y] as GameObject; // лучше использовать as при извлечении одного объекта из двумерного массива
+                GameObject holder = currentLevelAllTokensArray[column + (int)direction.x, row + (int)direction.y] as GameObject; // лучше использовать as при извлечении одного объекта из двумерного массива
                 // переключение позиции первой точки на позицию второй точки
-                allDots[column + (int)direction.x, row + (int)direction.y] = allDots[column, row];
+                currentLevelAllTokensArray[column + (int)direction.x, row + (int)direction.y] = currentLevelAllTokensArray[column, row];
                 // установить первую точку на позицию второй точки
-                allDots[column, row] = holder;
+                currentLevelAllTokensArray[column, row] = holder;
             }
         }
 
@@ -950,9 +944,9 @@ namespace Base_Game_Scripts
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    if (allDots[i, j] != null) // не берём зарезервированные места на доске
+                    if (currentLevelAllTokensArray[i, j] != null) // не берём зарезервированные места на доске
                     {
-                        newBoard.Add(allDots[i, j]);
+                        newBoard.Add(currentLevelAllTokensArray[i, j]);
                     }
                 }
             }
@@ -962,7 +956,7 @@ namespace Base_Game_Scripts
                 for (int j = 0; j < Height; j++)
                 {
                     //если место не зарезервировано
-                    if (!blankSpaces[i, j] && !concreteTiles[i, j] && !concreteTiles[i, j])
+                    if (!_blankSpaces[i, j] && !_concreteTiles[i, j] && !_concreteTiles[i, j])
                     {
                         // Выбрать слуайное число
                         int pieceToUse = Random.Range(0, newBoard.Count);
@@ -987,7 +981,7 @@ namespace Base_Game_Scripts
                         piece.column = i;
                         piece.row = j;
                         // добавить/заменить рабочий токен в основной массив со всеми элементами доски
-                        allDots[i, j] = newBoard[pieceToUse];
+                        currentLevelAllTokensArray[i, j] = newBoard[pieceToUse];
                         // удалить текущий токен по адресу спика, во избежании повторного общащения к нему
                         newBoard.Remove(newBoard[pieceToUse]);
                     }

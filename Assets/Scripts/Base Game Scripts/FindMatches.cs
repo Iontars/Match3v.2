@@ -109,15 +109,15 @@ namespace Base_Game_Scripts
             {
                 for (int j = 0; j < board.Height; j++)
                 {
-                    GameObject currentDot = board.allDots[i, j];
+                    GameObject currentDot = board.currentLevelAllTokensArray[i, j];
                 
                     if (currentDot != null)
                     {
                         Dot currentDotDot = currentDot.GetComponent<Dot>();
                         if (i > 0 && i < board.Width - 1)
                         {
-                            GameObject leftDot = board.allDots[i - 1, j];
-                            GameObject rightDot = board.allDots[i + 1, j];
+                            GameObject leftDot = board.currentLevelAllTokensArray[i - 1, j];
+                            GameObject rightDot = board.currentLevelAllTokensArray[i + 1, j];
                             if (leftDot != null && rightDot != null)
                             {
                                 Dot leftDotDot = leftDot.GetComponent<Dot>();
@@ -138,8 +138,8 @@ namespace Base_Game_Scripts
                         }
                         if (j > 0 && j < board.Height - 1)
                         {
-                            GameObject downDot = board.allDots[i, j - 1];
-                            GameObject upDot = board.allDots[i, j + 1];
+                            GameObject downDot = board.currentLevelAllTokensArray[i, j - 1];
+                            GameObject upDot = board.currentLevelAllTokensArray[i, j + 1];
 
                             if (downDot != null && upDot != null)
                             {
@@ -172,11 +172,11 @@ namespace Base_Game_Scripts
                 for (int j = 0; j < board.Height; j++)
                 {
                     // Проверить вызывается ли этот кусок
-                    if (board.allDots[i,j] != null)
+                    if (board.currentLevelAllTokensArray[i,j] != null)
                     {
-                        if (board.allDots[i,j].tag == color)
+                        if (board.currentLevelAllTokensArray[i,j].tag == color)
                         {
-                            board.allDots[i, j].GetComponent<Dot>().isMatched = true;
+                            board.currentLevelAllTokensArray[i, j].GetComponent<Dot>().isMatched = true;
                         }
                     }
 
@@ -194,10 +194,10 @@ namespace Base_Game_Scripts
                     // находится ли фигура внутри доски
                     if (i >= 0 && i < board.Width && j >= 0 && j < board.Height)
                     {
-                        if (board.allDots[i,j] != null) // проверка на наличие точек вокруг радиуса взрыва, что бы не вызвать ошибку исключения
+                        if (board.currentLevelAllTokensArray[i,j] != null) // проверка на наличие точек вокруг радиуса взрыва, что бы не вызвать ошибку исключения
                         {
-                            dots.Add(board.allDots[i, j]);
-                            board.allDots[i, j].GetComponent<Dot>().isMatched = true;
+                            dots.Add(board.currentLevelAllTokensArray[i, j]);
+                            board.currentLevelAllTokensArray[i, j].GetComponent<Dot>().isMatched = true;
                         }
                     }
 
@@ -212,14 +212,14 @@ namespace Base_Game_Scripts
             List<GameObject> dots = new List<GameObject>();
             for (int i = 0; i < board.Height; i++)
             {
-                if (board.allDots[column,i] != null)
+                if (board.currentLevelAllTokensArray[column,i] != null)
                 {
-                    Dot dot = board.allDots[column, i].GetComponent<Dot>();
+                    Dot dot = board.currentLevelAllTokensArray[column, i].GetComponent<Dot>();
                     if (dot.isRowBomb) // если среди задетых токенов, взрывной волной есть горизонтальная бомба то
                     {
                         dots.Union(GetRowPieces(i)).ToList(); // если взрывная волна от вертикальной бомбы задевает горизонральную бомбу она тоже взрывается
                     }
-                    dots.Add(board.allDots[column, i]);
+                    dots.Add(board.currentLevelAllTokensArray[column, i]);
                     dot.isMatched = true;
                 }
             }
@@ -231,14 +231,14 @@ namespace Base_Game_Scripts
             List<GameObject> dots = new List<GameObject>();
             for (int i = 0; i < board.Width; i++)
             {
-                if (board.allDots[i, row] != null)
+                if (board.currentLevelAllTokensArray[i, row] != null)
                 {
-                    Dot dot = board.allDots[i, row].GetComponent<Dot>();
+                    Dot dot = board.currentLevelAllTokensArray[i, row].GetComponent<Dot>();
                     if (dot.isColumnBomb) // если среди задетых токенов, взрывной волной есть вертикальная бомба то
                     {
                         dots.Union(GetColumnPieces(i)).ToList(); // если взрывная волна от горизонтальной бомбы задевает вертикальную бомбу она тоже взрывается
                     }
-                    dots.Add(board.allDots[i, row]);
+                    dots.Add(board.currentLevelAllTokensArray[i, row]);
                     dot.isMatched = true;
                 }
             }
