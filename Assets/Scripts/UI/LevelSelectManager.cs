@@ -1,69 +1,70 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Game_Data_Scripts;
 using UnityEngine;
 
-public class LevelSelectManager : MonoBehaviour
+namespace UI
 {
-    public GameObject[] panels;
-    public GameObject currentPanel;
-    public int page;
-    private GameData _gameData;
-    public int currentLevel = default;
-
-    private void Awake()
+    public class LevelSelectManager : MonoBehaviour
     {
-        _gameData = FindObjectOfType<GameData>();
-        
-    }
+        public GameObject[] panels;
+        public GameObject currentPanel;
+        public int page;
+        private GameData _gameData;
+        public int currentLevel = default;
 
-    private void Start()
-    {
-        for (int i = 0; i < panels.Length; i++)
+        private void Awake()
         {
-            panels[i].SetActive(false);
+            _gameData = FindObjectOfType<GameData>();
+        
         }
 
-        if (_gameData != null)
+        private void Start()
         {
-            for (int i = 0; i < _gameData.saveData.isActive.Length; i++)
+            for (int i = 0; i < panels.Length; i++)
             {
-                if (_gameData.saveData.isActive[i])
+                panels[i].SetActive(false);
+            }
+
+            if (_gameData != null)
+            {
+                for (int i = 0; i < _gameData.saveData.isActive.Length; i++)
                 {
-                    currentLevel = i;
+                    if (_gameData.saveData.isActive[i])
+                    {
+                        currentLevel = i;
+                    }
                 }
             }
-        }
 
-        page = (int)Mathf.Floor(currentLevel / 9f);
-        currentPanel = panels[page];
-        panels[page].SetActive(true);
-    }
-
-    public void PageRight()
-    {
-        if (page < panels.Length - 1)
-        {
-            currentPanel.SetActive(false);
-            page++;
+            page = (int)Mathf.Floor(currentLevel / 9f);
             currentPanel = panels[page];
-            currentPanel.SetActive(true);
-
+            panels[page].SetActive(true);
         }
-    }
-    public void PageLeft()
-    {
-        if (page > 0)
+
+        public void PageRight()
         {
-            currentPanel.SetActive(false);
-            page--;
-            currentPanel = panels[page];
-            currentPanel.SetActive(true);
+            if (page < panels.Length - 1)
+            {
+                currentPanel.SetActive(false);
+                page++;
+                currentPanel = panels[page];
+                currentPanel.SetActive(true);
 
+            }
         }
-    }
-    private void Update()
-    {
+        public void PageLeft()
+        {
+            if (page > 0)
+            {
+                currentPanel.SetActive(false);
+                page--;
+                currentPanel = panels[page];
+                currentPanel.SetActive(true);
+
+            }
+        }
+        private void Update()
+        {
         
+        }
     }
 }

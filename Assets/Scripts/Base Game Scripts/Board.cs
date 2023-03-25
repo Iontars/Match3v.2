@@ -1,1001 +1,1005 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
+using Scriptable_Objects;
+using Static_Prefs;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public enum GameState{wait, move, win, lose, pause} // состояние используется для блокировки повторного свайпа пока токены движутся и меняет состояние игры
-
-public enum TileKind {Breakable, Blank, Normal, Lock, Concrete, Slime } // состояние тайлов, говорящще о том занял ли тайл или нет
-
-[System.Serializable]
-public class TileType // класс хранящйи в себе информацию о том занят ли тайл или нет
+namespace Base_Game_Scripts
 {
-    public int x;
-    public int y;
-    public TileKind tileKind;
-}
+    public enum GameState{Wait, Move, Win, Lose, Pause} // состояние используется для блокировки повторного свайпа пока токены движутся и меняет состояние игры
 
-[System.Serializable]
-public class MatchType
-{
-    public int type;
-    public string color;
-}
+    public enum TileKind {Breakable, Blank, Normal, Lock, Concrete, Slime } // состояние тайлов, говорящще о том занял ли тайл или нет
 
-/// <summary>
-/// Постороение игрового поля, создание токенов, поиск различных совпадений, уничтожение токенов, звук токенов,
-/// добавление очков за токены, распознавание пустых мест а так же границы доски, перезаполнение доски.
-/// </summary>
-public class Board : MonoBehaviour
-{
-    public World world;
-    public int Level { get; private set; }
-    public GameState currentState = GameState.move; // ?Рудимент
-
-    private int _offSet = 2; // смещает позициаю спавна точек по оси х что позволяет им скользить вниз при появлении
-    public int Width { get; private set; }
-    public int Height { get; private set; }
-
-    [Header("Prefabs")]
-    public GameObject tilePrefab;
-    public GameObject breakableTilePrefab;
-    public GameObject lockTilePrefab;
-    public GameObject concreteTilePrefab;
-    public GameObject slimePiecePrefab;
-    public GameObject[] dots;
-    public GameObject destroyEffect;
-
-    [Header("Layout")]
-    private bool[,] blankSpaces; // массив соразмерный текущей доске для хранения значений о зарезервированных местах
-    private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске содержит компоненты
-    private BackgroundTile[,] concreteTiles;
-    private BackgroundTile[,] slimeTiles;
-    public BackgroundTile[,] lockTiles; // publick becouse need accces from dataScript
-    public TileType[] boardLayout;
-    public GameObject[,] allDots; // массив со всеми игровыми точками на доске
-
-    [Header("Match Stuff")]
-    private FindMatches findMatches;
-    private SoundManager soundManager;
-    private ScoreManager scoreManager;
-    private GoalManager goalManager; // vid 40
-    private int streakValue = 1;
-    private bool _makeSlime = true;
-    private float refillDelay = 0.5f;
-    public Dot currentDot; // запись в скрипте Dot метод CalculateAngle
-    public MatchType matchType;
-    public int basePieceValue = 5;
-    public int[] scoreGoals; // сколько нужно набрать очков для различных успехов на карте, 1 звезда 2000 очков 2 звезды 4000 очков итд
-
-    private void Awake()
+    [System.Serializable]
+    public class TileType // класс хранящйи в себе информацию о том занят ли тайл или нет
     {
-        scoreManager = FindObjectOfType<ScoreManager>();
-        goalManager = FindObjectOfType<GoalManager>();
-        soundManager = FindObjectOfType<SoundManager>();
-        LoadLevelByHisNumber();
-        findMatches = FindObjectOfType<FindMatches>();
-        breakableTiles = new BackgroundTile[Width, Height];
-        lockTiles = new BackgroundTile[Width, Height];
-        concreteTiles = new BackgroundTile[Width, Height];
-        slimeTiles = new BackgroundTile[Width, Height];
-        allDots = new GameObject[Width, Height];
+        public int x;
+        public int y;
+        public TileKind tileKind;
     }
 
-    void Start()
+    [System.Serializable]
+    public class MatchType
     {
-        currentState = GameState.pause; // игра начинается с состояния паузы !!!!!!!!!!!!
-        LoadLevelByHisNumber();
-        SetUp();
+        public int type;
+        public string color;
     }
 
-    private void LoadLevelByHisNumber()
+    /// <summary>
+    /// Постороение игрового поля, создание токенов, поиск различных совпадений, уничтожение токенов, звук токенов,
+    /// добавление очков за токены, распознавание пустых мест а так же границы доски, перезаполнение доски.
+    /// </summary>
+    public class Board : MonoBehaviour
     {
-        //загрузка номера уровня переданного из сцены выбора уровней
-        if (PlayerPrefs.HasKey(PlayerPrefsStorage.keyCurrentLevel))
+        public World world;
+        public int Level { get; private set; }
+        public GameState currentState = GameState.Move; // ?Рудимент
+
+        private int _offSet = 2; // смещает позициаю спавна точек по оси х что позволяет им скользить вниз при появлении
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+
+        [Header("Prefabs")]
+        public GameObject tilePrefab;
+        public GameObject breakableTilePrefab;
+        public GameObject lockTilePrefab;
+        public GameObject concreteTilePrefab;
+        public GameObject slimePiecePrefab;
+        public GameObject[] dots;
+        public GameObject destroyEffect;
+
+        [Header("Layout")]
+        private bool[,] blankSpaces; // массив соразмерный текущей доске для хранения значений о зарезервированных местах
+        private BackgroundTile[,] breakableTiles; // массив с ломающимися плитками на доске содержит компоненты
+        private BackgroundTile[,] concreteTiles;
+        private BackgroundTile[,] slimeTiles;
+        public BackgroundTile[,] lockTiles; // publick becouse need accces from dataScript
+        public TileType[] boardLayout;
+        public GameObject[,] allDots; // массив со всеми игровыми точками на доске
+
+        [Header("Match Stuff")]
+        private FindMatches findMatches;
+        private SoundManager soundManager;
+        private ScoreManager scoreManager;
+        private GoalManager goalManager; // vid 40
+        private int _streakValue = 1;
+        private bool _makeSlime = true;
+        private readonly float _refillDelay = 0.5f;
+        public Dot currentDot; // запись в скрипте Dot метод CalculateAngle
+        public MatchType matchType;
+        public int basePieceValue = 5;
+        public int[] scoreGoals; // сколько нужно набрать очков для различных успехов на карте, 1 звезда 2000 очков 2 звезды 4000 очков итд
+
+        private void Awake()
         {
-            Level = PlayerPrefs.GetInt(PlayerPrefsStorage.keyCurrentLevel);
+            scoreManager = FindObjectOfType<ScoreManager>();
+            goalManager = FindObjectOfType<GoalManager>();
+            soundManager = FindObjectOfType<SoundManager>();
+            LoadLevelByHisNumber();
+            findMatches = FindObjectOfType<FindMatches>();
+            breakableTiles = new BackgroundTile[Width, Height];
+            lockTiles = new BackgroundTile[Width, Height];
+            concreteTiles = new BackgroundTile[Width, Height];
+            slimeTiles = new BackgroundTile[Width, Height];
+            allDots = new GameObject[Width, Height];
         }
 
-        if (world != null)
+        void Start()
         {
-            if (Level < world.levels.Length)
+            currentState = GameState.Pause; // игра начинается с состояния паузы !!!!!!!!!!!!
+            LoadLevelByHisNumber();
+            SetUp();
+        }
+
+        private void LoadLevelByHisNumber()
+        {
+            //загрузка номера уровня переданного из сцены выбора уровней
+            if (PlayerPrefs.HasKey(PlayerPrefsStorage.keyCurrentLevel))
             {
-                if (world.levels[Level] != null)
+                Level = PlayerPrefs.GetInt(PlayerPrefsStorage.keyCurrentLevel);
+            }
+
+            if (world != null)
+            {
+                if (Level < world.levels.Length)
                 {
-                    //копирование значений из выбранного уровня в нашу доску
-                    Width = world.levels[Level].width;
-                    Height = world.levels[Level].height;
-                    dots = world.levels[Level].dots;
-                    scoreGoals = world.levels[Level].scoreGoals;
-                    boardLayout = world.levels[Level].boardLayout;
-                    blankSpaces = new bool[Width, Height];
-                }
-            }
-        }
-    }
-
-    private void GenerateReservePlaceToken()
-    {
-        for (int i = 0; i < boardLayout.Length; i++)
-        {
-            Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y);
-
-            if (boardLayout[i].tileKind == TileKind.Blank)
-            {
-                blankSpaces[boardLayout[i].x, boardLayout[i].y] = true;
-            }
-            else if (boardLayout[i].tileKind == TileKind.Slime)
-            {
-                GameObject reserveToken = Instantiate(slimePiecePrefab, tempPosition, Quaternion.identity);
-                slimeTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
-            }
-            else if(boardLayout[i].tileKind == TileKind.Breakable)
-            {
-                GameObject reserveToken = Instantiate(breakableTilePrefab, tempPosition, Quaternion.identity);
-                breakableTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
-            }
-            else if(boardLayout[i].tileKind == TileKind.Lock)
-            {
-                GameObject reserveToken = Instantiate(lockTilePrefab, tempPosition, Quaternion.identity);
-                lockTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
-            }
-            else if(boardLayout[i].tileKind == TileKind.Concrete)
-            {
-                GameObject reserveToken = Instantiate(concreteTilePrefab, tempPosition, Quaternion.identity);
-                concreteTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
-            }
-        }
-    }
-
-
-    //создание доски
-    void SetUp()
-    {
-        GenerateReservePlaceToken(); // перед созданием тайлов на доске, создаём зарезервированные места
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-
-                if (!blankSpaces[i, j] && !concreteTiles[i,j] && !slimeTiles[i,j]) // проверка на пустое место/бетонное место на доске/если false создаёт тайл на доске
-                {
-                    Vector2 tempPosition = new Vector2(i, j);
-                    Vector2 tilePosition = new Vector2(i, j);
-                    GameObject backgroundTile = Instantiate(tilePrefab, tilePosition, Quaternion.identity) as GameObject;
-                    backgroundTile.transform.parent = transform;
-                    backgroundTile.name = "( " + i + ", " + j + " )";
-                    int dotToUse = Random.Range(0, dots.Length);
-
-                    //вызов проверки на совпадение при создании доски (не должно быть готовых совпадений)
-                    int maxIterations = 0;
-                    while (MatchesAt(i, j, dots[dotToUse]) && maxIterations < 100)
+                    if (world.levels[Level] != null)
                     {
-                        dotToUse = Random.Range(0, dots.Length);
-                        maxIterations++;
-                        //Debug.Log(maxIterations);
+                        //копирование значений из выбранного уровня в нашу доску
+                        Width = world.levels[Level].width;
+                        Height = world.levels[Level].height;
+                        dots = world.levels[Level].dots;
+                        scoreGoals = world.levels[Level].scoreGoals;
+                        boardLayout = world.levels[Level].boardLayout;
+                        blankSpaces = new bool[Width, Height];
                     }
-                    maxIterations = 0;
-
-                    GameObject dot = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity);
-                    dot.GetComponent<Dot>().row = j;
-                    dot.GetComponent<Dot>().column = i;
-                    dot.transform.parent = transform;
-                    dot.name = "( " + i + ", " + j + " )";
-                    allDots[i, j] = dot;
                 }
             }
         }
-    }
 
-    //проверка на одинаковые токены при создании доски
-    bool MatchesAt(int colunm, int row, GameObject piece)
-    {
-        if (colunm > 1 && row >1 )
+        private void GenerateReservePlaceToken()
         {
-            if (allDots[colunm -1, row] != null && allDots[colunm - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
+            for (int i = 0; i < boardLayout.Length; i++)
             {
-                if (allDots[colunm - 1, row].tag == piece.tag &&
+                Vector2 tempPosition = new Vector2(boardLayout[i].x, boardLayout[i].y);
+
+                if (boardLayout[i].tileKind == TileKind.Blank)
+                {
+                    blankSpaces[boardLayout[i].x, boardLayout[i].y] = true;
+                }
+                else if (boardLayout[i].tileKind == TileKind.Slime)
+                {
+                    GameObject reserveToken = Instantiate(slimePiecePrefab, tempPosition, Quaternion.identity);
+                    slimeTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+                }
+                else if(boardLayout[i].tileKind == TileKind.Breakable)
+                {
+                    GameObject reserveToken = Instantiate(breakableTilePrefab, tempPosition, Quaternion.identity);
+                    breakableTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+                }
+                else if(boardLayout[i].tileKind == TileKind.Lock)
+                {
+                    GameObject reserveToken = Instantiate(lockTilePrefab, tempPosition, Quaternion.identity);
+                    lockTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+                }
+                else if(boardLayout[i].tileKind == TileKind.Concrete)
+                {
+                    GameObject reserveToken = Instantiate(concreteTilePrefab, tempPosition, Quaternion.identity);
+                    concreteTiles[boardLayout[i].x, boardLayout[i].y] = reserveToken.GetComponent<BackgroundTile>();
+                }
+            }
+        }
+
+
+        //создание доски
+        void SetUp()
+        {
+            GenerateReservePlaceToken(); // перед созданием тайлов на доске, создаём зарезервированные места
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+
+                    if (!blankSpaces[i, j] && !concreteTiles[i,j] && !slimeTiles[i,j]) // проверка на пустое место/бетонное место на доске/если false создаёт тайл на доске
+                    {
+                        Vector2 tempPosition = new Vector2(i, j);
+                        Vector2 tilePosition = new Vector2(i, j);
+                        GameObject backgroundTile = Instantiate(tilePrefab, tilePosition, Quaternion.identity) as GameObject;
+                        backgroundTile.transform.parent = transform;
+                        backgroundTile.name = "( " + i + ", " + j + " )";
+                        int dotToUse = Random.Range(0, dots.Length);
+
+                        //вызов проверки на совпадение при создании доски (не должно быть готовых совпадений)
+                        int maxIterations = 0;
+                        while (MatchesAt(i, j, dots[dotToUse]) && maxIterations < 100)
+                        {
+                            dotToUse = Random.Range(0, dots.Length);
+                            maxIterations++;
+                            //Debug.Log(maxIterations);
+                        }
+                        maxIterations = 0;
+
+                        GameObject dot = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity);
+                        dot.GetComponent<Dot>().row = j;
+                        dot.GetComponent<Dot>().column = i;
+                        dot.transform.parent = transform;
+                        dot.name = "( " + i + ", " + j + " )";
+                        allDots[i, j] = dot;
+                    }
+                }
+            }
+        }
+
+        //проверка на одинаковые токены при создании доски
+        bool MatchesAt(int colunm, int row, GameObject piece)
+        {
+            if (colunm > 1 && row >1 )
+            {
+                if (allDots[colunm -1, row] != null && allDots[colunm - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
+                {
+                    if (allDots[colunm - 1, row].tag == piece.tag &&
                         allDots[colunm - 2, row].tag == piece.tag)
-                {
-                    return true;
+                    {
+                        return true;
+                    }
                 }
-            }
-            if (allDots[colunm, row - 1] != null && allDots[colunm, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
-            {
-                if (allDots[colunm, row - 1].tag == piece.tag &&
-                        allDots[colunm, row - 2].tag == piece.tag)
-                {
-                    return true;
-                }
-            }
-        }
-        else if(colunm <= 1 || row <= 1)
-        {
-            if (row > 1)
-            {
                 if (allDots[colunm, row - 1] != null && allDots[colunm, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
                 {
                     if (allDots[colunm, row - 1].tag == piece.tag &&
-                                allDots[colunm, row - 2].tag == piece.tag)
+                        allDots[colunm, row - 2].tag == piece.tag)
                     {
                         return true;
                     }
                 }
             }
-            if (colunm > 1) //
+            else if(colunm <= 1 || row <= 1)
             {
-                if (allDots[colunm - 1, row] != null && allDots[colunm - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
+                if (row > 1)
                 {
-                    if (allDots[colunm - 1, row].tag == piece.tag &&
-                                allDots[colunm - 2, row].tag == piece.tag)
+                    if (allDots[colunm, row - 1] != null && allDots[colunm, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
                     {
-                        return true;
+                        if (allDots[colunm, row - 1].tag == piece.tag &&
+                            allDots[colunm, row - 2].tag == piece.tag)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if (colunm > 1) //
+                {
+                    if (allDots[colunm - 1, row] != null && allDots[colunm - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
+                    {
+                        if (allDots[colunm - 1, row].tag == piece.tag &&
+                            allDots[colunm - 2, row].tag == piece.tag)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
+            return false;
         }
-        return false;
-    }
 
-    private MatchType ColumnOrRow()
-    {
-        // создать копию FindMatches.currentMatches
-        List<GameObject> matchCopy = findMatches.currentMatches as List<GameObject>; // as Важно изучить
-
-        matchType.type = 0;
-        matchType.color = "";
-
-        // Просмотреть список и решить нужно ли делать бомбу
-        for (int i = 0; i < matchCopy.Count; i++)
+        private MatchType ColumnOrRow()
         {
-            // сохраним текущую точку
-            Dot thisDot = matchCopy[i].GetComponent<Dot>();
-            string color = matchCopy[i].tag;
-            //int column = thisDot.column;
-            //int row = thisDot.row;
-            int columnMatch = default;
-            int rowMatch = default;
-            // просмотреть остальные соседние точки и сравнить
-            for (int j = 0; j < matchCopy.Count; j++)
+            // создать копию FindMatches.currentMatches
+            List<GameObject> matchCopy = findMatches.currentMatches as List<GameObject>; // as Важно изучить
+
+            matchType.type = 0;
+            matchType.color = "";
+
+            // Просмотреть список и решить нужно ли делать бомбу
+            for (int i = 0; i < matchCopy.Count; i++)
             {
-                Dot nextDot = matchCopy[j]?.GetComponent<Dot>();
-                if (thisDot == nextDot)
+                // сохраним текущую точку
+                Dot thisDot = matchCopy[i].GetComponent<Dot>();
+                string color = matchCopy[i].tag;
+                //int column = thisDot.column;
+                //int row = thisDot.row;
+                int columnMatch = default;
+                int rowMatch = default;
+                // просмотреть остальные соседние точки и сравнить
+                for (int j = 0; j < matchCopy.Count; j++)
                 {
-                    continue;
+                    Dot nextDot = matchCopy[j]?.GetComponent<Dot>();
+                    if (thisDot == nextDot)
+                    {
+                        continue;
+                    }
+                    if (thisDot.column == nextDot.column && nextDot.tag == color) // перейти на компонентную систему заменив теги
+                    {
+                        columnMatch++;
+                    }
+                    if (thisDot.row == nextDot.row && nextDot.tag == color) // перейти на компонентную систему заменив теги
+                    {
+                        rowMatch++;
+                    }
                 }
-                if (thisDot.column == nextDot.column && nextDot.tag == color) // перейти на компонентную систему заменив теги
+                //return 3 если колонки или строки совпали
+                //return 2 если бомба уничтожающая соседние тайлы
+                //return 1 если цветная бомба
+                if (columnMatch == 4 || rowMatch == 4) //  сравниваем с числом меньше фактического так как не учитываем сами себя
                 {
-                    columnMatch++;
+                    matchType.type = 1;
+                    matchType.color = color;
+                    return matchType;
                 }
-                if (thisDot.row == nextDot.row && nextDot.tag == color) // перейти на компонентную систему заменив теги
+                if (columnMatch == 2 && rowMatch == 2)
                 {
-                    rowMatch++;
+                    matchType.type = 2;
+                    matchType.color = color;
+                    return matchType;
                 }
+                if (columnMatch == 3 || rowMatch == 3)
+                {
+                    matchType.type = 3;
+                    matchType.color = color;
+                    return matchType;
+                }          
             }
-            //return 3 если колонки или строки совпали
-            //return 2 если бомба уничтожающая соседние тайлы
-            //return 1 если цветная бомба
-            if (columnMatch == 4 || rowMatch == 4) //  сравниваем с числом меньше фактического так как не учитываем сами себя
-            {
-                matchType.type = 1;
-                matchType.color = color;
-                return matchType;
-            }
-            if (columnMatch == 2 && rowMatch == 2)
-            {
-                matchType.type = 2;
-                matchType.color = color;
-                return matchType;
-            }
-            if (columnMatch == 3 || rowMatch == 3)
-            {
-                matchType.type = 3;
-                matchType.color = color;
-                return matchType;
-            }          
+            matchType.type = 0;
+            matchType.color = "";
+            return matchType;
         }
-        matchType.type = 0;
-        matchType.color = "";
-        return matchType;
-    }
 
 
-    // Vid 51.2 (16 min) как то связано с уничтожением бетона если его задеват горизонтальная бомба
-    public void BombRow(int row)
-    {
-        for (int i = 0; i < Width; i++)
+        // Vid 51.2 (16 min) как то связано с уничтожением бетона если его задеват горизонтальная бомба
+        public void BombRow(int row)
         {
+            for (int i = 0; i < Width; i++)
+            {
             
-            if (concreteTiles[i, row])
-            {
-                concreteTiles[i, row].TakeDamage(1);
-                if (concreteTiles[i, row].hitPoints <= 0)
+                if (concreteTiles[i, row])
                 {
-                    concreteTiles[i, row] = null; // удаляем из массива ломающийся токен
+                    concreteTiles[i, row].TakeDamage(1);
+                    if (concreteTiles[i, row].hitPoints <= 0)
+                    {
+                        concreteTiles[i, row] = null; // удаляем из массива ломающийся токен
+                    }
                 }
             }
         }
-    }
 
-    public void BombColumn(int column)
-    {
-        for (int i = 0; i < Width; i++)
+        public void BombColumn(int column)
         {
-            if (concreteTiles[column, i])
+            for (int i = 0; i < Width; i++)
             {
-                concreteTiles[column, i].TakeDamage(1);
-                if (concreteTiles[column, i].hitPoints <= 0)
+                if (concreteTiles[column, i])
                 {
-                    concreteTiles[column, i] = null; // удаляем из массива ломающийся токен
+                    concreteTiles[column, i].TakeDamage(1);
+                    if (concreteTiles[column, i].hitPoints <= 0)
+                    {
+                        concreteTiles[column, i] = null; // удаляем из массива ломающийся токен
+                    }
                 }
             }
         }
-    }
 
-    // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод/ партикл взрыва / урон бонусным тайлам
-    void DestroyMatchesAt(int colunm, int row)
-    {
-        if (allDots[colunm,row].GetComponent<Dot>().isMatched)
+        // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод/ партикл взрыва / урон бонусным тайлам
+        void DestroyMatchesAt(int colunm, int row)
+        {
+            if (allDots[colunm,row].GetComponent<Dot>().isMatched)
+            {
+                // сколько эллементов в Списке currentMatches ?
+                if (findMatches.currentMatches.Count >=4)
+                {
+                    CheckToMakeBombs();
+                }
+
+                //эти уничтожения работают потому что они находятся на одной позиции с токеном, с бетоной стеной ест ьотдельный класс DamageConcrete
+                // нужно ли разбивать ломающуюся плитку
+                if (breakableTiles[colunm, row] != null) //  если в данной позиции есть ломающаяся плитка
+                {
+                    // если это нанесёт 1 единицу урона
+                    breakableTiles[colunm, row].TakeDamage(1);
+                    if (breakableTiles[colunm, row].hitPoints <= 0)
+                    {
+                        breakableTiles[colunm, row] = null; // удаляем из массива ломающийся токен
+                    }
+                }
+
+                if (lockTiles[colunm, row] != null)
+                {
+                    // если это нанесёт 1 единицу урона
+                    lockTiles[colunm, row].TakeDamage(1);
+                    if (lockTiles[colunm, row].hitPoints <= 0)
+                    {
+                        lockTiles[colunm, row] = null; // удаляем из массива ломающийся токен
+                    }
+                }
+
+                DamageConcrete(colunm, row); // урон по соседним от isMatched бомбам
+                DamageSlime(colunm, row); // урон по соседним от isMatched слаймам
+                CheckToMakeSlime();
+            
+            
+                // vid 40 // сравниваем ломающуюся плитку на предмет цели уровня
+                if (goalManager != null)
+                {
+                    goalManager.CompareGoal(allDots[colunm, row].tag.ToString());
+                    goalManager.UpdateGoals();
+                }
+
+                soundManager.PlayRandomDestroyNoise(); // звук ломания токена
+
+                GameObject particle = Instantiate(destroyEffect, new Vector3( // анимация взрыва партиклом
+                    allDots[colunm, row].transform.position.x,
+                    allDots[colunm, row].transform.position.y,
+                    allDots[colunm, row].transform.position.z - 1), Quaternion.identity);
+                Destroy(particle, .3f);
+                allDots[colunm,row].GetComponent<Dot>().PopAnimation(); // анимация спрайта
+                Destroy(allDots[colunm, row], .2f); // Фактическое уничтожение совпавших бомб
+                scoreManager.IncreaseScore(basePieceValue * _streakValue); // добавление очков на табло
+                allDots[colunm, row] = null;
+            
+            }
+        }
+
+        // вызов Уничтожение совпавших токенов
+        public void DestroyMatches() // зачем так сложно в 500 обёрток // оптимизировать. объеденить с методом DestroyMatchesAt
         {
             // сколько эллементов в Списке currentMatches ?
-            if (findMatches.currentMatches.Count >=4)
+            // как только мы проверили что в списке совпадений существует 4 или более совпадений мы сразу проверяем какую бомбу можно создать и 
+            // очищаем список совпадений в избежании повторных сравнений в процессе больших каскадов и больших цепочек совпадений
+            if (findMatches.currentMatches.Count >= 4)
             {
                 CheckToMakeBombs();
             }
-
-            //эти уничтожения работают потому что они находятся на одной позиции с токеном, с бетоной стеной ест ьотдельный класс DamageConcrete
-            // нужно ли разбивать ломающуюся плитку
-            if (breakableTiles[colunm, row] != null) //  если в данной позиции есть ломающаяся плитка
+            findMatches.currentMatches.Clear();
+            for (int i = 0; i < Width; i++)
             {
-                // если это нанесёт 1 единицу урона
-                breakableTiles[colunm, row].TakeDamage(1);
-                if (breakableTiles[colunm, row].hitPoints <= 0)
+                for (int j = 0; j < Height; j++)
                 {
-                    breakableTiles[colunm, row] = null; // удаляем из массива ломающийся токен
+                    if (allDots[i,j] != null)
+                    {
+                        DestroyMatchesAt(i, j);
+                    }
                 }
             }
-
-            if (lockTiles[colunm, row] != null)
-            {
-                // если это нанесёт 1 единицу урона
-                lockTiles[colunm, row].TakeDamage(1);
-                if (lockTiles[colunm, row].hitPoints <= 0)
-                {
-                    lockTiles[colunm, row] = null; // удаляем из массива ломающийся токен
-                }
-            }
-
-            DamageConcrete(colunm, row); // урон по соседним от isMatched бомбам
-            DamageSlime(colunm, row); // урон по соседним от isMatched слаймам
-            CheckToMakeSlime();
-            
-            
-            // vid 40 // сравниваем ломающуюся плитку на предмет цели уровня
-            if (goalManager != null)
-            {
-                goalManager.CompareGoal(allDots[colunm, row].tag.ToString());
-                goalManager.UpdateGoals();
-            }
-
-            soundManager.PlayRandomDestroyNoise(); // звук ломания токена
-
-            GameObject particle = Instantiate(destroyEffect, new Vector3( // анимация взрыва партиклом
-                allDots[colunm, row].transform.position.x,
-                allDots[colunm, row].transform.position.y,
-                allDots[colunm, row].transform.position.z - 1), Quaternion.identity);
-            Destroy(particle, .3f);
-            allDots[colunm,row].GetComponent<Dot>().PopAnimation(); // анимация спрайта
-            Destroy(allDots[colunm, row], .2f); // Фактическое уничтожение совпавших бомб
-            scoreManager.IncreaseScore(basePieceValue * streakValue); // добавление очков на табло
-            allDots[colunm, row] = null;
-            
+            findMatches.currentMatches.Clear();
+            StartCoroutine(nameof(DecreaseRowCo2));
         }
-    }
 
-    // вызов Уничтожение совпавших токенов
-    public void DestroyMatches() // зачем так сложно в 500 обёрток // оптимизировать. объеденить с методом DestroyMatchesAt
-    {
-        // сколько эллементов в Списке currentMatches ?
-        // как только мы проверили что в списке совпадений существует 4 или более совпадений мы сразу проверяем какую бомбу можно создать и 
-        // очищаем список совпадений в избежании повторных сравнений в процессе больших каскадов и больших цепочек совпадений
-        if (findMatches.currentMatches.Count >= 4)
+        // проверить какой тип бонуса создать при совпадениях
+        private void CheckToMakeBombs()
         {
-            CheckToMakeBombs();
-        }
-        findMatches.currentMatches.Clear();
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
+            // Скольк осовпадений за раз находится в списке FindMatches.currentMatches
+            if (findMatches.currentMatches.Count > 3)
             {
-                if (allDots[i,j] != null)
+                // какой тип срвпадений?
+                MatchType typeOfMatch = ColumnOrRow();
+                if (typeOfMatch.type == 1)
                 {
-                    DestroyMatchesAt(i, j);
+                    //Make a color bomb
+                    //is the current dot matched?
+                    if (currentDot != null && currentDot.isMatched && currentDot.tag == typeOfMatch.color)
+                    {
+                        currentDot.isMatched = false;
+                        currentDot.MakeColorBomb();
+                    }
+                    else
+                    {
+                        if (currentDot.otherDot != null)
+                        {
+                            Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
+                            if (otherDot.isMatched && otherDot.tag == typeOfMatch.color)
+                            {
+                                otherDot.isMatched = false;
+                                otherDot.MakeColorBomb();
+                            }
+                        }
+                    }
                 }
-            }
-        }
-        findMatches.currentMatches.Clear();
-        StartCoroutine(nameof(DecreaseRowCo2));
-    }
-
-    // проверить какой тип бонуса создать при совпадениях
-    private void CheckToMakeBombs()
-    {
-        // Скольк осовпадений за раз находится в списке FindMatches.currentMatches
-        if (findMatches.currentMatches.Count > 3)
-        {
-            // какой тип срвпадений?
-            MatchType typeOfMatch = ColumnOrRow();
-            if (typeOfMatch.type == 1)
-            {
-                //Make a color bomb
-                //is the current dot matched?
-                if (currentDot != null && currentDot.isMatched && currentDot.tag == typeOfMatch.color)
+                else if (typeOfMatch.type == 2)
                 {
-                    currentDot.isMatched = false;
-                    currentDot.MakeColorBomb();
-                }
-                else
-                {
-                    if (currentDot.otherDot != null)
+                    //Make a adjacent bomb
+                    //is the current dot matched?
+                    if (currentDot != null && currentDot.isMatched && currentDot.tag == typeOfMatch.color)
+                    {
+                        currentDot.isMatched = false;
+                        currentDot.MakeAjacentBomb();
+                    }
+                    else if (currentDot.otherDot != null)
                     {
                         Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
                         if (otherDot.isMatched && otherDot.tag == typeOfMatch.color)
                         {
                             otherDot.isMatched = false;
-                            otherDot.MakeColorBomb();
+                            otherDot.MakeAjacentBomb();
                         }
                     }
                 }
-            }
-            else if (typeOfMatch.type == 2)
-            {
-                //Make a adjacent bomb
-                //is the current dot matched?
-                if (currentDot != null && currentDot.isMatched && currentDot.tag == typeOfMatch.color)
+                else if (typeOfMatch.type == 3)
                 {
-                    currentDot.isMatched = false;
-                    currentDot.MakeAjacentBomb();
+                    findMatches.CheckBombs(typeOfMatch); // если в совпадениях 3 токена то смотрим только лишь на линейные бомбы
                 }
-                else if (currentDot.otherDot != null)
+            }
+        }
+
+        // урон по соседним бетонным стенам
+        private void DamageConcrete(int column, int row)
+        {
+            // проверка есть ли бетонная стена слева от токена, смотрим только позиции отличные от нуля так как левее границы поля не может быть бетонной стены
+            if (column > 0)
+            {
+                if (concreteTiles[column - 1, row] != null)
                 {
-                    Dot otherDot = currentDot.otherDot.GetComponent<Dot>();
-                    if (otherDot.isMatched && otherDot.tag == typeOfMatch.color)
+                    concreteTiles[column - 1, row].TakeDamage(1);
+                    if (concreteTiles[column - 1, row].hitPoints <= 0)
                     {
-                        otherDot.isMatched = false;
-                        otherDot.MakeAjacentBomb();
+                        concreteTiles[column - 1, row] = null; // удаляем из массива ломающийся токен
                     }
                 }
             }
-            else if (typeOfMatch.type == 3)
+            // проверка есть ли бетонная стена справа от токена
+            if (column < Width - 1)
             {
-                findMatches.CheckBombs(typeOfMatch); // если в совпадениях 3 токена то смотрим только лишь на линейные бомбы
-            }
-        }
-    }
-
-    // урон по соседним бетонным стенам
-    private void DamageConcrete(int column, int row)
-    {
-        // проверка есть ли бетонная стена слева от токена, смотрим только позиции отличные от нуля так как левее границы поля не может быть бетонной стены
-        if (column > 0)
-        {
-            if (concreteTiles[column - 1, row] != null)
-            {
-                concreteTiles[column - 1, row].TakeDamage(1);
-                if (concreteTiles[column - 1, row].hitPoints <= 0)
+                if (concreteTiles[column + 1, row] != null)
                 {
-                    concreteTiles[column - 1, row] = null; // удаляем из массива ломающийся токен
-                }
-            }
-        }
-        // проверка есть ли бетонная стена справа от токена
-        if (column < Width - 1)
-        {
-            if (concreteTiles[column + 1, row] != null)
-            {
-                concreteTiles[column + 1, row].TakeDamage(1);
-                if (concreteTiles[column + 1, row].hitPoints <= 0)
-                {
-                    concreteTiles[column + 1, row] = null; // удаляем из массива ломающийся токен
-                }
-            }
-        }
-        if (row > 0)
-        {
-            if (concreteTiles[column, row - 1] != null)
-            {
-                concreteTiles[column, row - 1].TakeDamage(1);
-                if (concreteTiles[column, row - 1].hitPoints <= 0)
-                {
-                    concreteTiles[column, row - 1] = null; // удаляем из массива ломающийся токен
-                }
-            }
-        }
-        if (row < Height - 1)
-        {
-            if (concreteTiles[column, row + 1] != null)
-            {
-                concreteTiles[column, row + 1].TakeDamage(1);
-                if (concreteTiles[column, row + 1].hitPoints <= 0)
-                {
-                    concreteTiles[column, row + 1] = null; // удаляем из массива ломающийся токен
-                }
-            }
-        }
-    }
-    
-    // урон по соседним слайм стенам
-    private void DamageSlime(int column, int row)
-    {
-        // проверка есть ли бетонная стена слева от токена, смотрим только позиции отличные от нуля так как левее границы поля не может быть бетонной стены
-        if (column > 0)
-        {
-            if (slimeTiles[column - 1, row] != null)
-            {
-                slimeTiles[column - 1, row].TakeDamage(1);
-                if (slimeTiles[column - 1, row].hitPoints <= 0)
-                {
-                    slimeTiles[column - 1, row] = null; // удаляем из массива ломающийся токен
-                }
-                _makeSlime = false;
-            }
-        }
-        // проверка есть ли бетонная стена справа от токена
-        if (column < Width - 1)
-        {
-            if (slimeTiles[column + 1, row] != null)
-            {
-                slimeTiles[column + 1, row].TakeDamage(1);
-                if (slimeTiles[column + 1, row].hitPoints <= 0)
-                {
-                    slimeTiles[column + 1, row] = null; // удаляем из массива ломающийся токен
-                }
-                _makeSlime = false;
-            }
-        }
-        if (row > 0)
-        {
-            if (slimeTiles[column, row - 1] != null)
-            {
-                slimeTiles[column, row - 1].TakeDamage(1);
-                if (slimeTiles[column, row - 1].hitPoints <= 0)
-                {
-                    slimeTiles[column, row - 1] = null; // удаляем из массива ломающийся токен
-                }
-                _makeSlime = false;
-            }
-        }
-        if (row < Height - 1)
-        {
-            if (slimeTiles[column, row + 1] != null)
-            {
-                slimeTiles[column, row + 1].TakeDamage(1);
-                if (slimeTiles[column, row + 1].hitPoints <= 0)
-                {
-                    slimeTiles[column, row + 1] = null; // удаляем из массива ломающийся токен
-                }
-                _makeSlime = false;
-            }
-        }
-    }
-
-    // продвинутое распознавание пустых мест на доске
-    IEnumerator DecreaseRowCo2()
-    {
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                // не зарезервировано ли место внутри доски? работает в совокупности с методом RefillBoard() и таким же условием в нем
-                if (!blankSpaces[i,j] && allDots[i,j] == null && !concreteTiles[i, j] && !slimeTiles[i,j])
-                {
-                    // проверка доски
-                    for (int k = j + 1; k < Height; k++)
+                    concreteTiles[column + 1, row].TakeDamage(1);
+                    if (concreteTiles[column + 1, row].hitPoints <= 0)
                     {
-                        // найдена ли точка ?
-                        if (allDots[i,k] != null)
+                        concreteTiles[column + 1, row] = null; // удаляем из массива ломающийся токен
+                    }
+                }
+            }
+            if (row > 0)
+            {
+                if (concreteTiles[column, row - 1] != null)
+                {
+                    concreteTiles[column, row - 1].TakeDamage(1);
+                    if (concreteTiles[column, row - 1].hitPoints <= 0)
+                    {
+                        concreteTiles[column, row - 1] = null; // удаляем из массива ломающийся токен
+                    }
+                }
+            }
+            if (row < Height - 1)
+            {
+                if (concreteTiles[column, row + 1] != null)
+                {
+                    concreteTiles[column, row + 1].TakeDamage(1);
+                    if (concreteTiles[column, row + 1].hitPoints <= 0)
+                    {
+                        concreteTiles[column, row + 1] = null; // удаляем из массива ломающийся токен
+                    }
+                }
+            }
+        }
+    
+        // урон по соседним слайм стенам
+        private void DamageSlime(int column, int row)
+        {
+            // проверка есть ли бетонная стена слева от токена, смотрим только позиции отличные от нуля так как левее границы поля не может быть бетонной стены
+            if (column > 0)
+            {
+                if (slimeTiles[column - 1, row] != null)
+                {
+                    slimeTiles[column - 1, row].TakeDamage(1);
+                    if (slimeTiles[column - 1, row].hitPoints <= 0)
+                    {
+                        slimeTiles[column - 1, row] = null; // удаляем из массива ломающийся токен
+                    }
+                    _makeSlime = false;
+                }
+            }
+            // проверка есть ли бетонная стена справа от токена
+            if (column < Width - 1)
+            {
+                if (slimeTiles[column + 1, row] != null)
+                {
+                    slimeTiles[column + 1, row].TakeDamage(1);
+                    if (slimeTiles[column + 1, row].hitPoints <= 0)
+                    {
+                        slimeTiles[column + 1, row] = null; // удаляем из массива ломающийся токен
+                    }
+                    _makeSlime = false;
+                }
+            }
+            if (row > 0)
+            {
+                if (slimeTiles[column, row - 1] != null)
+                {
+                    slimeTiles[column, row - 1].TakeDamage(1);
+                    if (slimeTiles[column, row - 1].hitPoints <= 0)
+                    {
+                        slimeTiles[column, row - 1] = null; // удаляем из массива ломающийся токен
+                    }
+                    _makeSlime = false;
+                }
+            }
+            if (row < Height - 1)
+            {
+                if (slimeTiles[column, row + 1] != null)
+                {
+                    slimeTiles[column, row + 1].TakeDamage(1);
+                    if (slimeTiles[column, row + 1].hitPoints <= 0)
+                    {
+                        slimeTiles[column, row + 1] = null; // удаляем из массива ломающийся токен
+                    }
+                    _makeSlime = false;
+                }
+            }
+        }
+
+        // продвинутое распознавание пустых мест на доске
+        IEnumerator DecreaseRowCo2()
+        {
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    // не зарезервировано ли место внутри доски? работает в совокупности с методом RefillBoard() и таким же условием в нем
+                    if (!blankSpaces[i,j] && allDots[i,j] == null && !concreteTiles[i, j] && !slimeTiles[i,j])
+                    {
+                        // проверка доски
+                        for (int k = j + 1; k < Height; k++)
                         {
-                            // переместить точки в пустое пространство
-                            allDots[i, k].GetComponent<Dot>().row = j;
-                            // установить значение этого места как null
-                            allDots[i, k] = null;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        yield return new WaitForSeconds(refillDelay * 0.5f); // не трогать, задержка перед появлением новых токенов
-        StartCoroutine(nameof(FillBoardCo));      
-    }
-
-    IEnumerator FillBoardCo()
-    {
-        yield return new WaitForSeconds(refillDelay);
-        RefillBoard();
-        yield return new WaitForSeconds(refillDelay);
-        while (MatchesOnBoard())
-        {
-            streakValue++;
-            DestroyMatches();
-            yield break;
-        }
-        currentDot = null;
-        CheckToMakeSlime();
-        if (IsDeadlocked())
-        {
-            StartCoroutine(nameof(ShuffleBorad));
-        }
-        yield return new WaitForSeconds(refillDelay);
-        Debug.Log("Done Refilling");
-        System.GC.Collect();
-        if (currentState != GameState.pause) // vid 55 (9 min)
-            currentState = GameState.move;
-        _makeSlime = true;
-        streakValue = 1;
-
-        // RefillBoard(); // заполнить досу токенами после первого совпадения
-        // yield return new WaitForSeconds(refillDelay); // и подождать
-        // // каскад совпадений
-        // while (MatchesOnBoard()) // пока есть каскад совпадений, ждать wait
-        // {
-        //     streakValue++; // серия совпадений
-        //     //currentState = GameState.wait;
-        //     print(streakValue);
-        //     DestroyMatches(); // вызов этого метода должен быть раньше задержки
-        //     //yield return new WaitForSeconds(1.5f * refillDelay); // нужно дождаться заполнения доски прежде чем проверить поэтому увеличиваем время
-        //     yield break;
-        // }
-        // findMatches.currentMatches.Clear(); // Имеет отношенеи к бонусам
-        // CheckToMakeSlime();
-        // yield return new WaitForSeconds(refillDelay);
-        //
-        //
-        // if (IsDeadlocked()) // проверка на наличие того что на доске больше нельзя создать совпадений
-        // {
-        //     ShuffleBorad();
-        // }
-        // if (!MatchesOnBoard())
-        // {
-        //     currentState = GameState.move;
-        //     _makeSlime = true;
-        //     streakValue = 1;
-        // }
-    }
-
-    #region Slime
-
-    private void CheckToMakeSlime()
-    {
-        // проверить массив слаймов
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                if (slimeTiles[i,j] != null && _makeSlime)
-                {
-                    // вызвать другой метод для создания нового слайма
-                    Debug.LogError("Slime");
-                    MakeNewSlime();
-                    return;
-                }
-            }
-        }
-    }
-
-    //проверка на соседнюю бомбу vid 53 (19) связано со слаймами
-    private Vector2 CheckForAdjacent(int column, int row)
-    {
-
-        if (column < Width - 1 && allDots[column + 1, row])
-        {
-            return Vector2.right;
-        }
-        if (column > 0 && allDots[column - 1, row])
-        {
-            return Vector2.left;
-        }
-        if (row < Height - 1 && allDots[column, row + 1])
-        {
-            return Vector2.up;
-        }
-        if (row > 0 && allDots[column, row - 1])
-        {
-            return Vector2.down;
-        }
-        return Vector2.zero;
-    }
-
-    private void MakeNewSlime() // vid 53 (27 min)
-    {
-        bool slime = false;
-        int loops = 0; //  что бы не попасть в вечную проверку
-        while (!slime && loops < 200)
-        {
-            int newX = Random.Range(0, Width);
-            int newY = Random.Range(0, Height);
-            if (slimeTiles[newX, newY]) // проверяем есть ли по даному индексу массива плитка слайма
-            {
-                Vector2 adjacent = CheckForAdjacent(newX, newY);
-                if (adjacent != Vector2.zero)
-                {
-                    Destroy(allDots[newX + (int)adjacent.x, newY + (int)adjacent.y]);
-                    Vector2 tempPosition = new Vector2(newX + (int)adjacent.x, newY + (int)adjacent.y);
-                    GameObject tile = Instantiate(slimePiecePrefab, tempPosition, Quaternion.identity);
-                    slimeTiles[newX + (int)adjacent.x, newY + (int)adjacent.y] = tile.GetComponent<BackgroundTile>();
-                    slime = true;
-                }
-            }
-            loops++;
-        }
-    }
-    #endregion
-
-    // заполнение пустых ячеек
-    void RefillBoard()
-    {
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                if (allDots[i,j] == null && !blankSpaces[i,j] && !concreteTiles[i, j] && !slimeTiles[i, j]) // проверка в том числе на зарезервированные места на доске
-                {
-                    Vector2 tempPosition = new Vector2(i, j + _offSet);
-                    int dotToUse = Random.Range(0, dots.Length); 
-
-                    //фикс проблемы когда при каскаде можно было передвиграть фгуры вручную
-                    int maxIterations = 0;
-                    while (MatchesAt(i,j, dots[dotToUse]) && maxIterations < 100)
-                    {
-                        maxIterations++;
-                        dotToUse = Random.Range(0, dots.Length);
-                    }
-                    maxIterations = 0;
-
-                    GameObject piece = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity); // пул из массива с цветными токенами // можно добавит ьещё один массив с бонусами
-                    piece.transform.parent = transform;
-                    piece.name = "( " + i + ", " + j + " )";
-                    allDots[i, j] = piece;
-                    piece.GetComponent<Dot>().row = j; // новые токены ползут сверху вниз
-                    piece.GetComponent<Dot>().column = i; // новые токены ползут сверху вниз
-                }
-            }
-        }
-    }
-
-    //постоянный скан доски на наличие совпадений
-    bool MatchesOnBoard()
-    {
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                if (allDots[i,j] != null)
-                {
-                    if (allDots[i,j].GetComponent<Dot>().isMatched)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    
-    // =============================================================================================================
-    // методы для проверки отсутствия совпадений на всей доске а так же поиск всех возможных совпадений на доске !!!
-    
-
-    bool CheckForMatches()
-    {
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                if (allDots[i,j] != null)
-                {
-                    // убедиться что проверяемые точки находятся в пределах игрового поля либо не зарезервированны
-                    if (i < Width - 2)
-                    {
-                        // проверить существует ли точка справа и на две правее
-                        if (allDots[i + 1, j] != null && allDots[i + 2, j] != null)
-                        {
-                            // потом отказаться от тегов // проверка наличие возможных совпадений вправо при возможном смещении точки
-                            if (allDots[i + 1, j].tag == allDots[i, j].tag &&
-                                allDots[i + 2, j].tag == allDots[i, j].tag)
+                            // найдена ли точка ?
+                            if (allDots[i,k] != null)
                             {
-                                return true;
-                            }
-                        }
-                    }
-                    if (j < Height - 2)
-                    {
-                        // проверить существует ли точка выше и на две выше
-                        if (allDots[i, j + 1] != null && allDots[i, j + 2] != null)
-                        {
-                            // потом отказаться от тегов // проверка наличие возможных совпадений вверх при возможном смещении точки
-                            if (allDots[i, j + 1].tag == allDots[i, j].tag &&
-                                allDots[i, j + 2].tag == allDots[i, j].tag)
-                            {
-                                return true;
+                                // переместить точки в пустое пространство
+                                allDots[i, k].GetComponent<Dot>().row = j;
+                                // установить значение этого места как null
+                                allDots[i, k] = null;
+                                break;
                             }
                         }
                     }
                 }
             }
+            yield return new WaitForSeconds(_refillDelay * 0.5f); // не трогать, задержка перед появлением новых токенов
+            StartCoroutine(nameof(FillBoardCo));      
         }
-        return false;
-    }
 
-    // во время работы метода FindAllMatces() из скрипта HintManager игра проверят каждую точку все доступные совпадения в разыне стороны
-    // и запсиывает их в List в скрипте HintManager, там же выбирается случайная точка их этого списка и в данном
-    // месте спавнится подсказка, в HintManager в апдейте идёт таймер бездейсивтя игрока
-    public bool SwitchAndCheck(int column, int row, Vector2 direction) 
-    {
-        SwitchPieces(column, row, direction);
-        if (CheckForMatches())
+        IEnumerator FillBoardCo()
+        {
+            yield return new WaitForSeconds(_refillDelay);
+            RefillBoard();
+            yield return new WaitForSeconds(_refillDelay);
+            while (MatchesOnBoard())
+            {
+                _streakValue++;
+                DestroyMatches();
+                yield break;
+            }
+            currentDot = null;
+            CheckToMakeSlime();
+            if (IsDeadlocked())
+            {
+                StartCoroutine(nameof(ShuffleBorad));
+            }
+            yield return new WaitForSeconds(_refillDelay);
+            Debug.Log("Done Refilling");
+            System.GC.Collect();
+            if (currentState != GameState.Pause) // vid 55 (9 min)
+                currentState = GameState.Move;
+            _makeSlime = true;
+            _streakValue = 1;
+
+            // RefillBoard(); // заполнить досу токенами после первого совпадения
+            // yield return new WaitForSeconds(refillDelay); // и подождать
+            // // каскад совпадений
+            // while (MatchesOnBoard()) // пока есть каскад совпадений, ждать wait
+            // {
+            //     streakValue++; // серия совпадений
+            //     //currentState = GameState.wait;
+            //     print(streakValue);
+            //     DestroyMatches(); // вызов этого метода должен быть раньше задержки
+            //     //yield return new WaitForSeconds(1.5f * refillDelay); // нужно дождаться заполнения доски прежде чем проверить поэтому увеличиваем время
+            //     yield break;
+            // }
+            // findMatches.currentMatches.Clear(); // Имеет отношенеи к бонусам
+            // CheckToMakeSlime();
+            // yield return new WaitForSeconds(refillDelay);
+            //
+            //
+            // if (IsDeadlocked()) // проверка на наличие того что на доске больше нельзя создать совпадений
+            // {
+            //     ShuffleBorad();
+            // }
+            // if (!MatchesOnBoard())
+            // {
+            //     currentState = GameState.move;
+            //     _makeSlime = true;
+            //     streakValue = 1;
+            // }
+        }
+
+        #region Slime
+
+        private void CheckToMakeSlime()
+        {
+            // проверить массив слаймов
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    if (slimeTiles[i,j] != null && _makeSlime)
+                    {
+                        // вызвать другой метод для создания нового слайма
+                        Debug.LogError("Slime");
+                        MakeNewSlime();
+                        return;
+                    }
+                }
+            }
+        }
+
+        //проверка на соседнюю бомбу vid 53 (19) связано со слаймами
+        private Vector2 CheckForAdjacent(int column, int row)
+        {
+
+            if (column < Width - 1 && allDots[column + 1, row])
+            {
+                return Vector2.right;
+            }
+            if (column > 0 && allDots[column - 1, row])
+            {
+                return Vector2.left;
+            }
+            if (row < Height - 1 && allDots[column, row + 1])
+            {
+                return Vector2.up;
+            }
+            if (row > 0 && allDots[column, row - 1])
+            {
+                return Vector2.down;
+            }
+            return Vector2.zero;
+        }
+
+        private void MakeNewSlime() // vid 53 (27 min)
+        {
+            bool slime = false;
+            int loops = 0; //  что бы не попасть в вечную проверку
+            while (!slime && loops < 200)
+            {
+                int newX = Random.Range(0, Width);
+                int newY = Random.Range(0, Height);
+                if (slimeTiles[newX, newY]) // проверяем есть ли по даному индексу массива плитка слайма
+                {
+                    Vector2 adjacent = CheckForAdjacent(newX, newY);
+                    if (adjacent != Vector2.zero)
+                    {
+                        Destroy(allDots[newX + (int)adjacent.x, newY + (int)adjacent.y]);
+                        Vector2 tempPosition = new Vector2(newX + (int)adjacent.x, newY + (int)adjacent.y);
+                        GameObject tile = Instantiate(slimePiecePrefab, tempPosition, Quaternion.identity);
+                        slimeTiles[newX + (int)adjacent.x, newY + (int)adjacent.y] = tile.GetComponent<BackgroundTile>();
+                        slime = true;
+                    }
+                }
+                loops++;
+            }
+        }
+        #endregion
+
+        // заполнение пустых ячеек
+        void RefillBoard()
+        {
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    if (allDots[i,j] == null && !blankSpaces[i,j] && !concreteTiles[i, j] && !slimeTiles[i, j]) // проверка в том числе на зарезервированные места на доске
+                    {
+                        Vector2 tempPosition = new Vector2(i, j + _offSet);
+                        int dotToUse = Random.Range(0, dots.Length); 
+
+                        //фикс проблемы когда при каскаде можно было передвиграть фгуры вручную
+                        int maxIterations = 0;
+                        while (MatchesAt(i,j, dots[dotToUse]) && maxIterations < 100)
+                        {
+                            maxIterations++;
+                            dotToUse = Random.Range(0, dots.Length);
+                        }
+                        maxIterations = 0;
+
+                        GameObject piece = Instantiate(dots[dotToUse], tempPosition, Quaternion.identity); // пул из массива с цветными токенами // можно добавит ьещё один массив с бонусами
+                        piece.transform.parent = transform;
+                        piece.name = "( " + i + ", " + j + " )";
+                        allDots[i, j] = piece;
+                        piece.GetComponent<Dot>().row = j; // новые токены ползут сверху вниз
+                        piece.GetComponent<Dot>().column = i; // новые токены ползут сверху вниз
+                    }
+                }
+            }
+        }
+
+        //постоянный скан доски на наличие совпадений
+        bool MatchesOnBoard()
+        {
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    if (allDots[i,j] != null)
+                    {
+                        if (allDots[i,j].GetComponent<Dot>().isMatched)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+    
+        // =============================================================================================================
+        // методы для проверки отсутствия совпадений на всей доске а так же поиск всех возможных совпадений на доске !!!
+    
+
+        bool CheckForMatches()
+        {
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    if (allDots[i,j] != null)
+                    {
+                        // убедиться что проверяемые точки находятся в пределах игрового поля либо не зарезервированны
+                        if (i < Width - 2)
+                        {
+                            // проверить существует ли точка справа и на две правее
+                            if (allDots[i + 1, j] != null && allDots[i + 2, j] != null)
+                            {
+                                // потом отказаться от тегов // проверка наличие возможных совпадений вправо при возможном смещении точки
+                                if (allDots[i + 1, j].tag == allDots[i, j].tag &&
+                                    allDots[i + 2, j].tag == allDots[i, j].tag)
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                        if (j < Height - 2)
+                        {
+                            // проверить существует ли точка выше и на две выше
+                            if (allDots[i, j + 1] != null && allDots[i, j + 2] != null)
+                            {
+                                // потом отказаться от тегов // проверка наличие возможных совпадений вверх при возможном смещении точки
+                                if (allDots[i, j + 1].tag == allDots[i, j].tag &&
+                                    allDots[i, j + 2].tag == allDots[i, j].tag)
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        // во время работы метода FindAllMatces() из скрипта HintManager игра проверят каждую точку все доступные совпадения в разыне стороны
+        // и запсиывает их в List в скрипте HintManager, там же выбирается случайная точка их этого списка и в данном
+        // месте спавнится подсказка, в HintManager в апдейте идёт таймер бездейсивтя игрока
+        public bool SwitchAndCheck(int column, int row, Vector2 direction) 
         {
             SwitchPieces(column, row, direction);
-            return true;
-        }
-        SwitchPieces(column, row, direction);
-        return false;
-    }
-
-    bool IsDeadlocked() // изменено Vid 52
-    {
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
+            if (CheckForMatches())
             {
-                if (allDots[i,j] != null)
+                SwitchPieces(column, row, direction);
+                return true;
+            }
+            SwitchPieces(column, row, direction);
+            return false;
+        }
+
+        bool IsDeadlocked() // изменено Vid 52
+        {
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
                 {
-                    if (i < Width - 1)
+                    if (allDots[i,j] != null)
                     {
-                        if (SwitchAndCheck(i, j, Vector2.right))
+                        if (i < Width - 1)
                         {
-                            return false;
-                        }                        
-                    }
-                    if (j < Height - 1)
-                    {
-                        if (SwitchAndCheck(i, j, Vector2.up))
+                            if (SwitchAndCheck(i, j, Vector2.right))
+                            {
+                                return false;
+                            }                        
+                        }
+                        if (j < Height - 1)
                         {
-                            return false;
+                            if (SwitchAndCheck(i, j, Vector2.up))
+                            {
+                                return false;
+                            }
                         }
                     }
                 }
             }
+            return true;
         }
-        return true;
-    }
 
-    // изменено Vid 51.1 (8 min)
-    void SwitchPieces(int column, int row, Vector2 direction)
-    {
-        if (allDots[column + (int)direction.x, row + (int)direction.y] != null)
+        // изменено Vid 51.1 (8 min)
+        void SwitchPieces(int column, int row, Vector2 direction)
         {
-            // взять второй токен и сохранить его в holder
-            GameObject holder = allDots[column + (int)direction.x, row + (int)direction.y] as GameObject; // лучше использовать as при извлечении одного объекта из двумерного массива
-                                                                                                          // переключение позиции первой точки на позицию второй точки
-            allDots[column + (int)direction.x, row + (int)direction.y] = allDots[column, row];
-            // установить первую точку на позицию второй точки
-            allDots[column, row] = holder;
-        }
-    }
-
-    void ShuffleBorad()
-    {
-        //yield return new WaitForSeconds(0.5f);
-        ////Create a list of game objects
-        //List<GameObject> newBoard = new List<GameObject>();
-        ////Add every piece to this list
-        //for (int i = 0; i < width; i++)
-        //{
-        //    for (int j = 0; j < height; j++)
-        //    {
-        //        if (allDots[i, j] != null)
-        //        {
-        //            newBoard.Add(allDots[i, j]);
-        //        }
-        //    }
-        //}
-        //yield return new WaitForSeconds(0.5f);
-        ////for every spot on the board. . . 
-        //for (int i = 0; i < width; i++)
-        //{
-        //    for (int j = 0; j < height; j++)
-        //    {
-        //        //if this spot shouldn't be blank
-        //        if (!blankSpaces[i, j] && !concreteTiles[i, j] && !slimeTiles[i, j])
-        //        {
-        //            //Pick a random number
-        //            int pieceToUse = Random.Range(0, newBoard.Count);
-
-        //            //Assign the column to the piece
-        //            int maxIterations = 0;
-
-        //            while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100)
-        //            {
-        //                pieceToUse = Random.Range(0, newBoard.Count);
-        //                maxIterations++;
-        //            }
-        //            //Make a container for the piece
-        //            Dot piece = newBoard[pieceToUse].GetComponent<Dot>();
-        //            maxIterations = 0;
-        //            piece.column = i;
-        //            //Assign the row to the piece
-        //            piece.row = j;
-        //            //Fill in the dots array with this new piece
-        //            allDots[i, j] = newBoard[pieceToUse];
-        //            //Remove it from the list
-        //            newBoard.Remove(newBoard[pieceToUse]);
-        //        }
-        //    }
-        //}
-        ////Check if it's still deadlocked
-        //if (IsDeadlocked())
-        //{
-        //    StartCoroutine(ShuffleBorad());
-        //}
-
-        List<GameObject> newBoard = new List<GameObject>();
-        // добавить каждый активный токен в новый Лист
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
+            if (allDots[column + (int)direction.x, row + (int)direction.y] != null)
             {
-                if (allDots[i, j] != null) // не берём зарезервированные места на доске
-                {
-                    newBoard.Add(allDots[i, j]);
-                }
+                // взять второй токен и сохранить его в holder
+                GameObject holder = allDots[column + (int)direction.x, row + (int)direction.y] as GameObject; // лучше использовать as при извлечении одного объекта из двумерного массива
+                // переключение позиции первой точки на позицию второй точки
+                allDots[column + (int)direction.x, row + (int)direction.y] = allDots[column, row];
+                // установить первую точку на позицию второй точки
+                allDots[column, row] = holder;
             }
         }
 
-        for (int i = 0; i < Width; i++)
+        void ShuffleBorad()
         {
-            for (int j = 0; j < Height; j++)
-            {
-                //если место не зарезервировано
-                if (!blankSpaces[i, j] && !concreteTiles[i, j] && !concreteTiles[i, j])
-                {
-                    // Выбрать слуайное число
-                    int pieceToUse = Random.Range(0, newBoard.Count);
-                    //вызов проверки на совпадение при создании доски (не должно быть готовых совпадений)
-                    int maxIterations = 0;
+            //yield return new WaitForSeconds(0.5f);
+            ////Create a list of game objects
+            //List<GameObject> newBoard = new List<GameObject>();
+            ////Add every piece to this list
+            //for (int i = 0; i < width; i++)
+            //{
+            //    for (int j = 0; j < height; j++)
+            //    {
+            //        if (allDots[i, j] != null)
+            //        {
+            //            newBoard.Add(allDots[i, j]);
+            //        }
+            //    }
+            //}
+            //yield return new WaitForSeconds(0.5f);
+            ////for every spot on the board. . . 
+            //for (int i = 0; i < width; i++)
+            //{
+            //    for (int j = 0; j < height; j++)
+            //    {
+            //        //if this spot shouldn't be blank
+            //        if (!blankSpaces[i, j] && !concreteTiles[i, j] && !slimeTiles[i, j])
+            //        {
+            //            //Pick a random number
+            //            int pieceToUse = Random.Range(0, newBoard.Count);
 
-                    //============================================================
-                    // механика которая при окончании времени не прекращает игру а перестаёт перезаполнять досту даёт сбой здесь
-                    // при попытке перемешать массв с точками программа обращается к пустым элементам массива в которых предпложитено должны
-                    // быть точки, игра не знает о том что массив точек перестал фактически заполнятся если закоментировать строки в Методе RefillBoarb
-                    while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100) // скокль попыток произведёт юнити для перетасовки доски что бы в ней заранее не оказалось совпадений
-                    // 100 это магическое число служащее для того что бы не попасть в бесконечный цикл и в крайнем слуае создать новую доску с совпадениями 
+            //            //Assign the column to the piece
+            //            int maxIterations = 0;
+
+            //            while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100)
+            //            {
+            //                pieceToUse = Random.Range(0, newBoard.Count);
+            //                maxIterations++;
+            //            }
+            //            //Make a container for the piece
+            //            Dot piece = newBoard[pieceToUse].GetComponent<Dot>();
+            //            maxIterations = 0;
+            //            piece.column = i;
+            //            //Assign the row to the piece
+            //            piece.row = j;
+            //            //Fill in the dots array with this new piece
+            //            allDots[i, j] = newBoard[pieceToUse];
+            //            //Remove it from the list
+            //            newBoard.Remove(newBoard[pieceToUse]);
+            //        }
+            //    }
+            //}
+            ////Check if it's still deadlocked
+            //if (IsDeadlocked())
+            //{
+            //    StartCoroutine(ShuffleBorad());
+            //}
+
+            List<GameObject> newBoard = new List<GameObject>();
+            // добавить каждый активный токен в новый Лист
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    if (allDots[i, j] != null) // не берём зарезервированные места на доске
                     {
-                        pieceToUse = Random.Range(0, newBoard.Count);
-                        maxIterations++;
+                        newBoard.Add(allDots[i, j]);
                     }
-                    // контенер для токена
-                    Dot piece = newBoard[pieceToUse].GetComponent<Dot>();
-                    maxIterations = 0;
-
-                    // назначить позиции токену над которым ведется работа на данной итерации
-                    piece.column = i;
-                    piece.row = j;
-                    // добавить/заменить рабочий токен в основной массив со всеми элементами доски
-                    allDots[i, j] = newBoard[pieceToUse];
-                    // удалить текущий токен по адресу спика, во избежании повторного общащения к нему
-                    newBoard.Remove(newBoard[pieceToUse]);
                 }
             }
-        }
-        //прежде чем выйдти из данного метода и завершить перетасовку необходимо проверить не будет ли перетасованная доска снова не иметь ходов
-        if (IsDeadlocked())
-        {
-            // рекурсивный вызов
-            ShuffleBorad();
-        }
 
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    //если место не зарезервировано
+                    if (!blankSpaces[i, j] && !concreteTiles[i, j] && !concreteTiles[i, j])
+                    {
+                        // Выбрать слуайное число
+                        int pieceToUse = Random.Range(0, newBoard.Count);
+                        //вызов проверки на совпадение при создании доски (не должно быть готовых совпадений)
+                        int maxIterations = 0;
+
+                        //============================================================
+                        // механика которая при окончании времени не прекращает игру а перестаёт перезаполнять досту даёт сбой здесь
+                        // при попытке перемешать массв с точками программа обращается к пустым элементам массива в которых предпложитено должны
+                        // быть точки, игра не знает о том что массив точек перестал фактически заполнятся если закоментировать строки в Методе RefillBoarb
+                        while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100) // скокль попыток произведёт юнити для перетасовки доски что бы в ней заранее не оказалось совпадений
+                            // 100 это магическое число служащее для того что бы не попасть в бесконечный цикл и в крайнем слуае создать новую доску с совпадениями 
+                        {
+                            pieceToUse = Random.Range(0, newBoard.Count);
+                            maxIterations++;
+                        }
+                        // контенер для токена
+                        Dot piece = newBoard[pieceToUse].GetComponent<Dot>();
+                        maxIterations = 0;
+
+                        // назначить позиции токену над которым ведется работа на данной итерации
+                        piece.column = i;
+                        piece.row = j;
+                        // добавить/заменить рабочий токен в основной массив со всеми элементами доски
+                        allDots[i, j] = newBoard[pieceToUse];
+                        // удалить текущий токен по адресу спика, во избежании повторного общащения к нему
+                        newBoard.Remove(newBoard[pieceToUse]);
+                    }
+                }
+            }
+            //прежде чем выйдти из данного метода и завершить перетасовку необходимо проверить не будет ли перетасованная доска снова не иметь ходов
+            if (IsDeadlocked())
+            {
+                // рекурсивный вызов
+                ShuffleBorad();
+            }
+
+        }
     }
 }

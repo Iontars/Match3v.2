@@ -1,31 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
+using Base_Game_Scripts;
 using UnityEngine;
-using System.Linq;
-using UnityEngine.UI;
-/// <summary>
-/// 
-/// </summary>
 
-[CreateAssetMenu (fileName = "World", menuName = "Level")]
-public class Level : ScriptableObject
+namespace Scriptable_Objects
 {
-    [Header("Board Dimensions")]
-    public int width;
-    public int height;
+    /// <summary>
+    /// 
+    /// </summary>
 
-    [Header("Start Tiles")]
-    public TileType[] boardLayout;
+    [CreateAssetMenu (fileName = "World", menuName = "Level")]
+    public class Level : ScriptableObject
+    {
+        [Header("Board Dimensions")]
+        public int width;
+        public int height;
 
-    [Header("Avalible dots")]
-    public GameObject[] dots;
+        [Header("Start Tiles")]
+        public TileType[] boardLayout;
 
-    [Header("Score Goal")]
-    public int[] scoreGoals;
+        [Header("Avalible dots")]
+        public GameObject[] dots;
 
-    [Header("End Game Requirements")]
-    public EndGameRequirements endGameRequirements;
+        [Header("Score Goal")]
+        public int[] scoreGoals;
 
-    public BlankGoal[] levelGoals;
+        [Header("End Game Requirements")]
+        public EndGameRequirements endGameRequirements;
 
+        public BlankGoal[] levelGoals;
+
+    }
 }

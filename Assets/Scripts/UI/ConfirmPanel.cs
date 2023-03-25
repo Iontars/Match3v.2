@@ -1,88 +1,91 @@
-using System.Collections;
-using System.Collections.Generic;
+using Game_Data_Scripts;
+using Static_Prefs;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class ConfirmPanel : MonoBehaviour
+namespace UI
 {
-    [Header("Level information")]
-    public string levelToLoad;
-    public int level;
-    GameData gameData;
-    int starsActive;
-    int highScore;
-
-    [Header("UI Stuff")]
-    public Image[] stars;
-    public Text highScoreText;
-    public Text starText;
-
-
-    private void Awake()
+    public class ConfirmPanel : MonoBehaviour
     {
-        
-    }
+        [Header("Level information")]
+        public string levelToLoad;
+        public int level;
+        GameData gameData;
+        int starsActive;
+        int highScore;
 
-    public void Cancel()
-    {
-        gameObject.SetActive(false); // выключает сам объект
-    }
+        [Header("UI Stuff")]
+        public Image[] stars;
+        public Text highScoreText;
+        public Text starText;
 
-    public void Play()
-    {
-        //PlayerPrefs.SetInt("Current Level", level - 1); vid 45 (29min)
-        PlayerPrefs.SetInt(PlayerPrefsStorage.keyCurrentLevel, level - 1); // ��������
-        SceneManager.LoadScene(levelToLoad);
-    }
 
-    void ActivateStars() // дублирующий метод из LevelButton !!! ИСПРАВИТЬ
-    {
-        for (int i = 0; i < 3; i++)
+        private void Awake()
         {
-            // обновляет панель подтверждения выключая звёзды
-            stars[i].enabled = false;
+        
         }
-        for (int i = 0; i < starsActive; i++)
+
+        public void Cancel()
         {
-            // включает звёзды в соответствии с данными из базы
-            stars[i].enabled = true;
+            gameObject.SetActive(false); // выключает сам объект
         }
-    }
 
-    void LoadData() // дублирующий метод из LevelButton !!! ИСПРАВИТЬ
-    {
-        if (gameData != null)
+        public void Play()
         {
-            // перелдача информации из базы
-            starsActive = gameData.saveData.stars[level - 1];
-            highScore = gameData.saveData.highScores[level - 1];          
+            //PlayerPrefs.SetInt("Current Level", level - 1); vid 45 (29min)
+            PlayerPrefs.SetInt(PlayerPrefsStorage.keyCurrentLevel, level - 1); // ��������
+            SceneManager.LoadScene(levelToLoad);
         }
-    }
 
-    void SetText()
-    {
-        highScoreText.text ="" + highScore;
-        starText.text = "" + starsActive + "/3";
-    }
+        void ActivateStars() // дублирующий метод из LevelButton !!! ИСПРАВИТЬ
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                // обновляет панель подтверждения выключая звёзды
+                stars[i].enabled = false;
+            }
+            for (int i = 0; i < starsActive; i++)
+            {
+                // включает звёзды в соответствии с данными из базы
+                stars[i].enabled = true;
+            }
+        }
 
-    void Start()
-    {
+        void LoadData() // дублирующий метод из LevelButton !!! ИСПРАВИТЬ
+        {
+            if (gameData != null)
+            {
+                // перелдача информации из базы
+                starsActive = gameData.saveData.stars[level - 1];
+                highScore = gameData.saveData.highScores[level - 1];          
+            }
+        }
+
+        void SetText()
+        {
+            highScoreText.text ="" + highScore;
+            starText.text = "" + starsActive + "/3";
+        }
+
+        void Start()
+        {
         
 
-    }
+        }
 
-    private void OnEnable()
-    {
-        gameData = FindObjectOfType<GameData>();
-        LoadData();
-        ActivateStars();
-        SetText();
-        print(starsActive);
-    }
+        private void OnEnable()
+        {
+            gameData = FindObjectOfType<GameData>();
+            LoadData();
+            ActivateStars();
+            SetText();
+            print(starsActive);
+        }
 
-    void Update()
-    {
+        void Update()
+        {
         
+        }
     }
 }

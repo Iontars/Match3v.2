@@ -1,41 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
+using Base_Game_Scripts;
+using Game_Data_Scripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-/// <summary>
-/// Main/Board/EndGameManager
-/// </summary>
-public class BackToSplash : MonoBehaviour
+
+namespace UI
 {
-    public string sceneToLoad;
-    GameData gameData;
-    Board board;
-    public void WinOK()
+    /// <summary>
+    /// Main/Board/EndGameManager
+    /// </summary>
+    public class BackToSplash : MonoBehaviour
     {
-        if (gameData != null)
+        public string sceneToLoad;
+        GameData gameData;
+        Board board;
+        public void WinOK()
         {
-            gameData.saveData.isActive[board.Level + 1] = true;
-            gameData.Save();
+            if (gameData != null)
+            {
+                gameData.saveData.isActive[board.Level + 1] = true;
+                gameData.Save();
+            }
+            SceneManager.LoadScene(sceneToLoad);
         }
-        SceneManager.LoadScene(sceneToLoad);
-    }
-    public void LoseOK()
-    {
-        SceneManager.LoadScene(sceneToLoad);
-    }
+        public void LoseOK()
+        {
+            SceneManager.LoadScene(sceneToLoad);
+        }
 
-    private void Awake()
-    {
-        gameData = FindObjectOfType<GameData>();
-        board = FindObjectOfType<Board>();
-    }
-    void Start()
-    {
+        private void Awake()
+        {
+            gameData = FindObjectOfType<GameData>();
+            board = FindObjectOfType<Board>();
+        }
+        void Start()
+        {
         
-    }
+        }
 
-    void Update()
-    {
+        void Update()
+        {
         
+        }
     }
 }
