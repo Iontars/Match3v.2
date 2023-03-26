@@ -21,10 +21,5 @@ namespace Base_Game_Scripts
             Setup();
         }
 
-    
-        void Update()
-        {
-        
-        }
     }
 }

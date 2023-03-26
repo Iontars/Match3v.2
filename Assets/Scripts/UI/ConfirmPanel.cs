@@ -34,7 +34,7 @@ namespace UI
         public void Play()
         {
             //PlayerPrefs.SetInt("Current Level", level - 1); vid 45 (29min)
-            PlayerPrefs.SetInt(PlayerPrefsStorage.keyCurrentLevel, level - 1); // ��������
+            PlayerPrefs.SetInt(PlayerPrefsStorage.KeyCurrentLevel, level - 1); // ��������
             SceneManager.LoadScene(levelToLoad);
         }
 

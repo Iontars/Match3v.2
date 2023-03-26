@@ -8,8 +8,6 @@ namespace Base_Game_Scripts
     /// </summary>
     public class FadePanelController : MonoBehaviour
     {
-
-    
         public Animator panelAnim;
         public Animator gameInfoAnim;
 

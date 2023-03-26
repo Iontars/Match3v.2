@@ -6,77 +6,56 @@ namespace Base_Game_Scripts
 {
     public class ScoreManager : MonoBehaviour
     {
-        private Board board;
+        private Board _board;
+        private GameData _gameData;
+        private int _numberStars;
+        public Image scoreBar;
         public Text scoreText;
         public int score;
-        public Image scoreBar;
-        GameData gameData;
-        private int numberStars;
 
-        public void IncreaseScore(int AmountToIncrease)
+        public void IncreaseScore(int amountToIncrease)
         {
-            score += AmountToIncrease;
-            for (int i = 0; i < board.scoreGoals.Length; i++)
+            score += amountToIncrease;
+            for (int i = 0; i < _board.scoreGoals.Length; i++)
             {
-                if (score > board.scoreGoals[i] && numberStars < i + 1)
+                if (score > _board.scoreGoals[i] && _numberStars < i + 1)
                 {
-                    numberStars++;
+                    _numberStars++;
                 }
             }
-            if (gameData != null)
+            if (_gameData != null)
             {
-                int highScore = gameData.saveData.highScores[board.Level];
+                int highScore = _gameData.saveData.highScores[_board.Level];
                 if (highScore < score)
                 {
-                    gameData.saveData.highScores[board.Level] = score;
+                    _gameData.saveData.highScores[_board.Level] = score;
                     //gameData.saveData.stars[board.level] = numberStars;
                 }
 
-                var currentStars = gameData.saveData.stars[board.Level];
-                if (numberStars > currentStars)
+                var currentStars = _gameData.saveData.stars[_board.Level];
+                if (_numberStars > currentStars)
                 {
-                    gameData.saveData.stars[board.Level] = numberStars;
+                    _gameData.saveData.stars[_board.Level] = _numberStars;
                 }
-                gameData.Save();
+                _gameData.Save();
             }
             UpdateBar();
         }
-    
-        // private void OnApplicationPause()
-        // {
-        //     if (gameData != null)
-        //     {
-        //         gameData.saveData.stars[board.level] = numberStars;
-        //     }
-        //     gameData.Save();
-        // }
-
+        
         private void UpdateBar()
         {
             scoreText.text = score.ToString();
-            if (board != null && scoreBar != null)
+            if (_board != null && scoreBar != null)
             {
-                int lenght = board.scoreGoals.Length;
-                scoreBar.fillAmount = (float)score / (float)board?.scoreGoals[board.scoreGoals.Length - 1];
+                int lenght = _board.scoreGoals.Length;
+                scoreBar.fillAmount = (float)score / (float)_board?.scoreGoals[_board.scoreGoals.Length - 1];
             }
         }
-    
-
+        
         void Start()
         {
-            board = FindObjectOfType<Board>();
-            gameData = FindObjectOfType<GameData>();
-        }
-
-        void Update()
-        {
-            // scoreText.text = score.ToString();
-            //
-            // if (scoreBar != null)
-            // {
-            //     //int lenght = board.scoreGoals.Length;
-            //     scoreBar.fillAmount = (float)score / (float)board?.scoreGoals[board.scoreGoals.Length - 1];
-            // }
+            _board = FindObjectOfType<Board>();
+            _gameData = FindObjectOfType<GameData>();
         }
     }
 }

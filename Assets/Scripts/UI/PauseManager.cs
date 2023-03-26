@@ -19,10 +19,10 @@ namespace UI
         public Image soundButton;
         public Sprite musicOnSprite;
         public Sprite musicOffSprite;
-        private SoundManager sound; // убрать здесь ему не место
+        private SoundManager _sound; // убрать здесь ему не место
         private void Awake()
         {
-            sound = FindObjectOfType<SoundManager>();
+            _sound = FindObjectOfType<SoundManager>();
             _board = GameObject.FindWithTag("Board").GetComponent<Board>();
         }
 
@@ -58,20 +58,20 @@ namespace UI
                 {
                     soundButton.sprite = musicOnSprite;
                     PlayerPrefs.SetInt("Sound", 1);
-                    sound.AdjustValue();
+                    _sound.AdjustValue();
                 }
                 else
                 {
                     soundButton.sprite = musicOffSprite;
                     PlayerPrefs.SetInt("Sound", 0);
-                    sound.AdjustValue();
+                    _sound.AdjustValue();
                 }
             }
             else
             {
                 soundButton.sprite = musicOffSprite;
                 PlayerPrefs.SetInt("Sound", 1);
-                sound.AdjustValue();
+                _sound.AdjustValue();
             }
         }
 

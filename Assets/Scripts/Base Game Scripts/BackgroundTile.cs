@@ -4,26 +4,29 @@ namespace Base_Game_Scripts
 {
     public class BackgroundTile : MonoBehaviour
     {
-        private SpriteRenderer sprite;
+        private SpriteRenderer _sprite;
+        private GoalManager _goalManager;
+        private bool _isGoalManagerNotNull;
         public int hitPoints;
-        GoalManager goalManager;
 
-        private void Start()
+        private void Awake()
         {
-            sprite = GetComponent<SpriteRenderer>();
-            goalManager = FindObjectOfType<GoalManager>();
+            _sprite = GetComponent<SpriteRenderer>();
+            _goalManager = FindObjectOfType<GoalManager>();
+            _isGoalManagerNotNull = _goalManager != null;
         }
+        
         public void TakeDamage(int damage)
         {
             hitPoints -= damage;
             MakeLighter();
         }
 
-        void MakeLighter() // изменение цвета фоновой плитки п мере получения урона
+        private void MakeLighter() // изменение цвета фоновой плитки п мере получения урона
         {
-            Color color = sprite.color;
+            Color color = _sprite.color;
             float newAlfa = color.a * .5f;
-            sprite.color = new Color(color.r, color.g, color.b, newAlfa);
+            _sprite.color = new Color(color.r, color.g, color.b, newAlfa);
         }
 
 
@@ -32,16 +35,17 @@ namespace Base_Game_Scripts
             if (hitPoints <= 0)
             {
                 // проверка на совпадение целей, если целью уровня стоят Breakable плитки
-                if (goalManager != null)
+                if (_isGoalManagerNotNull)
                 {
-                    goalManager.CompareGoal(gameObject.tag);
-                    goalManager.UpdateGoals();
+                    _goalManager.CompareGoal(gameObject.tag);
+                    _goalManager.UpdateGoals();
                     print("Breakable tile was destroyed");
                 }
                 Destroy(gameObject);
             }
         }
-        void Update()
+
+        private void Update()
         {
             CheckForBreakableTokens();
         }

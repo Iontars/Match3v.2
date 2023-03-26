@@ -5,40 +5,40 @@ namespace Base_Game_Scripts
 {
     public class HintManager : MonoBehaviour
     {
-        private Board board;
+        private Board _board;
+        private float _hintDelaySeconds;
         public float hintDelay;
-        private float hintDelaySeconds;
         public GameObject hintParticle;
         public GameObject currentHint;
 
-        void Start()
+        private void Start()
         {
-            board = FindObjectOfType<Board>();
-            hintDelaySeconds = hintDelay;
+            _board = FindObjectOfType<Board>();
+            _hintDelaySeconds = hintDelay;
         }
 
         // найти все возможные совпадения на доске
-        List<GameObject> FindAllMatces()
+        private List<GameObject> FindAllMatches()
         {
             List<GameObject> possibleMoves = new List<GameObject>();
-            for (int i = 0; i < board.Width; i++)
+            for (int i = 0; i < _board.Width; i++)
             {
-                for (int j = 0; j < board.Height; j++)
+                for (int j = 0; j < _board.Height; j++)
                 {
-                    if (board.currentLevelAllTokensArray[i, j] != null)
+                    if (_board.currentLevelAllTokensArray[i, j] != null)
                     {
-                        if (i < board.Width - 1)
+                        if (i < _board.Width - 1)
                         {
-                            if (board.SwitchAndCheck(i, j, Vector2.right))
+                            if (_board.SwitchAndCheck(i, j, Vector2.right))
                             {
-                                possibleMoves.Add(board.currentLevelAllTokensArray[i,j]) ;
+                                possibleMoves.Add(_board.currentLevelAllTokensArray[i,j]) ;
                             }
                         }
-                        if (j < board.Height - 1)
+                        if (j < _board.Height - 1)
                         {
-                            if (board.SwitchAndCheck(i, j, Vector2.up))
+                            if (_board.SwitchAndCheck(i, j, Vector2.up))
                             {
-                                possibleMoves.Add(board.currentLevelAllTokensArray[i, j]);
+                                possibleMoves.Add(_board.currentLevelAllTokensArray[i, j]);
                             }
                         }
                     }
@@ -47,10 +47,9 @@ namespace Base_Game_Scripts
             return possibleMoves;
         }
         // выбрать одно из этих совпадений случайным образом
-        GameObject PickOneRandomly()
+        private GameObject PickOneRandomly()
         {
-            List<GameObject> possibleMoves = new List<GameObject>();
-            possibleMoves = FindAllMatces();
+            List<GameObject> possibleMoves = FindAllMatches();
             if (possibleMoves.Count > 0)
             {
                 int pieceToUse = Random.Range(0, possibleMoves.Count);
@@ -74,20 +73,20 @@ namespace Base_Game_Scripts
             {
                 Destroy(currentHint);
                 currentHint = null;
-                hintDelaySeconds = hintDelay;
+                _hintDelaySeconds = hintDelay;
             }
         }
 
         void Update()
         {
-            if (board.currentState == GameState.Move)
+            if (_board.currentState == GameState.Move)
             {
 
-                hintDelaySeconds -= Time.deltaTime;
-                if (hintDelaySeconds <= 0 && currentHint == null)
+                _hintDelaySeconds -= Time.deltaTime;
+                if (_hintDelaySeconds <= 0 && currentHint == null)
                 {
                     MarkHint();
-                    hintDelaySeconds = hintDelay;
+                    _hintDelaySeconds = hintDelay;
 
                 }
             }

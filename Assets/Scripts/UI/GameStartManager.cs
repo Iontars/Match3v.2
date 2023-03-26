@@ -11,7 +11,8 @@ namespace UI
     {
         public GameObject startPanel;
         public GameObject levelPanel;
-        void Awake()
+
+        private void Awake()
         {
             startPanel.SetActive(true);
             levelPanel.SetActive(false);

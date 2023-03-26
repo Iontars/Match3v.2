@@ -50,8 +50,7 @@ namespace UI
                 starsActive = gameData.saveData.stars[level - 1];
             }
         }
-
-
+        
         // ��������� ����������� ������ ������/. ��������� ������������ ������ ������ �������
         void DecideSprite()
         {
@@ -97,16 +96,6 @@ namespace UI
             ActivateStars();
             DecideSprite();
             ShowLevel();
-        }
-
-        void Start()
-        {
-        
-        }
-
-        void Update()
-        {
-
         }
     }
 }

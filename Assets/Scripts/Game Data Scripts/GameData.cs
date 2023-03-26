@@ -37,7 +37,7 @@ namespace Game_Data_Scripts
 
         private void Start()
         {
-            print(Application.persistentDataPath + PlayerPrefsStorage.pathToSaveFile);
+            print(Application.persistentDataPath + PlayerPrefsStorage.PathToSaveFile);
         }
 
         public void Save()
@@ -46,7 +46,7 @@ namespace Game_Data_Scripts
             BinaryFormatter formatter = new();
             // создать маршрут от программы к файлу
             //File.Create(Application.persistentDataPath + PlayerPrefsStorage.pathToSaveFile);
-            FileStream file = File.Open(Application.persistentDataPath + PlayerPrefsStorage.pathToSaveFile, FileMode.Create);
+            FileStream file = File.Open(Application.persistentDataPath + PlayerPrefsStorage.PathToSaveFile, FileMode.Create);
             // создать новый объект SaveData, значит перезапистаь данные
             SaveData data = new();
             data = saveData;
@@ -60,11 +60,11 @@ namespace Game_Data_Scripts
         public void Load()
         {
             // Проверить существует ли файл загрузки
-            if (File.Exists(Application.persistentDataPath + PlayerPrefsStorage.pathToSaveFile))
+            if (File.Exists(Application.persistentDataPath + PlayerPrefsStorage.PathToSaveFile))
             {
                 // создать бинарный формат для чтения бинарных файлов
                 BinaryFormatter formatter = new();
-                FileStream file = File.Open(Application.persistentDataPath + PlayerPrefsStorage.pathToSaveFile, FileMode.Open);
+                FileStream file = File.Open(Application.persistentDataPath + PlayerPrefsStorage.PathToSaveFile, FileMode.Open);
                 saveData = formatter.Deserialize(file) as SaveData;
                 file.Close();
                 Debug.Log("Data loaded");

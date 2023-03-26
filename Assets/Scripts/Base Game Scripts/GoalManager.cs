@@ -25,7 +25,7 @@ public class GoalManager : MonoBehaviour
     EndGameManager EndGame;
     Board board;
 
-    void SetupGoals()
+    private void SetupGoals()
     {
         for (int i = 0; i < levelGoals.Length; i++)
         {
@@ -92,7 +92,7 @@ public class GoalManager : MonoBehaviour
     }
 
     // метод достиженяи целей
-    public void GetGoal()
+    private void GetGoal()
     {
         if (board != null)
         {
@@ -119,7 +119,7 @@ public class GoalManager : MonoBehaviour
         board = FindObjectOfType<Board>();
     }
 
-    void Start()
+    private void Start()
     {
         GetGoal();
         SetupGoals();

@@ -43,12 +43,12 @@ namespace Base_Game_Scripts
 
         [Header("Prefabs")]
         private GameObject[] _currentLevelUsableTokens; // какие игровые токены будут использоваться на текущей доске
-        public GameObject padTilePrefab; // подложка под токена на доске
-        public GameObject breakableTilePrefab;
-        public GameObject lockTilePrefab;
-        public GameObject concreteTilePrefab;
-        public GameObject slimeTilePrefab;
-        public GameObject destroyEffect;
+        [SerializeField] public GameObject padTilePrefab; // подложка под токена на доске
+        [SerializeField] public GameObject breakableTilePrefab;
+        [SerializeField] public GameObject lockTilePrefab;
+        [SerializeField] public GameObject concreteTilePrefab;
+        [SerializeField] public GameObject slimeTilePrefab;
+        [SerializeField] public GameObject destroyEffect;
         
         [Header("Layout")]
         private bool[,] _blankSpaces; // массив соразмерный текущей доске для хранения значений о зарезервированных местах
@@ -74,6 +74,13 @@ namespace Base_Game_Scripts
 
         private void Awake()
         {
+            padTilePrefab = Resources.Load<GameObject>("Prefabs/Tile Background");
+            breakableTilePrefab = Resources.Load<GameObject>("Prefabs/Breakable Tile");
+            lockTilePrefab = Resources.Load<GameObject>("Prefabs/Lock Tile");
+            concreteTilePrefab = Resources.Load<GameObject>("Prefabs/Concrete Tile");
+            slimeTilePrefab = Resources.Load<GameObject>("Prefabs/Slime Tile");
+            destroyEffect = Resources.Load<GameObject>("Prefabs/Destroy Effect");
+            
             _scoreManager = FindObjectOfType<ScoreManager>();
             _goalManager = FindObjectOfType<GoalManager>();
             _soundManager = FindObjectOfType<SoundManager>();
@@ -96,9 +103,9 @@ namespace Base_Game_Scripts
         private void LoadLevelByHisNumber()
         {
             //загрузка номера уровня переданного из сцены выбора уровней
-            if (PlayerPrefs.HasKey(PlayerPrefsStorage.keyCurrentLevel))
+            if (PlayerPrefs.HasKey(PlayerPrefsStorage.KeyCurrentLevel))
             {
-                Level = PlayerPrefs.GetInt(PlayerPrefsStorage.keyCurrentLevel);
+                Level = PlayerPrefs.GetInt(PlayerPrefsStorage.KeyCurrentLevel);
             }
             
             if (world != null && Level < world.levels.Length && world.levels[Level] != null )
@@ -147,46 +154,46 @@ namespace Base_Game_Scripts
         }
         
         //проверка на одинаковые токены перед создании доски
-        private bool MatchesAt(int colunm, int row, GameObject piece)
+        private bool CheckForSameTokensAround(int column, int row, GameObject checkableToken)
         {
-            if (colunm > 1 && row >1 )
+            if (column > 1 && row > 1 )
             {
-                if (currentLevelAllTokensArray[colunm -1, row] != null && currentLevelAllTokensArray[colunm - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
+                if (currentLevelAllTokensArray[column -1, row] != null && currentLevelAllTokensArray[column - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
                 {
-                    if (currentLevelAllTokensArray[colunm - 1, row].tag == piece.tag &&
-                        currentLevelAllTokensArray[colunm - 2, row].tag == piece.tag)
+                    if (currentLevelAllTokensArray[column - 1, row].CompareTag(checkableToken.tag) &&
+                        currentLevelAllTokensArray[column - 2, row].CompareTag(checkableToken.tag))
                     {
                         return true;
                     }
                 }
-                if (currentLevelAllTokensArray[colunm, row - 1] != null && currentLevelAllTokensArray[colunm, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
+                if (currentLevelAllTokensArray[column, row - 1] != null && currentLevelAllTokensArray[column, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
                 {
-                    if (currentLevelAllTokensArray[colunm, row - 1].tag == piece.tag &&
-                        currentLevelAllTokensArray[colunm, row - 2].tag == piece.tag)
+                    if (currentLevelAllTokensArray[column, row - 1].CompareTag(checkableToken.tag) &&
+                        currentLevelAllTokensArray[column, row - 2].CompareTag(checkableToken.tag))
                     {
                         return true;
                     }
                 }
             }
-            else if(colunm <= 1 || row <= 1)
+            else if(column <= 1 || row <= 1)
             {
                 if (row > 1)
                 {
-                    if (currentLevelAllTokensArray[colunm, row - 1] != null && currentLevelAllTokensArray[colunm, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
+                    if (currentLevelAllTokensArray[column, row - 1] != null && currentLevelAllTokensArray[column, row - 2] != null) //проверка относящаяся к зарезервированым местам на доске
                     {
-                        if (currentLevelAllTokensArray[colunm, row - 1].tag == piece.tag &&
-                            currentLevelAllTokensArray[colunm, row - 2].tag == piece.tag)
+                        if (currentLevelAllTokensArray[column, row - 1].CompareTag(checkableToken.tag) &&
+                            currentLevelAllTokensArray[column, row - 2].CompareTag(checkableToken.tag))
                         {
                             return true;
                         }
                     }
                 }
-                if (colunm > 1) //
+                if (column > 1) //
                 {
-                    if (currentLevelAllTokensArray[colunm - 1, row] != null && currentLevelAllTokensArray[colunm - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
+                    if (currentLevelAllTokensArray[column - 1, row] != null && currentLevelAllTokensArray[column - 2, row] != null) //проверка относящаяся к зарезервированым местам на доске
                     {
-                        if (currentLevelAllTokensArray[colunm - 1, row].tag == piece.tag &&
-                            currentLevelAllTokensArray[colunm - 2, row].tag == piece.tag)
+                        if (currentLevelAllTokensArray[column - 1, row].CompareTag(checkableToken.tag) &&
+                            currentLevelAllTokensArray[column - 2, row].CompareTag(checkableToken.tag))
                         {
                             return true;
                         }
@@ -204,32 +211,36 @@ namespace Base_Game_Scripts
             {
                 for (var j = 0; j < Height; j++)
                 {
-
-                    if (!_blankSpaces[i, j] && !_concreteTiles[i,j] && !_slimeTiles[i,j]) // проверка на пустое место/бетонное место на доске/если false создаёт тайл на доске
+                    // подложки спавним только не на пустых зарезевриванных местах
+                    if (!_blankSpaces[i, j]) 
                     {
-                        Vector2 tempPosition = new Vector2(i, j);
                         Vector2 tilePosition = new Vector2(i, j);
                         GameObject backgroundTile = Instantiate(padTilePrefab, tilePosition, Quaternion.identity) as GameObject;
                         backgroundTile.transform.parent = transform;
                         backgroundTile.name = "( " + i + ", " + j + " )";
-                        int dotToUse = Random.Range(0, _currentLevelUsableTokens.Length);
-
+                    }
+                    
+                    // обычные токены спавним на всех свободныех от резервации местах
+                    if (!_blankSpaces[i, j] && !_concreteTiles[i,j] && !_slimeTiles[i,j]) // проверка на пустое место/бетонное место на доске/если false создаёт тайл на доске
+                    {
+                        var checkableTokenValue = Random.Range(0, _currentLevelUsableTokens.Length);
                         //вызов проверки на совпадение при создании доски (не должно быть готовых совпадений)
                         int maxIterations = 0;
-                        while (MatchesAt(i, j, _currentLevelUsableTokens[dotToUse]) && maxIterations < 100)
+                        while (CheckForSameTokensAround(i, j, _currentLevelUsableTokens[checkableTokenValue]) && maxIterations < 100)
                         {
-                            dotToUse = Random.Range(0, _currentLevelUsableTokens.Length);
+                            checkableTokenValue = Random.Range(0, _currentLevelUsableTokens.Length);
                             maxIterations++;
                             //Debug.Log(maxIterations);
                         }
                         maxIterations = 0;
 
-                        GameObject dot = Instantiate(_currentLevelUsableTokens[dotToUse], tempPosition, Quaternion.identity);
-                        dot.GetComponent<Dot>().row = j;
-                        dot.GetComponent<Dot>().column = i;
-                        dot.transform.parent = transform;
-                        dot.name = "( " + i + ", " + j + " )";
-                        currentLevelAllTokensArray[i, j] = dot;
+                        Vector2 tempPosition = new Vector2(i, j);
+                        GameObject createdToken = Instantiate(_currentLevelUsableTokens[checkableTokenValue], tempPosition, Quaternion.identity);
+                        createdToken.GetComponent<Dot>().row = j;
+                        createdToken.GetComponent<Dot>().column = i;
+                        createdToken.transform.parent = transform;
+                        createdToken.name = "( " + i + ", " + j + " )";
+                        currentLevelAllTokensArray[i, j] = createdToken;
                     }
                 }
             }
@@ -238,7 +249,7 @@ namespace Base_Game_Scripts
         private MatchType ColumnOrRow()
         {
             // создать копию FindMatches.currentMatches
-            List<GameObject> matchCopy = _findMatches.currentMatches as List<GameObject>; // as Важно изучить
+            List<GameObject> matchCopy = _findMatches.currentMatches; // as Важно изучить
 
             matchType.type = 0;
             matchType.color = "";
@@ -261,18 +272,18 @@ namespace Base_Game_Scripts
                     {
                         continue;
                     }
-                    if (thisDot.column == nextDot.column && nextDot.tag == color) // перейти на компонентную систему заменив теги
+                    if (thisDot.column == nextDot.column && nextDot.CompareTag(color)) // перейти на компонентную систему заменив теги
                     {
                         columnMatch++;
                     }
-                    if (thisDot.row == nextDot.row && nextDot.tag == color) // перейти на компонентную систему заменив теги
+                    if (thisDot.row == nextDot.row && nextDot.CompareTag(color)) // перейти на компонентную систему заменив теги
                     {
                         rowMatch++;
                     }
                 }
-                //return 3 если колонки или строки совпали
-                //return 2 если бомба уничтожающая соседние тайлы
                 //return 1 если цветная бомба
+                //return 2 если бомба уничтожающая соседние тайлы
+                //return 3 если колонки или строки совпали
                 if (columnMatch == 4 || rowMatch == 4) //  сравниваем с числом меньше фактического так как не учитываем сами себя
                 {
                     matchType.type = 1;
@@ -578,7 +589,7 @@ namespace Base_Game_Scripts
         }
 
         // продвинутое распознавание пустых мест на доске
-        IEnumerator DecreaseRowCo2()
+        private IEnumerator DecreaseRowCo2()
         {
             for (int i = 0; i < Width; i++)
             {
@@ -607,7 +618,7 @@ namespace Base_Game_Scripts
             StartCoroutine(nameof(FillBoardCo));      
         }
 
-        IEnumerator FillBoardCo()
+        private IEnumerator FillBoardCo()
         {
             yield return new WaitForSeconds(_refillDelay);
             RefillBoard();
@@ -622,7 +633,7 @@ namespace Base_Game_Scripts
             CheckToMakeSlime();
             if (IsDeadlocked())
             {
-                StartCoroutine(nameof(ShuffleBorad));
+                StartCoroutine(nameof(ShuffleBoard));
             }
             yield return new WaitForSeconds(_refillDelay);
             Debug.Log("Done Refilling");
@@ -673,7 +684,7 @@ namespace Base_Game_Scripts
                     if (_slimeTiles[i,j] != null && _makeSlime)
                     {
                         // вызвать другой метод для создания нового слайма
-                        Debug.LogError("Slime");
+                        Debug.Log("Slime");
                         MakeNewSlime();
                         return;
                     }
@@ -730,7 +741,7 @@ namespace Base_Game_Scripts
         #endregion
 
         // заполнение пустых ячеек
-        void RefillBoard()
+        private void RefillBoard()
         {
             for (int i = 0; i < Width; i++)
             {
@@ -743,7 +754,7 @@ namespace Base_Game_Scripts
 
                         //фикс проблемы когда при каскаде можно было передвиграть фгуры вручную
                         int maxIterations = 0;
-                        while (MatchesAt(i,j, _currentLevelUsableTokens[dotToUse]) && maxIterations < 100)
+                        while (CheckForSameTokensAround(i,j, _currentLevelUsableTokens[dotToUse]) && maxIterations < 100)
                         {
                             maxIterations++;
                             dotToUse = Random.Range(0, _currentLevelUsableTokens.Length);
@@ -762,7 +773,7 @@ namespace Base_Game_Scripts
         }
 
         //постоянный скан доски на наличие совпадений
-        bool MatchesOnBoard()
+        private bool MatchesOnBoard()
         {
             for (int i = 0; i < Width; i++)
             {
@@ -783,9 +794,9 @@ namespace Base_Game_Scripts
     
         // =============================================================================================================
         // методы для проверки отсутствия совпадений на всей доске а так же поиск всех возможных совпадений на доске !!!
-    
 
-        bool CheckForMatches()
+
+        private bool CheckForMatches()
         {
             for (int i = 0; i < Width; i++)
             {
@@ -800,8 +811,8 @@ namespace Base_Game_Scripts
                             if (currentLevelAllTokensArray[i + 1, j] != null && currentLevelAllTokensArray[i + 2, j] != null)
                             {
                                 // потом отказаться от тегов // проверка наличие возможных совпадений вправо при возможном смещении точки
-                                if (currentLevelAllTokensArray[i + 1, j].tag == currentLevelAllTokensArray[i, j].tag &&
-                                    currentLevelAllTokensArray[i + 2, j].tag == currentLevelAllTokensArray[i, j].tag)
+                                if (currentLevelAllTokensArray[i + 1, j].CompareTag(currentLevelAllTokensArray[i, j].tag) &&
+                                    currentLevelAllTokensArray[i + 2, j].CompareTag(currentLevelAllTokensArray[i, j].tag))
                                 {
                                     return true;
                                 }
@@ -813,8 +824,8 @@ namespace Base_Game_Scripts
                             if (currentLevelAllTokensArray[i, j + 1] != null && currentLevelAllTokensArray[i, j + 2] != null)
                             {
                                 // потом отказаться от тегов // проверка наличие возможных совпадений вверх при возможном смещении точки
-                                if (currentLevelAllTokensArray[i, j + 1].tag == currentLevelAllTokensArray[i, j].tag &&
-                                    currentLevelAllTokensArray[i, j + 2].tag == currentLevelAllTokensArray[i, j].tag)
+                                if (currentLevelAllTokensArray[i, j + 1].CompareTag(currentLevelAllTokensArray[i, j].tag) &&
+                                    currentLevelAllTokensArray[i, j + 2].CompareTag(currentLevelAllTokensArray[i, j].tag))
                                 {
                                     return true;
                                 }
@@ -870,7 +881,7 @@ namespace Base_Game_Scripts
         }
 
         // изменено Vid 51.1 (8 min)
-        void SwitchPieces(int column, int row, Vector2 direction)
+        private void SwitchPieces(int column, int row, Vector2 direction)
         {
             if (currentLevelAllTokensArray[column + (int)direction.x, row + (int)direction.y] != null)
             {
@@ -883,61 +894,8 @@ namespace Base_Game_Scripts
             }
         }
 
-        void ShuffleBorad()
+        private void ShuffleBoard()
         {
-            //yield return new WaitForSeconds(0.5f);
-            ////Create a list of game objects
-            //List<GameObject> newBoard = new List<GameObject>();
-            ////Add every piece to this list
-            //for (int i = 0; i < width; i++)
-            //{
-            //    for (int j = 0; j < height; j++)
-            //    {
-            //        if (allDots[i, j] != null)
-            //        {
-            //            newBoard.Add(allDots[i, j]);
-            //        }
-            //    }
-            //}
-            //yield return new WaitForSeconds(0.5f);
-            ////for every spot on the board. . . 
-            //for (int i = 0; i < width; i++)
-            //{
-            //    for (int j = 0; j < height; j++)
-            //    {
-            //        //if this spot shouldn't be blank
-            //        if (!blankSpaces[i, j] && !concreteTiles[i, j] && !slimeTiles[i, j])
-            //        {
-            //            //Pick a random number
-            //            int pieceToUse = Random.Range(0, newBoard.Count);
-
-            //            //Assign the column to the piece
-            //            int maxIterations = 0;
-
-            //            while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100)
-            //            {
-            //                pieceToUse = Random.Range(0, newBoard.Count);
-            //                maxIterations++;
-            //            }
-            //            //Make a container for the piece
-            //            Dot piece = newBoard[pieceToUse].GetComponent<Dot>();
-            //            maxIterations = 0;
-            //            piece.column = i;
-            //            //Assign the row to the piece
-            //            piece.row = j;
-            //            //Fill in the dots array with this new piece
-            //            allDots[i, j] = newBoard[pieceToUse];
-            //            //Remove it from the list
-            //            newBoard.Remove(newBoard[pieceToUse]);
-            //        }
-            //    }
-            //}
-            ////Check if it's still deadlocked
-            //if (IsDeadlocked())
-            //{
-            //    StartCoroutine(ShuffleBorad());
-            //}
-
             List<GameObject> newBoard = new List<GameObject>();
             // добавить каждый активный токен в новый Лист
             for (int i = 0; i < Width; i++)
@@ -967,7 +925,7 @@ namespace Base_Game_Scripts
                         // механика которая при окончании времени не прекращает игру а перестаёт перезаполнять досту даёт сбой здесь
                         // при попытке перемешать массв с точками программа обращается к пустым элементам массива в которых предпложитено должны
                         // быть точки, игра не знает о том что массив точек перестал фактически заполнятся если закоментировать строки в Методе RefillBoarb
-                        while (MatchesAt(i, j, newBoard[pieceToUse]) && maxIterations < 100) // скокль попыток произведёт юнити для перетасовки доски что бы в ней заранее не оказалось совпадений
+                        while (CheckForSameTokensAround(i, j, newBoard[pieceToUse]) && maxIterations < 100) // скокль попыток произведёт юнити для перетасовки доски что бы в ней заранее не оказалось совпадений
                             // 100 это магическое число служащее для того что бы не попасть в бесконечный цикл и в крайнем слуае создать новую доску с совпадениями 
                         {
                             pieceToUse = Random.Range(0, newBoard.Count);
@@ -991,7 +949,7 @@ namespace Base_Game_Scripts
             if (IsDeadlocked())
             {
                 // рекурсивный вызов
-                ShuffleBorad();
+                ShuffleBoard();
             }
 
         }

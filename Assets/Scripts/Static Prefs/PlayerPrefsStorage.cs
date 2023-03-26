@@ -5,9 +5,9 @@ namespace Static_Prefs
     [CreateAssetMenu(fileName = "PlayerPrefsStorage", menuName = "PLayerPrefsMenu")]
     public class PlayerPrefsStorage : ScriptableObject
     {
-        public static string pathToSaveFile = "/player.dat";
+        public const string PathToSaveFile = "/player.dat";
+        public const string KeyCurrentLevel = "Current Level";
+        public const string TagBoard = "Board";
 
-        [SerializeField]
-        public static string keyCurrentLevel = "Current Level";
     }
 }

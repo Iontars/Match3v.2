@@ -62,9 +62,5 @@ namespace UI
 
             }
         }
-        private void Update()
-        {
-        
-        }
     }
 }
