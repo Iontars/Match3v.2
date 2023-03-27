@@ -21,8 +21,7 @@ namespace Base_Game_Scripts
         }
 
         public void FindAllMatches() => StartCoroutine(nameof(FindAllMatchesCo));
-
-
+        
         private List<GameObject> IsAdjacentBomb(Dot dot1, Dot dot2, Dot dot3)
         {
             List<GameObject> currentDots = new List<GameObject>();
@@ -103,7 +102,6 @@ namespace Base_Game_Scripts
         // проверка на совпадения токенов
         private IEnumerator FindAllMatchesCo()
         {
-            //yield return new WaitForSeconds(.2f);
             yield return null;   
             for (int i = 0; i < _board.Width; i++)
             {

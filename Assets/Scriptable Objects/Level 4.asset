@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2249442d61c6456db7b927b9bebf5fa, type: 3}
   m_Name: Level 4
   m_EditorClassIdentifier: 
-  width: 8
-  height: 8
+  width: 10
+  height: 10
   boardLayout:
   - x: 5
     y: 5
@@ -31,9 +31,9 @@ MonoBehaviour:
   scoreGoals: e8030000d0070000b80b0000
   endGameRequirements:
     gameType: 1
-    counterValue: 100
+    counterValue: 1000
   levelGoals:
-  - numberNeeded: 10
-    numberCollected: 15
+  - numberNeeded: 100
+    numberCollected: 6
     goalSprite: {fileID: 185662926, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Red Dot

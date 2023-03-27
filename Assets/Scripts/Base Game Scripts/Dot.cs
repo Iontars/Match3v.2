@@ -16,6 +16,8 @@ namespace Base_Game_Scripts
         public int targetX, targetY;[Space]
         [HideInInspector]public bool isMatched = false;
 
+        private int tokenSpeed = 10;
+
         Animator animator;
         EndGameManager endGameManager;
         FindMatches findMatches;
@@ -67,6 +69,64 @@ namespace Base_Game_Scripts
             shineDelay= Random.Range(2,5); // так как точки создаются часто то рандомное значение можно задать единожды в конструкторе Start
             shineDelaySeconds = shineDelay;
         }
+        
+        void Update()
+        {
+            print(tokenSpeed);
+            // создание рандомных интервалов запуска анимации, можно использовать для других целей
+            shineDelaySeconds -= Time.deltaTime;
+            if (shineDelaySeconds <= 0)
+            {
+                shineDelaySeconds = shineDelay;
+                StartCoroutine(nameof(StartShine));
+            }
+
+            targetX = column;
+            targetY = row;
+            
+            if (Mathf.Abs(targetX - transform.position.x) > .1f)
+            {
+                tempPosition = new Vector2(targetX, transform.position.y);
+                transform.position = Vector2.Lerp(transform.position, tempPosition, tokenSpeed * Time.deltaTime);
+                print("12312312213");
+                if (board.currentLevelAllTokensArray[column, row] != gameObject)// падение токенов после уничтожения совпавших
+                {
+                    board.currentLevelAllTokensArray[column, row] = gameObject;
+                }
+                findMatches.FindAllMatches();
+                tokenSpeed = 3;
+            }
+            else
+            {
+                tempPosition = new Vector2(targetX, transform.position.y);
+                transform.position = tempPosition;           
+            }
+
+            if (Mathf.Abs(targetY - transform.position.y) >.1f)
+            {
+                tempPosition = new Vector2(transform.position.x, targetY);
+                transform.position = Vector2.Lerp(transform.position, tempPosition, tokenSpeed * Time.deltaTime);
+                if (board.currentLevelAllTokensArray[column, row] != gameObject)// падение токенов после уничтожения совпавших
+                {
+                    board.currentLevelAllTokensArray[column, row] = gameObject;
+                }
+                findMatches.FindAllMatches();
+                tokenSpeed = 3;
+            }
+            else
+            {
+                tempPosition = new Vector2(transform.position.x, targetY);
+                transform.position = tempPosition;
+            }
+        }
+
+        IEnumerator TokenMoveSwipe()
+        {
+            
+            
+            yield return null;
+        }
+        
 
         IEnumerator StartShine()
         {
@@ -195,59 +255,7 @@ namespace Base_Game_Scripts
             }
         }
 
-        void Update()
-        {
-            // создание рандомных интервалов запуска анимации, можно использовать для других целей
-            shineDelaySeconds -= Time.deltaTime;
-            if (shineDelaySeconds <= 0)
-            {
-                shineDelaySeconds = shineDelay;
-                StartCoroutine(nameof(StartShine));
-            }
-
-            targetX = column;
-            targetY = row;
-
-            // следующий кусок кода отвечает за передвижение токена после проделанного свайпа, глупо реализация исправить
-            // скорость движения токена к цели после свайпа, та же скорость с которой падают свайпы сверху, глупая реализация переделать
-
-            if (Mathf.Abs(targetX - transform.position.x) > .1f)
-            {
-                //StartCoroutine(DelayFallingByX()); // корутина тормозит основной поток и у свайпа появляетс делей равный делею корутины , придумать асинх
-                tempPosition = new Vector2(targetX, transform.position.y);
-                // создать глобальную переменную для опрелеления скорости токена вместо 11f
-                transform.position = Vector2.Lerp(transform.position, tempPosition, 10 * Time.deltaTime);           
-                if (board.currentLevelAllTokensArray[column, row] != gameObject)// падение токенов после уничтожения совпавших
-                {
-                    board.currentLevelAllTokensArray[column, row] = gameObject;
-                }
-                findMatches.FindAllMatches();
-            }
-            else
-            {
-                tempPosition = new Vector2(targetX, transform.position.y);
-                transform.position = tempPosition;           
-            }
-
-            if (Mathf.Abs(targetY - transform.position.y) >.1f)
-            {
-                //StartCoroutine(DelayFallingByY()); // корутина тормозит основной поток и у свайпа появляетс делей равный делею корутины , придумать асинх
-                // НАДО РЕАЛИЗОВАТЬ КОРУТИНУ ЧТО БЫ ПОСЛЕ ВЗРЫВА ТОКЕНЫ НЕ ПАДАЛИ СРАЗУ
-                tempPosition = new Vector2(transform.position.x, targetY);
-                // создать глобальную переменную для опрелеления скорости токена вместо 11f
-                transform.position = Vector2.Lerp(transform.position, tempPosition, 10 * Time.deltaTime);           
-                if (board.currentLevelAllTokensArray[column, row] != gameObject)// падение токенов после уничтожения совпавших
-                {
-                    board.currentLevelAllTokensArray[column, row] = gameObject;
-                }
-                findMatches.FindAllMatches();
-            }
-            else
-            {
-                tempPosition = new Vector2(transform.position.x, targetY);
-                transform.position = tempPosition;
-            }
-        }
+        
 
         // самострой, необходимо проанализировать и улучшить
         /*IEnumerator DelayFallingByX()
