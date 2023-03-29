@@ -72,8 +72,8 @@ namespace AdventureMap
                     _number = 4 - _adjustmentForEventField;
                 }
                 _isStartMove = true;
-                //_numbersOfSteps = Random.Range(1, 4);
-                _numbersOfSteps = 7;
+                _numbersOfSteps = Random.Range(1, 4);
+                //_numbersOfSteps = 7;
                 print("Выброшено число " + _numbersOfSteps);
                 StartCoroutine(MoveSteps(_numbersOfSteps));
             }
