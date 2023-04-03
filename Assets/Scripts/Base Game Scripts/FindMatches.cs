@@ -182,7 +182,7 @@ namespace Base_Game_Scripts
             }
         }
         // Совпадение для Большой бомбы
-        List<GameObject> GetAdjacentPieces(int column, int row)
+        private List<GameObject> GetAdjacentPieces(int column, int row)
         {
             List<GameObject> dots = new List<GameObject>();
             for (int i = column - 1 ; i <= column + 1; i++)
@@ -205,7 +205,7 @@ namespace Base_Game_Scripts
         }
 
         //запись всех вертикальных токенов в список для возможности их уничтожения бонусом
-        List<GameObject> GetColumnPieces(int column)
+        private List<GameObject> GetColumnPieces(int column)
         {
             List<GameObject> dots = new List<GameObject>();
             for (int i = 0; i < _board.Height; i++)
@@ -224,7 +224,7 @@ namespace Base_Game_Scripts
             return dots;
         }
         //запись всех горизонтальных токенов в список для возможности их уничтожения бонусом
-        List<GameObject> GetRowPieces(int row)
+        private List<GameObject> GetRowPieces(int row)
         {
             List<GameObject> dots = new List<GameObject>();
             for (int i = 0; i < _board.Width; i++)

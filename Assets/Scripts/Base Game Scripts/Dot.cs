@@ -93,7 +93,6 @@ namespace Base_Game_Scripts
                     board.currentLevelAllTokensArray[column, row] = gameObject;
                 }
                 findMatches.FindAllMatches();
-                tokenSpeed = 3;
             }
             else
             {
@@ -110,7 +109,6 @@ namespace Base_Game_Scripts
                     board.currentLevelAllTokensArray[column, row] = gameObject;
                 }
                 findMatches.FindAllMatches();
-                tokenSpeed = 3;
             }
             else
             {
