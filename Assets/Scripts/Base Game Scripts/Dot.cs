@@ -88,7 +88,6 @@ namespace Base_Game_Scripts
             {
                 tempPosition = new Vector2(targetX, transform.position.y);
                 transform.position = Vector2.Lerp(transform.position, tempPosition, tokenSpeed * Time.deltaTime);
-                print("12312312213");
                 if (board.currentLevelAllTokensArray[column, row] != gameObject)// падение токенов после уничтожения совпавших
                 {
                     board.currentLevelAllTokensArray[column, row] = gameObject;
