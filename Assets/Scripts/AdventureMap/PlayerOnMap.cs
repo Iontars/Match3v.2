@@ -54,6 +54,26 @@ namespace AdventureMap
             transform.position = Vector2.Lerp(transform.position, mapCheckPointsArray[_number].position, 0.3f);
         }
 
+        public void GetMove()
+        {
+            if (_number <= mapCheckPointsArray.Length)
+            {
+                if (_numberOfCurrentLevel == 4)
+                {
+                    _number = 1 - _adjustmentForEventField;
+                }
+                if (_numberOfCurrentLevel == 7)
+                {
+                    _number = 4 - _adjustmentForEventField;
+                }
+                _isStartMove = true;
+                _numbersOfSteps = Random.Range(1, 4);
+                //_numbersOfSteps = 6;
+                print("Выброшено число " + _numbersOfSteps);
+                StartCoroutine(MoveSteps(_numbersOfSteps));
+            }
+        }
+        
         private void Update()
         {
 
