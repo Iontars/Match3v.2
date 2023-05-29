@@ -51,7 +51,7 @@ namespace AdventureMap
 
         private void MoveToPosition()
         {
-            transform.position = Vector2.Lerp(transform.position, mapCheckPointsArray[_number].position, 0.3f);
+            transform.position = Vector2.Lerp(transform.position, mapCheckPointsArray[_number].position, 0.03f);
         }
 
         public void GetMove()
@@ -89,7 +89,7 @@ namespace AdventureMap
                 _isStartMove = true;
             }
             
-            if (Input.GetKeyDown(KeyCode.Space) && _number <= mapCheckPointsArray.Length)
+            if (Input.GetMouseButtonDown(0) && _number <= mapCheckPointsArray.Length)
             {
                 if (_numberOfCurrentLevel == 4)
                 {
@@ -100,8 +100,8 @@ namespace AdventureMap
                     _number = 4 - _adjustmentForEventField;
                 }
                 _isStartMove = true;
-                //_numbersOfSteps = Random.Range(1, 4);
-                _numbersOfSteps = 6;
+                _numbersOfSteps = Random.Range(1, 4);
+                //_numbersOfSteps = 6;
                 print("Выброшено число " + _numbersOfSteps);
                 StartCoroutine(MoveSteps(_numbersOfSteps));
             }
@@ -120,7 +120,7 @@ namespace AdventureMap
                 print(_number);
                 //print("Move To position: " + _number );
                 _isCanMove = true;
-                yield return new WaitForSecondsRealtime(0.4f);
+                yield return new WaitForSeconds(1f);
                 _isCanMove = false;
                 
             }
@@ -131,6 +131,9 @@ namespace AdventureMap
         private void FinishMassage()
         {
             Debug.LogWarning("FinishGame");
+            _currentPlayerMapPosition = gameObject.transform;
+            _number = 0;
+            _isCanMove = true;
         }
     }
 }
