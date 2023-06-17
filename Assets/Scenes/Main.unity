@@ -1840,9 +1840,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b94d1e644d54b4c3d879838520391f4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreBar: {fileID: 1179307191}
   scoreText: {fileID: 1650366727}
   score: 0
-  scoreBar: {fileID: 1179307191}
 --- !u!1 &818685374
 GameObject:
   m_ObjectHideFlags: 0
@@ -2554,7 +2554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679a90dc51e7a1e4fadaca6158dab564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: Splash
+  sceneToLoad: AdventureMap
 --- !u!1 &1179307189
 GameObject:
   m_ObjectHideFlags: 0
@@ -3420,12 +3420,6 @@ MonoBehaviour:
     type: 3}
   slimeTilePrefab: {fileID: 6673068742601044246, guid: 7805c3fb26344b24ebdfd238cae80ee0,
     type: 3}
-  currentLevelTokensArray:
-  - {fileID: 380217878639168106, guid: 626dad3cdd87a174e85bdf3fc6d75b7f, type: 3}
-  - {fileID: 2205036190841030540, guid: 156afdf7791a33f49b79eda7f8470c40, type: 3}
-  - {fileID: 851745900852720794, guid: ff92602f56e93984c92de6fefbe04a61, type: 3}
-  - {fileID: 3222974119019145949, guid: d523a2bdbda671a4e9430a06834921af, type: 3}
-  - {fileID: 1092129758423907793, guid: 8fc9ae9e922b409468be77874941f554, type: 3}
   destroyEffect: {fileID: 5307088077756954478, guid: dc79056933b4b9341b475f5e6534393c,
     type: 3}
   boardLayout: []

@@ -1,5 +1,8 @@
 #region Using
 
+using System;
+using Adventure.AdventureMap;
+using Static_Prefs;
 using UnityEngine;
 
 #endregion
@@ -10,6 +13,13 @@ namespace AdventureMap
     public class ChechPoint_S : MonoBehaviour
     {
         private BoxCollider2D _collider;
+
+        private PlayerOnMap _playerOnMap;
+
+        private void Awake()
+        {
+            _playerOnMap = FindObjectOfType<PlayerOnMap>();
+        }
 
         private void Start()
         {
@@ -26,6 +36,10 @@ namespace AdventureMap
             }
         }
 
-    
+        private void OnMouseDown()
+        {
+            PlayerPrefs.SetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, int.Parse(gameObject.name) - 1);
+            print(int.Parse(gameObject.name) - 1);
+        }
     }
 }

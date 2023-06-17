@@ -11,6 +11,7 @@ namespace Base_Game_Scripts
 
     public class FindMatches : MonoBehaviour
     {
+
         private Board _board;
         // список хранящий колличество совпадений за 1 ход
         public List<GameObject> currentMatches = new List<GameObject>();
@@ -163,7 +164,7 @@ namespace Base_Game_Scripts
         }
 
         // совпадения для цветной бомбы
-        public void MatchPiecesOfColor( string color )
+        public void MatchPiecesOfColor(string color)
         {
             for (int i = 0; i < _board.Width; i++)
             {

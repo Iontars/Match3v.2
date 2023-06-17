@@ -8,6 +8,8 @@ namespace Static_Prefs
         public const string PathToSaveFile = "/player.dat";
         public const string KeyCurrentLevel = "Current Level";
         public const string TagBoard = "Board";
+        public const string PlayerCurrentPositionOnMap = "PlayerCurrentPositionOnMap";
+        public const string NumberOfCurrentLevel = "NumberOfCurrentLevel";
 
     }
 }

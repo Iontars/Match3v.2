@@ -10,7 +10,7 @@ namespace Base_Game_Scripts
 {
     public enum GameState{Wait, Move, Win, Lose, Pause} // состояние используется для блокировки повторного свайпа пока токены движутся и меняет состояние игры
 
-    public enum TileKind {Breakable, Blank, Normal, Lock, Concrete, Slime } // состояние тайлов, говорящще о том занял ли тайл или нет
+    public enum TileKind {Breakable, Blank, Normal, Lock, Concrete, Slime } // состояние тайлов, говорящее о том занял ли тайл или нет
 
     [System.Serializable]
     public class TileType // класс хранящйи в себе информацию о том занят ли тайл или нет
@@ -341,6 +341,31 @@ namespace Base_Game_Scripts
             }
         }
 
+        // вызов Уничтожение совпавших токенов
+        public void DestroyMatches() // зачем так сложно в 500 обёрток // оптимизировать. объеденить с методом DestroyMatchesAt
+        {
+            // сколько эллементов в Списке currentMatches ?
+            // как только мы проверили что в списке совпадений существует 4 или более совпадений мы сразу проверяем какую бомбу можно создать и 
+            // очищаем список совпадений в избежании повторных сравнений в процессе больших каскадов и больших цепочек совпадений
+            if (_findMatches.currentMatches.Count >= 4)
+            {
+                CheckToMakeBombs();
+            }
+            _findMatches.currentMatches.Clear();
+            for (int i = 0; i < Width; i++)
+            {
+                for (int j = 0; j < Height; j++)
+                {
+                    if (currentLevelAllTokensArray[i,j] != null)
+                    {
+                        DestroyMatchesAt(i, j);
+                    }
+                }
+            }
+            _findMatches.currentMatches.Clear();
+            StartCoroutine(nameof(DecreaseRowCo2));
+        }
+        
         // Уничтожение совпавших токенов // тут же подсчёт очков // звук ломания токена выделить в отдельный ивент/метод/ партикл взрыва / урон бонусным тайлам
         void DestroyMatchesAt(int colunm, int row)
         {
@@ -399,31 +424,6 @@ namespace Base_Game_Scripts
                 currentLevelAllTokensArray[colunm, row] = null;
             
             }
-        }
-
-        // вызов Уничтожение совпавших токенов
-        public void DestroyMatches() // зачем так сложно в 500 обёрток // оптимизировать. объеденить с методом DestroyMatchesAt
-        {
-            // сколько эллементов в Списке currentMatches ?
-            // как только мы проверили что в списке совпадений существует 4 или более совпадений мы сразу проверяем какую бомбу можно создать и 
-            // очищаем список совпадений в избежании повторных сравнений в процессе больших каскадов и больших цепочек совпадений
-            if (_findMatches.currentMatches.Count >= 4)
-            {
-                CheckToMakeBombs();
-            }
-            _findMatches.currentMatches.Clear();
-            for (int i = 0; i < Width; i++)
-            {
-                for (int j = 0; j < Height; j++)
-                {
-                    if (currentLevelAllTokensArray[i,j] != null)
-                    {
-                        DestroyMatchesAt(i, j);
-                    }
-                }
-            }
-            _findMatches.currentMatches.Clear();
-            StartCoroutine(nameof(DecreaseRowCo2));
         }
 
         // проверить какой тип бонуса создать при совпадениях
@@ -790,12 +790,9 @@ namespace Base_Game_Scripts
             }
             return false;
         }
-
-    
         // =============================================================================================================
         // методы для проверки отсутствия совпадений на всей доске а так же поиск всех возможных совпадений на доске !!!
-
-
+        
         private bool CheckForMatches()
         {
             for (int i = 0; i < Width; i++)

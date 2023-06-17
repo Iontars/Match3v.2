@@ -72,7 +72,6 @@ namespace Base_Game_Scripts
         
         void Update()
         {
-            print(tokenSpeed);
             // создание рандомных интервалов запуска анимации, можно использовать для других целей
             shineDelaySeconds -= Time.deltaTime;
             if (shineDelaySeconds <= 0)
@@ -116,15 +115,7 @@ namespace Base_Game_Scripts
                 transform.position = tempPosition;
             }
         }
-
-        IEnumerator TokenMoveSwipe()
-        {
-            
-            
-            yield return null;
-        }
         
-
         IEnumerator StartShine()
         {
             anim.SetBool("Shine", true);
@@ -251,23 +242,7 @@ namespace Base_Game_Scripts
                 marker.transform.parent = this.transform;
             }
         }
-
         
-
-        // самострой, необходимо проанализировать и улучшить
-        /*IEnumerator DelayFallingByX()
-    {
-        yield return new WaitForSeconds(.2f);
-        tempPosition = new Vector2(targetX, transform.position.y);
-        transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);
-    }
-    IEnumerator DelayFallingByY()
-    {
-        yield return new WaitForSeconds(.2f);
-        tempPosition = new Vector2(transform.position.x, targetY);
-        transform.position = Vector2.Lerp(transform.position, tempPosition, 11f * Time.deltaTime);
-    }*/
-
         // метод косвенно выполняющий перемещение точек // меняет позиции тайлов и те автоматически просто хоят твернуться на новые позиции, тупо
         void MovePiecesActual(Vector2 direction)
         {
