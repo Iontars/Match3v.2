@@ -72,10 +72,7 @@ namespace Base_Game_Scripts
         
         void Update()
         {
-<<<<<<< HEAD
-=======
             //print(tokenSpeed);
->>>>>>> 4befdbf18e3a1032b70704f389ccff488d924bb1
             // создание рандомных интервалов запуска анимации, можно использовать для других целей
             shineDelaySeconds -= Time.deltaTime;
             if (shineDelaySeconds <= 0)
