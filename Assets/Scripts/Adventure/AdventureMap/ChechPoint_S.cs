@@ -23,7 +23,6 @@ namespace AdventureMap
 
         private void Start()
         {
-            Debug.developerConsoleVisible = true;
             _collider = GetComponent<BoxCollider2D>();
         }
 
@@ -38,8 +37,12 @@ namespace AdventureMap
 
         private void OnMouseDown()
         {
-            PlayerPrefs.SetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, int.Parse(gameObject.name) - 1);
-            print(int.Parse(gameObject.name) - 1);
+            // PlayerPrefs.SetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, int.Parse(gameObject.name) - 1);
+
+            StartCoroutine(_playerOnMap.MoveTeleportToPoint(int.Parse(gameObject.name)));
+            
+            print(int.Parse(gameObject.name));
+            
         }
     }
 }

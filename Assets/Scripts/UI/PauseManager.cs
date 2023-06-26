@@ -28,16 +28,8 @@ namespace UI
 
         private void Start()
         {
-            // в PlayerPrefs ключ "Sound" для звука, 0 - mute, 1 - unmute
             pausePanel.SetActive(false);
-            if (PlayerPrefs.HasKey("Sound"))
-            {
-                soundButton.sprite = PlayerPrefs.GetInt("Sound") == 0 ? musicOffSprite : musicOnSprite;
-            }
-            else
-            {
-                soundButton.sprite = musicOnSprite;
-            }
+            soundButton.sprite = PlayerPrefs.GetInt("Sound") == 0 ? musicOffSprite : musicOnSprite;
         }
 
         public void PauseGame()
@@ -52,25 +44,16 @@ namespace UI
 
         public void SoundButton()
         {
-            if (PlayerPrefs.HasKey("Sound"))
+            if (PlayerPrefs.GetInt("Sound") == 0)
             {
-                if (PlayerPrefs.GetInt("Sound") == 0)
-                {
-                    soundButton.sprite = musicOnSprite;
-                    PlayerPrefs.SetInt("Sound", 1);
-                    _sound.AdjustValue();
-                }
-                else
-                {
-                    soundButton.sprite = musicOffSprite;
-                    PlayerPrefs.SetInt("Sound", 0);
-                    _sound.AdjustValue();
-                }
+                soundButton.sprite = musicOnSprite;
+                PlayerPrefs.SetInt("Sound", 1);
+                _sound.AdjustValue();
             }
             else
             {
                 soundButton.sprite = musicOffSprite;
-                PlayerPrefs.SetInt("Sound", 1);
+                PlayerPrefs.SetInt("Sound", 0);
                 _sound.AdjustValue();
             }
         }

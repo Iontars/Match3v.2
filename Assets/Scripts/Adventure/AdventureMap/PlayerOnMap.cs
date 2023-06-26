@@ -18,9 +18,10 @@ namespace Adventure.AdventureMap
         private Transform _currentPlayerMapPosition;
         private float _playerMapSpeed;
         private int _numbersOfSteps = 0;
+        private int _corutineForLerpDelay = 1;
         private int _numberOfCurrentLevel;
         private readonly int _adjustmentForEventField = 1;
-        private bool _isLerpMoving, _isStartMove;
+        [SerializeField]public bool _isLerpMoving, _isStartMove;
 
         private Action _finishGame;
         
@@ -33,8 +34,6 @@ namespace Adventure.AdventureMap
         private void Start()
         {
             _isLerpMoving = true;
-            print(PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap)+ "куда идём");
-            
         }
 
         private void OnEnable()
@@ -50,12 +49,12 @@ namespace Adventure.AdventureMap
         
         private void Update()
         {
-            //print(PlayerPrefs.GetInt(PlayerPrefsStorage.KeyCurrentLevel) + "Prefs");
-        
+            print(_isLerpMoving);        
             if (_isLerpMoving && PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) < mapCheckPointsArray.Length)
             {
                 MoveToPosition();
             }
+            
             if (Input.GetKeyDown(KeyCode.Space) && PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) <= mapCheckPointsArray.Length && !_isStartMove)
             {
                 _isStartMove = true;
@@ -68,35 +67,39 @@ namespace Adventure.AdventureMap
                     PlayerPrefs.SetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, 4 - _adjustmentForEventField);
                 }
                 _isStartMove = true;
-                _numbersOfSteps = Random.Range(1, 4);
-                //_numbersOfSteps = 1;
+                //_numbersOfSteps = Random.Range(1, 4);
+                _numbersOfSteps = 1;
                 print("Выброшено число " + _numbersOfSteps);
-                StartCoroutine(MoveSteps(_numbersOfSteps));
+                StartCoroutine(MoveStepBySteps(_numbersOfSteps));
+            }
+            else if(PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) >= mapCheckPointsArray.Length)
+            {
+                _finishGame?.Invoke();
             }
         }
 
-        private IEnumerator MoveSteps(int steps)
+        private IEnumerator MoveStepBySteps(int steps)
         {
             for (int i = 0; i < steps; i++)
             {
                 PlayerPrefs.SetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) + 1 );
-                if (PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) >= mapCheckPointsArray.Length)
-                {
-                    _finishGame?.Invoke();
-                    break;
-                }
-                //print(_number);
-                //print("Move To position: " + _number );
                 _isLerpMoving = true;
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(_corutineForLerpDelay);
                 _isLerpMoving = false;
                 
             }
-            print(PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) +"______" + mapCheckPointsArray.Length);
-            PlayerPrefs.SetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap));
+            print(PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) +" ИЗ " + mapCheckPointsArray.Length);
             _isStartMove = false;
             PlayerPrefs.SetInt(PlayerPrefsStorage.KeyCurrentLevel, PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) );
-            //SceneManager.LoadScene("Main");
+            SceneManager.LoadScene("Main");
+        }
+
+        public IEnumerator MoveTeleportToPoint(int targetPoint)
+        {
+            PlayerPrefs.SetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, targetPoint);
+            _isLerpMoving = true;
+            yield return new WaitForSeconds(_corutineForLerpDelay);
+            _isLerpMoving = false;
         }
         
         private void FinishMassage()
@@ -105,6 +108,11 @@ namespace Adventure.AdventureMap
             _currentPlayerMapPosition = gameObject.transform;
             PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, 0);
             _isLerpMoving = true;
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            print("Вошёл в точку" + other.gameObject.name);
         }
     }
 }

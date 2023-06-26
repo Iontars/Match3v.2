@@ -222,7 +222,7 @@ namespace Base_Game_Scripts
             {
                 board.currentState = GameState.Wait;
                 swipeAngle = Mathf.Atan2(finalTouchPosition.y - firstTouchPosition.y, finalTouchPosition.x - firstTouchPosition.x) * 180/ Mathf.PI;
-                MovePicies();
+                MovePieces();
                 board.currentDot = this;
             }
             else
@@ -275,7 +275,7 @@ namespace Base_Game_Scripts
         }
 
         // расчёт направления свайпа // лучше записать полученное направление свайпа в переменную, в дальнейшем это поможет избежать дублирования кода и ошибок. енам
-        void MovePicies()
+        void MovePieces()
         {
             if (swipeAngle > -45 && swipeAngle <= 45 && column < board.Width -1 )
             {

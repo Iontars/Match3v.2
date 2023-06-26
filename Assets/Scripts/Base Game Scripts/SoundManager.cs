@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -14,7 +15,6 @@ namespace Base_Game_Scripts
             {
                 if (PlayerPrefs.GetInt("Sound") == 0)
                 {
-                    backgroundMusic.Play();
                     backgroundMusic.volume = 0;
                 }
                 else
@@ -25,6 +25,7 @@ namespace Base_Game_Scripts
             }
             else
             {
+                PlayerPrefs.SetInt("Sound", 1);
                 backgroundMusic.Play();
                 backgroundMusic.volume = 1;
             }
@@ -40,6 +41,7 @@ namespace Base_Game_Scripts
                 }
                 else
                 {
+                    backgroundMusic.Play();
                     backgroundMusic.volume = 1;
                 }
             }
@@ -51,10 +53,16 @@ namespace Base_Game_Scripts
             {
                 if (PlayerPrefs.GetInt("Sound") == 1)
                 {
+                    print("ЗВУК");
                     int clipTopPlay = Random.Range(0, destroyNoise.Length);
                     destroyNoise[clipTopPlay].Play();
                 }
             }
+        }
+
+        private void Update()
+        {
+            print(PlayerPrefs.GetInt("Sound") + " звук");
         }
     }
 }
