@@ -11,7 +11,7 @@ namespace Adventure.AdventureMap
     {
         public GameObject _playerOnMapGO;
         private PlayerOnMapPro _playerOnMapPro;
-        public [] mapCheckPointsArray;
+        public Transform[] mapCheckPointsArray;
         public RollCube rollCube;
         private readonly int _adjustmentForEventField = 1;
         
