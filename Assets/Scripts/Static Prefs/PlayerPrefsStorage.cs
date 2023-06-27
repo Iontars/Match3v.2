@@ -10,6 +10,8 @@ namespace Static_Prefs
         public const string TagBoard = "Board";
         public const string PlayerCurrentPositionOnMap = "PlayerCurrentPositionOnMap";
         public const string NumberOfCurrentLevel = "NumberOfCurrentLevel";
+        
+        public const float CoroutineForLerpDelay = 1.2f;
 
     }
 }

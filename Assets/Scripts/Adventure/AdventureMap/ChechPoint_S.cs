@@ -14,11 +14,15 @@ namespace AdventureMap
     {
         private BoxCollider2D _collider;
 
-        private PlayerOnMap _playerOnMap;
+        private PlayerOnMapPro _playerOnMap;
+        private GlobalMapController _globalMapController;
+
+        //public Action action;
 
         private void Awake()
         {
-            _playerOnMap = FindObjectOfType<PlayerOnMap>();
+            _playerOnMap = FindObjectOfType<PlayerOnMapPro>();
+            _globalMapController = FindObjectOfType<GlobalMapController>();
         }
 
         private void Start()
@@ -37,12 +41,10 @@ namespace AdventureMap
 
         private void OnMouseDown()
         {
-            // PlayerPrefs.SetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, int.Parse(gameObject.name) - 1);
+            //action.Invoke();
+            print(Array.IndexOf(_globalMapController.mapCheckPointsArray, gameObject.transform.position));
+            StartCoroutine(_playerOnMap.MoveTeleportToPoint(Array.IndexOf(_globalMapController.mapCheckPointsArray, gameObject)));
 
-            StartCoroutine(_playerOnMap.MoveTeleportToPoint(int.Parse(gameObject.name)));
-            
-            print(int.Parse(gameObject.name));
-            
         }
     }
 }
