@@ -35,7 +35,7 @@ namespace Adventure.AdventureMap
         private void MoveToPosition()
         {
             transform.position = Vector2.Lerp(transform.position,
-                globalMapController.mapCheckPointsArray[PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap)].position,
+                globalMapController.mapCheckPointsArray[PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap)].transform.position,
                 0.03f);
         }
 
@@ -61,7 +61,7 @@ namespace Adventure.AdventureMap
             print(PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) + " ИЗ " + maxPointsCount);
             PlayerPrefs.SetInt(PlayerPrefsStorage.KeyCurrentLevel,
                 PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap));
-            SceneManager.LoadScene("Main");
+            //SceneManager.LoadScene("Main");
         }
 
         public IEnumerator MoveTeleportToPoint(int targetPoint)
@@ -70,6 +70,7 @@ namespace Adventure.AdventureMap
             isLerpMoving = true;
             yield return new WaitForSeconds(PlayerPrefsStorage.CoroutineForLerpDelay);
             isLerpMoving = false;
+            print(PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) + " ИЗ " + maxPointsCount);
         }
 
         private void FinishMassage()

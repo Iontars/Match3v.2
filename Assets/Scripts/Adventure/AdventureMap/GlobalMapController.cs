@@ -1,5 +1,6 @@
 #region Using
 
+using System;
 using Static_Prefs;
 using UnityEngine;
 
@@ -11,35 +12,51 @@ namespace Adventure.AdventureMap
     {
         public GameObject _playerOnMapGO;
         private PlayerOnMapPro _playerOnMapPro;
-        public Transform[] mapCheckPointsArray;
+        public GameObject[] mapCheckPointsArray;
         public RollCube rollCube;
         private readonly int _adjustmentForEventField = 1;
         
         private void Awake()
         {
             _playerOnMapPro = _playerOnMapGO.GetComponent<PlayerOnMapPro>();
-            _playerOnMapPro.currentPlayerMapPosition = new Vector2(
-                mapCheckPointsArray[PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap)].transform.position.x,
-                mapCheckPointsArray[PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap)].transform.position.y);
+            _playerOnMapPro.currentPlayerMapPosition =
+                mapCheckPointsArray[PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap)].transform
+                    .position;
             _playerOnMapPro.maxPointsCount = mapCheckPointsArray.Length;
             Instantiate(_playerOnMapGO,  _playerOnMapPro.currentPlayerMapPosition, _playerOnMapGO.transform.rotation);
         }
 
         private void OnEnable()
         {
-            rollCube.NumberReceived += TestMessage;
+            rollCube.NumberReceived += CallPlayerStepByStep;
+            
+            foreach (var item in mapCheckPointsArray)
+            {
+                item.GetComponent<ChechPoint_S>().action += CallPlayerTeleport;
+            }
         }
 
         private void OnDisable()
         {
-            rollCube.NumberReceived -= TestMessage;
+            rollCube.NumberReceived -= CallPlayerStepByStep;
+            foreach (var item in mapCheckPointsArray)
+            {
+                item.GetComponent<ChechPoint_S>().action -= CallPlayerTeleport;
+            }
         }
 
-        private void TestMessage()
+        private void CallPlayerStepByStep()
         {
             print(rollCube.RollNumber);
             CheckSpecialMapPosition();
             StartCoroutine(_playerOnMapPro.MoveStepBySteps(rollCube.RollNumber));
+        }
+        
+        private void CallPlayerTeleport(GameObject go)
+        {
+            CheckSpecialMapPosition();
+            StartCoroutine(_playerOnMapPro.MoveTeleportToPoint(Array.IndexOf(mapCheckPointsArray, go)));
+
         }
 
         private void CheckSpecialMapPosition()

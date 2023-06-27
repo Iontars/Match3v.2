@@ -1,13 +1,11 @@
 #region Using
 
 using System;
-using Adventure.AdventureMap;
-using Static_Prefs;
 using UnityEngine;
 
 #endregion
 
-namespace AdventureMap
+namespace Adventure.AdventureMap
 {
     /// <summary> Descriptions </summary>
     public class ChechPoint_S : MonoBehaviour
@@ -17,7 +15,7 @@ namespace AdventureMap
         private PlayerOnMapPro _playerOnMap;
         private GlobalMapController _globalMapController;
 
-        //public Action action;
+        public Action<GameObject> action;
 
         private void Awake()
         {
@@ -41,10 +39,8 @@ namespace AdventureMap
 
         private void OnMouseDown()
         {
-            //action.Invoke();
-            print(Array.IndexOf(_globalMapController.mapCheckPointsArray, gameObject.transform.position));
-            StartCoroutine(_playerOnMap.MoveTeleportToPoint(Array.IndexOf(_globalMapController.mapCheckPointsArray, gameObject)));
-
+            action?.Invoke(gameObject);
+            //StartCoroutine(_playerOnMap.MoveTeleportToPoint(Array.IndexOf(_globalMapController.mapCheckPointsArray, gameObject)));
         }
     }
 }
