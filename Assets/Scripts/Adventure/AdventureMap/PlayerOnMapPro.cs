@@ -61,7 +61,7 @@ namespace Adventure.AdventureMap
             print(PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) + " ИЗ " + maxPointsCount);
             PlayerPrefs.SetInt(PlayerPrefsStorage.KeyCurrentLevel,
                 PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap));
-            //SceneManager.LoadScene("Main");
+            SceneManager.LoadScene("Main");
         }
 
         public IEnumerator MoveTeleportToPoint(int targetPoint)

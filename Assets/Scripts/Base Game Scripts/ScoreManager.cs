@@ -1,6 +1,7 @@
 using Game_Data_Scripts;
 using UnityEngine;
 using UnityEngine.UI;
+using Static_Prefs;
 
 namespace Base_Game_Scripts
 {
@@ -11,6 +12,7 @@ namespace Base_Game_Scripts
         private int _numberStars;
         public Image scoreBar;
         public Text scoreText;
+        public Text stageNumber;
         public int score;
 
         public void IncreaseScore(int amountToIncrease)
@@ -51,11 +53,12 @@ namespace Base_Game_Scripts
                 scoreBar.fillAmount = (float)score / (float)_board?.scoreGoals[_board.scoreGoals.Length - 1];
             }
         }
-        
-        void Start()
+
+        private void Start()
         {
             _board = FindObjectOfType<Board>();
             _gameData = FindObjectOfType<GameData>();
+            stageNumber.text = PlayerPrefs.GetInt(PlayerPrefsStorage.KeyCurrentLevel).ToString();
         }
     }
 }

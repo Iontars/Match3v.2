@@ -53,7 +53,6 @@ namespace Base_Game_Scripts
             {
                 if (PlayerPrefs.GetInt("Sound") == 1)
                 {
-                    print("ЗВУК");
                     int clipTopPlay = Random.Range(0, destroyNoise.Length);
                     destroyNoise[clipTopPlay].Play();
                 }

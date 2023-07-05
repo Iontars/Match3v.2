@@ -54,9 +54,12 @@ namespace Adventure.AdventureMap
         
         private void CallPlayerTeleport(GameObject go)
         {
-            CheckSpecialMapPosition();
-            StartCoroutine(_playerOnMapPro.MoveTeleportToPoint(Array.IndexOf(mapCheckPointsArray, go)));
-
+            if (go != null)
+            {
+                print("Problem");
+                CheckSpecialMapPosition();
+                StartCoroutine(_playerOnMapPro?.MoveTeleportToPoint(Array.IndexOf(mapCheckPointsArray, go)));
+            }
         }
 
         private void CheckSpecialMapPosition()
