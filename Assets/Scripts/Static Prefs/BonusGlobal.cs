@@ -1,18 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using System.IO;
 
-public class BonusGlobal : MonoBehaviour
+namespace Static_Prefs
 {
-    // Start is called before the first frame update
-    void Start()
+    public class BonusGlobal : MonoBehaviour
     {
-        
-    }
+        public string jsonGlobalBonusPath;
+        public string jsonGlobalBonusText;
 
-    // Update is called once per frame
-    void Update()
-    {
+        private void Awake()
+        {
+            jsonGlobalBonusPath = "Assets/Resources/JSON/Bonuses/GlobalBonuses.json";
+            if (File.Exists(jsonGlobalBonusPath))
+            {
+                jsonGlobalBonusText = File.ReadAllText(jsonGlobalBonusPath);
+            }
+            else
+            {
+                print("Application.Quit");
+                Application.Quit();
+            }
+        }
+        void Start()
+        {
         
+        }
+    
+        void Update()
+        {
+        
+        }
     }
 }

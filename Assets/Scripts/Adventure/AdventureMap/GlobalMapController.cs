@@ -10,6 +10,7 @@ namespace Adventure.AdventureMap
 {
     public class GlobalMapController : MonoBehaviour
     {
+        
         public GameObject _playerOnMapGO;
         private PlayerOnMapPro _playerOnMapPro;
         public GameObject[] mapCheckPointsArray;
@@ -38,11 +39,11 @@ namespace Adventure.AdventureMap
 
         private void OnDisable()
         {
-            rollCube.NumberReceived -= CallPlayerStepByStep;
-            foreach (var item in mapCheckPointsArray)
-            {
-                item.GetComponent<ChechPoint_S>().action -= CallPlayerTeleport;
-            }
+            // rollCube.NumberReceived -= CallPlayerStepByStep;
+            // foreach (var item in mapCheckPointsArray)
+            // {
+            //     item.GetComponent<ChechPoint_S>().action -= CallPlayerTeleport; //ошибка
+            // }
         }
 
         private void CallPlayerStepByStep()

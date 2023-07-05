@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1536
     height: 772.8
   m_ShowMode: 4
-  m_Title: Scene
+  m_Title: Hierarchy
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 177
+  controlID: 167
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -168,9 +168,9 @@ MonoBehaviour:
     height: 547.2
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 16}
+  m_ActualView: {fileID: 18}
   m_Panes:
-  - {fileID: 16}
+  - {fileID: 18}
   m_Selected: 0
   m_LastSelected: 0
 --- !u!114 &8
@@ -194,9 +194,9 @@ MonoBehaviour:
     height: 175.59998
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 17}
+  m_ActualView: {fileID: 19}
   m_Panes:
-  - {fileID: 17}
+  - {fileID: 19}
   m_Selected: 0
   m_LastSelected: 0
 --- !u!114 &9
@@ -245,13 +245,15 @@ MonoBehaviour:
     height: 543.2
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 18}
+  m_ActualView: {fileID: 20}
   m_Panes:
-  - {fileID: 18}
-  - {fileID: 19}
   - {fileID: 20}
+  - {fileID: 21}
+  - {fileID: 22}
+  - {fileID: 17}
+  - {fileID: 16}
   m_Selected: 0
-  m_LastSelected: 1
+  m_LastSelected: 4
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -273,9 +275,9 @@ MonoBehaviour:
     height: 179.59998
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 21}
+  m_ActualView: {fileID: 23}
   m_Panes:
-  - {fileID: 21}
+  - {fileID: 23}
   m_Selected: 0
   m_LastSelected: 0
 --- !u!114 &12
@@ -324,9 +326,9 @@ MonoBehaviour:
     height: 453.6
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 22}
+  m_ActualView: {fileID: 24}
   m_Panes:
-  - {fileID: 22}
+  - {fileID: 24}
   m_Selected: 0
   m_LastSelected: 0
 --- !u!114 &14
@@ -350,9 +352,9 @@ MonoBehaviour:
     height: 269.19998
   m_MinSize: {x: 232, y: 271}
   m_MaxSize: {x: 10002, y: 10021}
-  m_ActualView: {fileID: 23}
+  m_ActualView: {fileID: 25}
   m_Panes:
-  - {fileID: 23}
+  - {fileID: 25}
   m_Selected: 0
   m_LastSelected: 0
 --- !u!114 &15
@@ -376,12 +378,425 @@ MonoBehaviour:
     height: 722.8
   m_MinSize: {x: 276, y: 71}
   m_MaxSize: {x: 4001, y: 4021}
-  m_ActualView: {fileID: 24}
+  m_ActualView: {fileID: 26}
   m_Panes:
-  - {fileID: 24}
+  - {fileID: 26}
   m_Selected: 0
   m_LastSelected: 0
 --- !u!114 &16
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 139222468, guid: 8dc1be91775c4bb469f6b74cef450eaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: NuGet
+    m_Image: {fileID: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 386.4
+    y: 73.6
+    width: 605.19995
+    height: 522.2
+  m_SerializedDataModeController:
+    m_DataMode: 0
+    m_PreferredDataMode: 0
+    m_SupportedDataModes: 
+    isAutomatic: 1
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+  availablePackages:
+  - Id: Newtonsoft.Json
+    Version: 13.0.3
+    Authors: James Newton-King
+    Description: Json.NET is a popular high-performance JSON framework for .NET
+    DownloadCount: 2147483647
+    DownloadUrl: https://www.nuget.org/api/v2/package/Newtonsoft.Json/13.0.3
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/newtonsoft.json/13.0.3/icon
+    LicenseUrl: https://www.nuget.org/packages/Newtonsoft.Json/13.0.3/license
+    ProjectUrl: https://www.newtonsoft.com/json
+    ReleaseNotes: 
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Json.NET
+  - Id: Microsoft.Extensions.DependencyInjection
+    Version: 7.0.0
+    Authors: Microsoft
+    Description: Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.
+    DownloadCount: 2147483647
+    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Extensions.DependencyInjection/7.0.0
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.extensions.dependencyinjection/7.0.0/icon
+    LicenseUrl: https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/7.0.0/license
+    ProjectUrl: https://dot.net/
+    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Microsoft.Extensions.DependencyInjection
+  - Id: Microsoft.Extensions.Logging
+    Version: 7.0.0
+    Authors: Microsoft
+    Description: Logging infrastructure default implementation for Microsoft.Extensions.Logging.
+    DownloadCount: 2147483647
+    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Extensions.Logging/7.0.0
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.extensions.logging/7.0.0/icon
+    LicenseUrl: https://www.nuget.org/packages/Microsoft.Extensions.Logging/7.0.0/license
+    ProjectUrl: https://dot.net/
+    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Microsoft.Extensions.Logging
+  - Id: System.Text.Json
+    Version: 7.0.3
+    Authors: Microsoft
+    Description: 'Provides high-performance and low-allocating types that serialize
+      objects to JavaScript Object Notation (JSON) text and deserialize JSON text
+      to objects, with UTF-8 support built-in. Also provides types to read and write
+      JSON text encoded as UTF-8, and to create an in-memory document object model
+      (DOM), that is read-only, for random access of the JSON elements within a structured
+      view of the data.
+
+
+      The System.Text.Json library is built-in as part
+      of the shared framework in .NET Runtime. The package can be installed when
+      you need to use it in other target frameworks.'
+    DownloadCount: 1220640147
+    DownloadUrl: https://www.nuget.org/api/v2/package/System.Text.Json/7.0.3
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/system.text.json/7.0.3/icon
+    LicenseUrl: https://www.nuget.org/packages/System.Text.Json/7.0.3/license
+    ProjectUrl: https://dot.net/
+    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: System.Text.Json
+  - Id: Microsoft.Bcl.AsyncInterfaces
+    Version: 7.0.0
+    Authors: Microsoft
+    Description: 'Provides the IAsyncEnumerable<T> and IAsyncDisposable interfaces
+      and helper types for .NET Standard 2.0. This package is not required starting
+      with .NET Standard 2.1 and .NET Core 3.0.
+
+
+      Commonly Used Types:
+
+      System.IAsyncDisposable
+
+      System.Collections.Generic.IAsyncEnumerable
+
+      System.Collections.Generic.IAsyncEnumerator'
+    DownloadCount: 993993149
+    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Bcl.AsyncInterfaces/7.0.0
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.bcl.asyncinterfaces/7.0.0/icon
+    LicenseUrl: https://www.nuget.org/packages/Microsoft.Bcl.AsyncInterfaces/7.0.0/license
+    ProjectUrl: https://dot.net/
+    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Microsoft.Bcl.AsyncInterfaces
+  - Id: System.Drawing.Common
+    Version: 7.0.0
+    Authors: Microsoft
+    Description: 'Provides access to GDI+ graphics functionality.
+
+
+      Commonly
+      Used Types:
+
+      System.Drawing.Bitmap
+
+      System.Drawing.BitmapData
+
+      System.Drawing.Brush
+
+      System.Drawing.Font
+
+      System.Drawing.Graphics
+
+      System.Drawing.Icon
+
+
+      Since
+      .NET 7, non-Windows platforms are not supported, even with the runtime configuration
+      switch. See https://aka.ms/systemdrawingnonwindows for more information.'
+    DownloadCount: 867206042
+    DownloadUrl: https://www.nuget.org/api/v2/package/System.Drawing.Common/7.0.0
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/system.drawing.common/7.0.0/icon
+    LicenseUrl: https://www.nuget.org/packages/System.Drawing.Common/7.0.0/license
+    ProjectUrl: https://dot.net/
+    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: System.Drawing.Common
+  - Id: Serilog
+    Version: 3.0.1
+    Authors: Serilog Contributors
+    Description: Simple .NET logging with fully-structured events
+    DownloadCount: 813956411
+    DownloadUrl: https://www.nuget.org/api/v2/package/Serilog/3.0.1
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/serilog/3.0.1/icon
+    LicenseUrl: https://www.nuget.org/packages/Serilog/3.0.1/license
+    ProjectUrl: https://serilog.net/
+    ReleaseNotes: 
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Serilog
+  - Id: Microsoft.Win32.SystemEvents
+    Version: 7.0.0
+    Authors: Microsoft
+    Description: 'Provides access to Windows system event notifications.
+
+
+      Commonly
+      Used Types:
+
+      Microsoft.Win32.SystemEvents'
+    DownloadCount: 804642108
+    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Win32.SystemEvents/7.0.0
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.win32.systemevents/7.0.0/icon
+    LicenseUrl: https://www.nuget.org/packages/Microsoft.Win32.SystemEvents/7.0.0/license
+    ProjectUrl: https://dot.net/
+    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Microsoft.Win32.SystemEvents
+  - Id: Microsoft.EntityFrameworkCore
+    Version: 7.0.8
+    Authors: Microsoft
+    Description: 'Entity Framework Core is a modern object-database mapper for .NET.
+      It supports LINQ queries, change tracking, updates, and schema migrations.
+      EF Core works with SQL Server, Azure SQL Database, SQLite, Azure Cosmos DB,
+      MySQL, PostgreSQL, and other databases through a provider plugin API.
+
+
+      Commonly
+      Used Types:
+
+      Microsoft.EntityFrameworkCore.DbContext
+
+      Microsoft.EntityFrameworkCore.DbSet'
+    DownloadCount: 742872901
+    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.EntityFrameworkCore/7.0.8
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.entityframeworkcore/7.0.8/icon
+    LicenseUrl: https://www.nuget.org/packages/Microsoft.EntityFrameworkCore/7.0.8/license
+    ProjectUrl: https://docs.microsoft.com/ef/core/
+    ReleaseNotes: 
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Microsoft.EntityFrameworkCore
+  - Id: System.Windows.Extensions
+    Version: 7.0.0
+    Authors: Microsoft
+    Description: 'Provides miscellaneous Windows-specific types
+
+
+      Commonly
+      Used Types:
+
+      System.Security.Cryptography.X509Certificates.X509Certificate2UI
+
+      System.Security.Cryptography.X509Certificates.X509SelectionFlag'
+    DownloadCount: 652717781
+    DownloadUrl: https://www.nuget.org/api/v2/package/System.Windows.Extensions/7.0.0
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/system.windows.extensions/7.0.0/icon
+    LicenseUrl: https://www.nuget.org/packages/System.Windows.Extensions/7.0.0/license
+    ProjectUrl: https://dot.net/
+    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: System.Windows.Extensions
+  - Id: Azure.Core
+    Version: 1.33.0
+    Authors: Microsoft
+    Description: This is the implementation of the Azure Client Pipeline
+    DownloadCount: 615797020
+    DownloadUrl: https://www.nuget.org/api/v2/package/Azure.Core/1.33.0
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/azure.core/1.33.0/icon
+    LicenseUrl: https://www.nuget.org/packages/Azure.Core/1.33.0/license
+    ProjectUrl: https://github.com/Azure/azure-sdk-for-net/blob/Azure.Core_1.33.0/sdk/core/Azure.Core/README.md
+    ReleaseNotes: https://github.com/Azure/azure-sdk-for-net/blob/Azure.Core_1.33.0/sdk/core/Azure.Core/CHANGELOG.md
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Azure.Core
+  - Id: Castle.Core
+    Version: 5.1.1
+    Authors: Castle Project Contributors
+    Description: Castle Core, including DynamicProxy, Logging Abstractions and DictionaryAdapter
+    DownloadCount: 613851686
+    DownloadUrl: https://www.nuget.org/api/v2/package/Castle.Core/5.1.1
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/castle.core/5.1.1/icon
+    LicenseUrl: https://www.nuget.org/packages/Castle.Core/5.1.1/license
+    ProjectUrl: http://www.castleproject.org/
+    ReleaseNotes: 
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Castle.Core
+  - Id: Microsoft.Identity.Client
+    Version: 4.54.1
+    Authors: Microsoft
+    Description: "This package contains the binaries of the Microsoft Authentication
+      Library for .NET (MSAL.NET).\n      MSAL.NET makes it easy to obtain tokens
+      from the Microsoft identity platform for developers (formally Azure AD v2.0)
+      signing-in users with work & school accounts, Microsoft personal accounts,
+      and social identities via Azure AD B2C. These tokens provide access to Microsoft
+      Cloud API and any other API secured by the Microsoft identity platform. This
+      version supports adding authentication functionality to your .NET based clients
+      - .NET, .NET Framework, .NET MAUI, Xamarin iOS, Xamarin Android and UWP"
+    DownloadCount: 591059905
+    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Identity.Client/4.54.1
+    icon: {fileID: 0}
+    IconUrl: 
+    LicenseUrl: https://www.nuget.org/packages/Microsoft.Identity.Client/4.54.1/license
+    ProjectUrl: https://go.microsoft.com/fwlink/?linkid=844761
+    ReleaseNotes: The release notes are available at https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/releases
+      and the roadmap at https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki#roadmap.
+      To provide feedback, fill-in the survey at https://ncv.microsoft.com/JrXkdySi0m.
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Microsoft Authentication Library for .NET
+  - Id: AWSSDK.Core
+    Version: 3.7.107.10
+    Authors: Amazon Web Services
+    Description: The Amazon Web Services SDK for .NET - Core Runtime
+    DownloadCount: 522205299
+    DownloadUrl: https://www.nuget.org/api/v2/package/AWSSDK.Core/3.7.107.10
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/awssdk.core/3.7.107.10/icon
+    LicenseUrl: https://www.nuget.org/packages/AWSSDK.Core/3.7.107.10/license
+    ProjectUrl: https://github.com/aws/aws-sdk-net/
+    ReleaseNotes: 
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: AWSSDK - Core Runtime
+  - Id: Microsoft.Extensions.Http
+    Version: 7.0.0
+    Authors: Microsoft
+    Description: 'The HttpClient factory is a pattern for configuring and retrieving
+      named HttpClients in a composable way. The HttpClient factory provides extensibility
+      to plug in DelegatingHandlers that address cross-cutting concerns such as service
+      location, load balancing, and reliability. The default HttpClient factory provides
+      built-in diagnostics and logging and manages the lifetimes of connections in
+      a performant way.
+
+
+      Commonly Used Types:
+
+      System.Net.Http.IHttpClientFactory'
+    DownloadCount: 511751015
+    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Extensions.Http/7.0.0
+    icon: {fileID: 0}
+    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.extensions.http/7.0.0/icon
+    LicenseUrl: https://www.nuget.org/packages/Microsoft.Extensions.Http/7.0.0/license
+    ProjectUrl: https://dot.net/
+    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
+    RepositoryBranch: 
+    RepositoryCommit: 
+    RepositoryType: 0
+    RepositoryUrl: 
+    Summary: 
+    Title: Microsoft.Extensions.Http
+  defaultIcon: {fileID: 2800000, guid: eec19781926cd2248b7c9abfde8db555, type: 3}
+  hasRefreshed: 1
+  numberToSkip: 0
+  updatePackages: []
+--- !u!114 &17
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13953, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 800, y: 250}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Package Manager
+    m_Image: {fileID: 5076950121296946556, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 386.4
+    y: 73.6
+    width: 605.19995
+    height: 522.2
+  m_SerializedDataModeController:
+    m_DataMode: 0
+    m_PreferredDataMode: 0
+    m_SupportedDataModes: 
+    isAutomatic: 1
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+--- !u!114 &18
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -479,7 +894,7 @@ MonoBehaviour:
   m_LowResolutionForAspectRatios: 00000000000000000000
   m_XRRenderMode: 0
   m_RenderTexture: {fileID: 0}
---- !u!114 &17
+--- !u!114 &19
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -513,7 +928,7 @@ MonoBehaviour:
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
     m_SaveData: []
---- !u!114 &18
+--- !u!114 &20
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -843,9 +1258,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 3.0414917, y: 10.425553, z: 5.8552794}
+    m_Target: {x: -2.710184, y: 0.056488156, z: 90}
     speed: 2
-    m_Value: {x: 3.0414917, y: 10.425553, z: 5.8552794}
+    m_Value: {x: -2.710184, y: 0.056488156, z: 90}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -895,9 +1310,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 3.4893746
+    m_Target: 8.758136
     speed: 2
-    m_Value: 3.4893746
+    m_Value: 8.758136
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -922,7 +1337,7 @@ MonoBehaviour:
   m_SceneVisActive: 1
   m_LastLockedObject: {fileID: 0}
   m_ViewIsLockedToObject: 0
---- !u!114 &19
+--- !u!114 &21
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -959,10 +1374,10 @@ MonoBehaviour:
   m_MipLevel: 0
   m_Zoom: -1
   m_ScrollPosition: {x: 0, y: 0}
-  m_SelectedObject: {fileID: 11400000, guid: 599dd12484bee4f2dbf0123fc4f4ece6, type: 2}
+  m_SelectedObject: {fileID: 4900000, guid: e1c0d168abb3f0c4b9ed0e77c4d57a17, type: 3}
   m_SelectedSpriteRectGUID: 00000000000000000000000000000000
   m_LastUsedModuleTypeName: 
---- !u!114 &20
+--- !u!114 &22
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1119,7 +1534,7 @@ MonoBehaviour:
   m_CurrentEditor: 1
   m_LayerEditor:
     m_SelectedLayerIndex: 0
---- !u!114 &21
+--- !u!114 &23
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1155,8 +1570,8 @@ MonoBehaviour:
     m_SaveData: []
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 38138
---- !u!114 &22
+  m_LastSelectedObjectID: 25116
+--- !u!114 &24
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1195,7 +1610,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 2680ffff48a2ffff80ecffff56edffff78f9ffff18fbffff32650000a465000016660000306a00003c6d0000a48b0000508c0000c893000042950000
+      m_ExpandedIDs: 18fbffff1c620000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1219,7 +1634,7 @@ MonoBehaviour:
       m_IsLocked: 0
     m_CurrentSortingName: TransformSorting
   m_WindowGUID: 0c4e42d2e41c54581b02d2d9f1c152e1
---- !u!114 &23
+--- !u!114 &25
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1266,7 +1681,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scriptable Objects
+    - Assets/Resources/JSON/Bonuses
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1281,7 +1696,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 9e5e0000
     m_LastClickedID: 24222
-    m_ExpandedIDs: 000000003a6400003c6400003e64000040640000426400004464000046640000486400004a6400004c6400004e64000050640000526400005464000056640000586400005a640000
+    m_ExpandedIDs: 0000000096640000986400009a6400009c6400009e640000a0640000a2640000a4640000a6640000a8640000aa640000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1306,10 +1721,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_AssetTreeState:
-    scrollPos: {x: 0, y: 443.80112}
+    scrollPos: {x: 0, y: 86.30148}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff000000003a6400003e64000040640000486400004c6400004e6400005464000056640000586400005a640000cc640000
+    m_ExpandedIDs: ffffffff00000000966400009c6400009e640000a0640000a2640000a4640000a6640000a864000016650000266500005067000062670000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1365,7 +1780,7 @@ MonoBehaviour:
     m_GridSize: 64
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 115
---- !u!114 &24
+--- !u!114 &26
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
