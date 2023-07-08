@@ -5,20 +5,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
-
 namespace Adventure.AdventureMap
 {
     public class PlayerOnMapPro : MonoBehaviour
     {
-        public GlobalMapController globalMapController;
+        private GlobalMapController globalMapController;
         private float _playerMapSpeed;
         private int _numberOfCurrentLevel;
         [HideInInspector] public Vector2 currentPlayerMapPosition;
         [HideInInspector] public int maxPointsCount;
         [HideInInspector] public bool isLerpMoving;
-        private bool isLerping = false;
-
-
+        
         private void Awake()
         {
             globalMapController = FindObjectOfType<GlobalMapController>();
@@ -30,7 +27,6 @@ namespace Adventure.AdventureMap
             isLerpMoving = true;
         }
         
-
         private void MoveToPosition()
         {
             transform.position = Vector2.Lerp(transform.position,
@@ -60,16 +56,24 @@ namespace Adventure.AdventureMap
             print(PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) + " ИЗ " + maxPointsCount);
             PlayerPrefs.SetInt(PlayerPrefsStorage.KeyCurrentLevel,
                 PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap));
-            SceneManager.LoadScene("Main");
+            StartCoroutine(MoveIsCompleted());
         }
 
-        public IEnumerator MoveTeleportToPoint(int targetPoint)
+        public IEnumerator MoveTeleportToPoint(int targetPoint) // вызов происходит по UI кнопке
         {
             PlayerPrefs.SetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, targetPoint);
             isLerpMoving = true;
             yield return new WaitForSeconds(PlayerPrefsStorage.CoroutineForLerpDelay);
             isLerpMoving = false;
             print(PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) + " ИЗ " + maxPointsCount);
+            StartCoroutine(MoveIsCompleted()); // не запускается
+        }
+        
+        private static IEnumerator MoveIsCompleted() 
+        {
+            yield return new WaitForSeconds(0.3f);
+            print("Движение завершилось");
+            //SceneManager.LoadScene("Main");
         }
 
         private void FinishMassage()
@@ -80,6 +84,7 @@ namespace Adventure.AdventureMap
             isLerpMoving = true;
         }
 
+        
         private void OnTriggerEnter2D(Collider2D other)
         {
             print("Вошёл в точку" + other.gameObject.name);

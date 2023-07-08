@@ -258,6 +258,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8df83402bdb66cd48bb19bc52586bc72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentPlayerMapPosition: {x: 4, y: -3}
+  maxPointsCount: 20
+  isLerpMoving: 0
 --- !u!1 &6621269097991116954
 GameObject:
   m_ObjectHideFlags: 0

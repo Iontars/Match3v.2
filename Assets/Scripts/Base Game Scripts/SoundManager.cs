@@ -61,7 +61,7 @@ namespace Base_Game_Scripts
 
         private void Update()
         {
-            print(PlayerPrefs.GetInt("Sound") + " звук");
+            //print(PlayerPrefs.GetInt("Sound") + " звук");
         }
     }
 }
