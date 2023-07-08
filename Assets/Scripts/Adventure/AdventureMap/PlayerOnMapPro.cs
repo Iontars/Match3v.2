@@ -16,6 +16,8 @@ namespace Adventure.AdventureMap
         [HideInInspector] public Vector2 currentPlayerMapPosition;
         [HideInInspector] public int maxPointsCount;
         [HideInInspector] public bool isLerpMoving;
+        private bool isLerping = false;
+
 
         private void Awake()
         {
@@ -27,10 +29,7 @@ namespace Adventure.AdventureMap
         {
             isLerpMoving = true;
         }
-
-        private void OnEnable()
-        {
-        }
+        
 
         private void MoveToPosition()
         {
