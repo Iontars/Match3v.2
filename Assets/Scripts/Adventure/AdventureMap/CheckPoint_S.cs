@@ -8,14 +8,15 @@ using UnityEngine;
 namespace Adventure.AdventureMap
 {
     /// <summary> Descriptions </summary>
-    public class ChechPoint_S : MonoBehaviour
+    public class CheckPoint_S : MonoBehaviour
     {
+        public int number;
         private BoxCollider2D _collider;
 
         private PlayerOnMapPro _playerOnMap;
         private GlobalMapController _globalMapController;
 
-        public Action<GameObject> action;
+        public Action<int> Action;
 
         private void Awake()
         {
@@ -39,8 +40,7 @@ namespace Adventure.AdventureMap
 
         private void OnMouseDown()
         {
-            action?.Invoke(gameObject);
-            //StartCoroutine(_playerOnMap.MoveTeleportToPoint(Array.IndexOf(_globalMapController.mapCheckPointsArray, gameObject)));
+            Action?.Invoke(number);
         }
     }
 }
