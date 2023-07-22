@@ -8,6 +8,30 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12004, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PixelRect:
+    serializedVersion: 2
+    x: 888.8
+    y: 318.4
+    width: 640.8
+    height: 497.6
+  m_ShowMode: 0
+  m_Title: Project Settings
+  m_RootView: {fileID: 4}
+  m_MinSize: {x: 310, y: 221}
+  m_MaxSize: {x: 4000, y: 4021}
+  m_Maximized: 0
+--- !u!114 &2
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12004, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
@@ -19,12 +43,62 @@ MonoBehaviour:
     width: 1536
     height: 772.8
   m_ShowMode: 4
-  m_Title: Project
-  m_RootView: {fileID: 2}
+  m_Title: Game
+  m_RootView: {fileID: 5}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
---- !u!114 &2
+--- !u!114 &3
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: ProjectSettingsWindow
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 640.8
+    height: 497.6
+  m_MinSize: {x: 310, y: 221}
+  m_MaxSize: {x: 4000, y: 4021}
+  m_ActualView: {fileID: 22}
+  m_Panes:
+  - {fileID: 22}
+  m_Selected: 0
+  m_LastSelected: 0
+--- !u!114 &4
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children:
+  - {fileID: 3}
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 640.8
+    height: 497.6
+  m_MinSize: {x: 310, y: 221}
+  m_MaxSize: {x: 4000, y: 4021}
+  vertical: 0
+  controlID: 180
+--- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -37,9 +111,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
-  - {fileID: 3}
-  - {fileID: 5}
-  - {fileID: 4}
+  - {fileID: 6}
+  - {fileID: 8}
+  - {fileID: 7}
   m_Position:
     serializedVersion: 2
     x: 0
@@ -52,7 +126,7 @@ MonoBehaviour:
   m_TopViewHeight: 30
   m_UseBottomView: 1
   m_BottomViewHeight: 20
---- !u!114 &3
+--- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,7 +148,7 @@ MonoBehaviour:
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
   m_LastLoadedLayoutName: 
---- !u!114 &4
+--- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,7 +169,7 @@ MonoBehaviour:
     height: 20
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
---- !u!114 &5
+--- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,10 +182,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
-  - {fileID: 6}
   - {fileID: 9}
   - {fileID: 12}
   - {fileID: 15}
+  - {fileID: 18}
   m_Position:
     serializedVersion: 2
     x: 0
@@ -121,84 +195,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 178
---- !u!114 &6
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Children:
-  - {fileID: 7}
-  - {fileID: 8}
-  m_Position:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 386.4
-    height: 722.8
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 8096, y: 16192}
-  vertical: 1
-  controlID: 19
---- !u!114 &7
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: GameView
-  m_EditorClassIdentifier: 
-  m_Children: []
-  m_Position:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 386.4
-    height: 547.2
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 18}
-  m_Panes:
-  - {fileID: 18}
-  m_Selected: 0
-  m_LastSelected: 0
---- !u!114 &8
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ConsoleWindow
-  m_EditorClassIdentifier: 
-  m_Children: []
-  m_Position:
-    serializedVersion: 2
-    x: 0
-    y: 547.2
-    width: 386.4
-    height: 175.59998
-  m_MinSize: {x: 101, y: 121}
-  m_MaxSize: {x: 4001, y: 4021}
-  m_ActualView: {fileID: 19}
-  m_Panes:
-  - {fileID: 19}
-  m_Selected: 0
-  m_LastSelected: 0
+  controlID: 114
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -216,14 +213,14 @@ MonoBehaviour:
   - {fileID: 11}
   m_Position:
     serializedVersion: 2
-    x: 386.4
+    x: 0
     y: 0
-    width: 607.19995
+    width: 387.2
     height: 722.8
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 73
+  controlID: 19
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -232,28 +229,24 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
-  m_EditorHideFlags: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: SceneView
+  m_Name: GameView
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 607.19995
-    height: 543.2
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 20}
+    width: 387.2
+    height: 548
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 19}
   m_Panes:
-  - {fileID: 20}
-  - {fileID: 21}
-  - {fileID: 22}
-  - {fileID: 17}
-  - {fileID: 16}
+  - {fileID: 19}
   m_Selected: 0
-  m_LastSelected: 3
+  m_LastSelected: 0
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -264,20 +257,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: AnimationWindow
+  m_Name: ConsoleWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 543.2
-    width: 607.19995
-    height: 179.59998
-  m_MinSize: {x: 102, y: 121}
-  m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 23}
+    y: 548
+    width: 387.2
+    height: 174.79999
+  m_MinSize: {x: 101, y: 121}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 20}
   m_Panes:
-  - {fileID: 23}
+  - {fileID: 20}
   m_Selected: 0
   m_LastSelected: 0
 --- !u!114 &12
@@ -297,15 +290,94 @@ MonoBehaviour:
   - {fileID: 14}
   m_Position:
     serializedVersion: 2
-    x: 993.6
+    x: 387.2
     y: 0
-    width: 213.59998
+    width: 621.6
     height: 722.8
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 143
+  controlID: 73
 --- !u!114 &13
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 1
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: SceneView
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 621.6
+    height: 544
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
+  m_ActualView: {fileID: 21}
+  m_Panes:
+  - {fileID: 21}
+  - {fileID: 23}
+  - {fileID: 24}
+  m_Selected: 0
+  m_LastSelected: 2
+--- !u!114 &14
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: AnimationWindow
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 544
+    width: 621.6
+    height: 178.79999
+  m_MinSize: {x: 102, y: 121}
+  m_MaxSize: {x: 4002, y: 4021}
+  m_ActualView: {fileID: 25}
+  m_Panes:
+  - {fileID: 25}
+  m_Selected: 0
+  m_LastSelected: 0
+--- !u!114 &15
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12010, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Children:
+  - {fileID: 16}
+  - {fileID: 17}
+  m_Position:
+    serializedVersion: 2
+    x: 1008.8
+    y: 0
+    width: 199.20001
+    height: 722.8
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 8096, y: 16192}
+  vertical: 1
+  controlID: 115
+--- !u!114 &16
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -322,16 +394,16 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 213.59998
-    height: 453.6
+    width: 199.20001
+    height: 538.4
   m_MinSize: {x: 202, y: 221}
   m_MaxSize: {x: 4002, y: 4021}
-  m_ActualView: {fileID: 24}
+  m_ActualView: {fileID: 26}
   m_Panes:
-  - {fileID: 24}
+  - {fileID: 26}
   m_Selected: 0
   m_LastSelected: 0
---- !u!114 &14
+--- !u!114 &17
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -347,17 +419,17 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 453.6
-    width: 213.59998
-    height: 269.19998
+    y: 538.4
+    width: 199.20001
+    height: 184.39996
   m_MinSize: {x: 232, y: 271}
   m_MaxSize: {x: 10002, y: 10021}
-  m_ActualView: {fileID: 25}
+  m_ActualView: {fileID: 27}
   m_Panes:
-  - {fileID: 25}
+  - {fileID: 27}
   m_Selected: 0
   m_LastSelected: 0
---- !u!114 &15
+--- !u!114 &18
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -372,431 +444,18 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 1207.2
+    x: 1208
     y: 0
-    width: 328.80005
+    width: 328
     height: 722.8
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 26}
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 28}
   m_Panes:
-  - {fileID: 26}
+  - {fileID: 28}
   m_Selected: 0
   m_LastSelected: 0
---- !u!114 &16
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 139222468, guid: 8dc1be91775c4bb469f6b74cef450eaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_TitleContent:
-    m_Text: NuGet
-    m_Image: {fileID: 0}
-    m_Tooltip: 
-  m_Pos:
-    serializedVersion: 2
-    x: 386.4
-    y: 73.6
-    width: 605.19995
-    height: 522.2
-  m_SerializedDataModeController:
-    m_DataMode: 0
-    m_PreferredDataMode: 0
-    m_SupportedDataModes: 
-    isAutomatic: 1
-  m_ViewDataDictionary: {fileID: 0}
-  m_OverlayCanvas:
-    m_LastAppliedPresetName: Default
-    m_SaveData: []
-  availablePackages:
-  - Id: Newtonsoft.Json
-    Version: 13.0.3
-    Authors: James Newton-King
-    Description: Json.NET is a popular high-performance JSON framework for .NET
-    DownloadCount: 2147483647
-    DownloadUrl: https://www.nuget.org/api/v2/package/Newtonsoft.Json/13.0.3
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/newtonsoft.json/13.0.3/icon
-    LicenseUrl: https://www.nuget.org/packages/Newtonsoft.Json/13.0.3/license
-    ProjectUrl: https://www.newtonsoft.com/json
-    ReleaseNotes: 
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Json.NET
-  - Id: Microsoft.Extensions.DependencyInjection
-    Version: 7.0.0
-    Authors: Microsoft
-    Description: Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.
-    DownloadCount: 2147483647
-    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Extensions.DependencyInjection/7.0.0
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.extensions.dependencyinjection/7.0.0/icon
-    LicenseUrl: https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/7.0.0/license
-    ProjectUrl: https://dot.net/
-    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Microsoft.Extensions.DependencyInjection
-  - Id: Microsoft.Extensions.Logging
-    Version: 7.0.0
-    Authors: Microsoft
-    Description: Logging infrastructure default implementation for Microsoft.Extensions.Logging.
-    DownloadCount: 2147483647
-    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Extensions.Logging/7.0.0
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.extensions.logging/7.0.0/icon
-    LicenseUrl: https://www.nuget.org/packages/Microsoft.Extensions.Logging/7.0.0/license
-    ProjectUrl: https://dot.net/
-    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Microsoft.Extensions.Logging
-  - Id: System.Text.Json
-    Version: 7.0.3
-    Authors: Microsoft
-    Description: 'Provides high-performance and low-allocating types that serialize
-      objects to JavaScript Object Notation (JSON) text and deserialize JSON text
-      to objects, with UTF-8 support built-in. Also provides types to read and write
-      JSON text encoded as UTF-8, and to create an in-memory document object model
-      (DOM), that is read-only, for random access of the JSON elements within a structured
-      view of the data.
-
-
-      The System.Text.Json library is built-in as part
-      of the shared framework in .NET Runtime. The package can be installed when
-      you need to use it in other target frameworks.'
-    DownloadCount: 1220640147
-    DownloadUrl: https://www.nuget.org/api/v2/package/System.Text.Json/7.0.3
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/system.text.json/7.0.3/icon
-    LicenseUrl: https://www.nuget.org/packages/System.Text.Json/7.0.3/license
-    ProjectUrl: https://dot.net/
-    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: System.Text.Json
-  - Id: Microsoft.Bcl.AsyncInterfaces
-    Version: 7.0.0
-    Authors: Microsoft
-    Description: 'Provides the IAsyncEnumerable<T> and IAsyncDisposable interfaces
-      and helper types for .NET Standard 2.0. This package is not required starting
-      with .NET Standard 2.1 and .NET Core 3.0.
-
-
-      Commonly Used Types:
-
-      System.IAsyncDisposable
-
-      System.Collections.Generic.IAsyncEnumerable
-
-      System.Collections.Generic.IAsyncEnumerator'
-    DownloadCount: 993993149
-    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Bcl.AsyncInterfaces/7.0.0
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.bcl.asyncinterfaces/7.0.0/icon
-    LicenseUrl: https://www.nuget.org/packages/Microsoft.Bcl.AsyncInterfaces/7.0.0/license
-    ProjectUrl: https://dot.net/
-    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Microsoft.Bcl.AsyncInterfaces
-  - Id: System.Drawing.Common
-    Version: 7.0.0
-    Authors: Microsoft
-    Description: 'Provides access to GDI+ graphics functionality.
-
-
-      Commonly
-      Used Types:
-
-      System.Drawing.Bitmap
-
-      System.Drawing.BitmapData
-
-      System.Drawing.Brush
-
-      System.Drawing.Font
-
-      System.Drawing.Graphics
-
-      System.Drawing.Icon
-
-
-      Since
-      .NET 7, non-Windows platforms are not supported, even with the runtime configuration
-      switch. See https://aka.ms/systemdrawingnonwindows for more information.'
-    DownloadCount: 867206042
-    DownloadUrl: https://www.nuget.org/api/v2/package/System.Drawing.Common/7.0.0
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/system.drawing.common/7.0.0/icon
-    LicenseUrl: https://www.nuget.org/packages/System.Drawing.Common/7.0.0/license
-    ProjectUrl: https://dot.net/
-    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: System.Drawing.Common
-  - Id: Serilog
-    Version: 3.0.1
-    Authors: Serilog Contributors
-    Description: Simple .NET logging with fully-structured events
-    DownloadCount: 813956411
-    DownloadUrl: https://www.nuget.org/api/v2/package/Serilog/3.0.1
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/serilog/3.0.1/icon
-    LicenseUrl: https://www.nuget.org/packages/Serilog/3.0.1/license
-    ProjectUrl: https://serilog.net/
-    ReleaseNotes: 
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Serilog
-  - Id: Microsoft.Win32.SystemEvents
-    Version: 7.0.0
-    Authors: Microsoft
-    Description: 'Provides access to Windows system event notifications.
-
-
-      Commonly
-      Used Types:
-
-      Microsoft.Win32.SystemEvents'
-    DownloadCount: 804642108
-    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Win32.SystemEvents/7.0.0
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.win32.systemevents/7.0.0/icon
-    LicenseUrl: https://www.nuget.org/packages/Microsoft.Win32.SystemEvents/7.0.0/license
-    ProjectUrl: https://dot.net/
-    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Microsoft.Win32.SystemEvents
-  - Id: Microsoft.EntityFrameworkCore
-    Version: 7.0.8
-    Authors: Microsoft
-    Description: 'Entity Framework Core is a modern object-database mapper for .NET.
-      It supports LINQ queries, change tracking, updates, and schema migrations.
-      EF Core works with SQL Server, Azure SQL Database, SQLite, Azure Cosmos DB,
-      MySQL, PostgreSQL, and other databases through a provider plugin API.
-
-
-      Commonly
-      Used Types:
-
-      Microsoft.EntityFrameworkCore.DbContext
-
-      Microsoft.EntityFrameworkCore.DbSet'
-    DownloadCount: 742872901
-    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.EntityFrameworkCore/7.0.8
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.entityframeworkcore/7.0.8/icon
-    LicenseUrl: https://www.nuget.org/packages/Microsoft.EntityFrameworkCore/7.0.8/license
-    ProjectUrl: https://docs.microsoft.com/ef/core/
-    ReleaseNotes: 
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Microsoft.EntityFrameworkCore
-  - Id: System.Windows.Extensions
-    Version: 7.0.0
-    Authors: Microsoft
-    Description: 'Provides miscellaneous Windows-specific types
-
-
-      Commonly
-      Used Types:
-
-      System.Security.Cryptography.X509Certificates.X509Certificate2UI
-
-      System.Security.Cryptography.X509Certificates.X509SelectionFlag'
-    DownloadCount: 652717781
-    DownloadUrl: https://www.nuget.org/api/v2/package/System.Windows.Extensions/7.0.0
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/system.windows.extensions/7.0.0/icon
-    LicenseUrl: https://www.nuget.org/packages/System.Windows.Extensions/7.0.0/license
-    ProjectUrl: https://dot.net/
-    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: System.Windows.Extensions
-  - Id: Azure.Core
-    Version: 1.33.0
-    Authors: Microsoft
-    Description: This is the implementation of the Azure Client Pipeline
-    DownloadCount: 615797020
-    DownloadUrl: https://www.nuget.org/api/v2/package/Azure.Core/1.33.0
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/azure.core/1.33.0/icon
-    LicenseUrl: https://www.nuget.org/packages/Azure.Core/1.33.0/license
-    ProjectUrl: https://github.com/Azure/azure-sdk-for-net/blob/Azure.Core_1.33.0/sdk/core/Azure.Core/README.md
-    ReleaseNotes: https://github.com/Azure/azure-sdk-for-net/blob/Azure.Core_1.33.0/sdk/core/Azure.Core/CHANGELOG.md
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Azure.Core
-  - Id: Castle.Core
-    Version: 5.1.1
-    Authors: Castle Project Contributors
-    Description: Castle Core, including DynamicProxy, Logging Abstractions and DictionaryAdapter
-    DownloadCount: 613851686
-    DownloadUrl: https://www.nuget.org/api/v2/package/Castle.Core/5.1.1
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/castle.core/5.1.1/icon
-    LicenseUrl: https://www.nuget.org/packages/Castle.Core/5.1.1/license
-    ProjectUrl: http://www.castleproject.org/
-    ReleaseNotes: 
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Castle.Core
-  - Id: Microsoft.Identity.Client
-    Version: 4.54.1
-    Authors: Microsoft
-    Description: "This package contains the binaries of the Microsoft Authentication
-      Library for .NET (MSAL.NET).\n      MSAL.NET makes it easy to obtain tokens
-      from the Microsoft identity platform for developers (formally Azure AD v2.0)
-      signing-in users with work & school accounts, Microsoft personal accounts,
-      and social identities via Azure AD B2C. These tokens provide access to Microsoft
-      Cloud API and any other API secured by the Microsoft identity platform. This
-      version supports adding authentication functionality to your .NET based clients
-      - .NET, .NET Framework, .NET MAUI, Xamarin iOS, Xamarin Android and UWP"
-    DownloadCount: 591059905
-    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Identity.Client/4.54.1
-    icon: {fileID: 0}
-    IconUrl: 
-    LicenseUrl: https://www.nuget.org/packages/Microsoft.Identity.Client/4.54.1/license
-    ProjectUrl: https://go.microsoft.com/fwlink/?linkid=844761
-    ReleaseNotes: The release notes are available at https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/releases
-      and the roadmap at https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki#roadmap.
-      To provide feedback, fill-in the survey at https://ncv.microsoft.com/JrXkdySi0m.
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Microsoft Authentication Library for .NET
-  - Id: AWSSDK.Core
-    Version: 3.7.107.10
-    Authors: Amazon Web Services
-    Description: The Amazon Web Services SDK for .NET - Core Runtime
-    DownloadCount: 522205299
-    DownloadUrl: https://www.nuget.org/api/v2/package/AWSSDK.Core/3.7.107.10
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/awssdk.core/3.7.107.10/icon
-    LicenseUrl: https://www.nuget.org/packages/AWSSDK.Core/3.7.107.10/license
-    ProjectUrl: https://github.com/aws/aws-sdk-net/
-    ReleaseNotes: 
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: AWSSDK - Core Runtime
-  - Id: Microsoft.Extensions.Http
-    Version: 7.0.0
-    Authors: Microsoft
-    Description: 'The HttpClient factory is a pattern for configuring and retrieving
-      named HttpClients in a composable way. The HttpClient factory provides extensibility
-      to plug in DelegatingHandlers that address cross-cutting concerns such as service
-      location, load balancing, and reliability. The default HttpClient factory provides
-      built-in diagnostics and logging and manages the lifetimes of connections in
-      a performant way.
-
-
-      Commonly Used Types:
-
-      System.Net.Http.IHttpClientFactory'
-    DownloadCount: 511751015
-    DownloadUrl: https://www.nuget.org/api/v2/package/Microsoft.Extensions.Http/7.0.0
-    icon: {fileID: 0}
-    IconUrl: https://api.nuget.org/v3-flatcontainer/microsoft.extensions.http/7.0.0/icon
-    LicenseUrl: https://www.nuget.org/packages/Microsoft.Extensions.Http/7.0.0/license
-    ProjectUrl: https://dot.net/
-    ReleaseNotes: https://go.microsoft.com/fwlink/?LinkID=799421
-    RepositoryBranch: 
-    RepositoryCommit: 
-    RepositoryType: 0
-    RepositoryUrl: 
-    Summary: 
-    Title: Microsoft.Extensions.Http
-  defaultIcon: {fileID: 2800000, guid: eec19781926cd2248b7c9abfde8db555, type: 3}
-  hasRefreshed: 1
-  numberToSkip: 0
-  updatePackages: []
---- !u!114 &17
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 13953, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MinSize: {x: 800, y: 250}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_TitleContent:
-    m_Text: Package Manager
-    m_Image: {fileID: 5076950121296946556, guid: 0000000000000000d000000000000000,
-      type: 0}
-    m_Tooltip: 
-  m_Pos:
-    serializedVersion: 2
-    x: 386.4
-    y: 73.6
-    width: 605.19995
-    height: 522.2
-  m_SerializedDataModeController:
-    m_DataMode: 0
-    m_PreferredDataMode: 0
-    m_SupportedDataModes: 
-    isAutomatic: 1
-  m_ViewDataDictionary: {fileID: 0}
-  m_OverlayCanvas:
-    m_LastAppliedPresetName: Default
-    m_SaveData: []
---- !u!114 &18
+--- !u!114 &19
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -819,8 +478,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 73.6
-    width: 385.4
-    height: 526.2
+    width: 386.2
+    height: 527
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -872,29 +531,29 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 385.4
-      height: 505.2
-    m_Scale: {x: 0.3289063, y: 0.32890627}
-    m_Translation: {x: 192.70001, y: 252.6}
+      width: 386.2
+      height: 506
+    m_Scale: {x: 0.3294271, y: 0.3294271}
+    m_Translation: {x: 193.1, y: 253}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -585.88116
+      x: -586.1692
       y: -768
-      width: 1171.7623
+      width: 1172.3384
       height: 1536
     m_MinimalGUI: 1
-  m_defaultScale: 0.32890627
-  m_LastWindowPixelSize: {x: 481.75, y: 657.75}
+  m_defaultScale: 0.3294271
+  m_LastWindowPixelSize: {x: 482.75, y: 658.75}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 00000000000000000000
   m_XRRenderMode: 0
   m_RenderTexture: {fileID: 0}
---- !u!114 &19
+--- !u!114 &20
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -916,9 +575,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 620.8
-    width: 385.4
-    height: 154.59998
+    y: 621.60004
+    width: 386.2
+    height: 153.79999
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -928,7 +587,7 @@ MonoBehaviour:
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default
     m_SaveData: []
---- !u!114 &20
+--- !u!114 &21
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -949,10 +608,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 386.4
+    x: 387.2
     y: 73.6
-    width: 605.19995
-    height: 522.2
+    width: 619.6
+    height: 523
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -967,8 +626,8 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 1
-      snapOffset: {x: -176, y: -26.400024}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffset: {x: -176, y: -26}
+      snapOffsetDelta: {x: 0, y: -0.3999939}
       snapCorner: 3
       id: Tool Settings
       index: 0
@@ -1019,7 +678,7 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 1
-      snapOffset: {x: 0, y: 26}
+      snapOffset: {x: 0, y: 0}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
       id: unity-transform-toolbar
@@ -1058,8 +717,8 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 0
-      snapOffset: {x: -244.80002, y: -522.39996}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffset: {x: -244.79999, y: -686}
+      snapOffsetDelta: {x: 0, y: 162.79999}
       snapCorner: 3
       id: Scene View/Camera
       index: 1
@@ -1258,9 +917,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0, y: -3, z: 0}
+    m_Target: {x: 1.4688414, y: 3.91862, z: 81.051834}
     speed: 2
-    m_Value: {x: 0, y: -3, z: 0}
+    m_Value: {x: 1.4688414, y: 3.91862, z: 81.051834}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1310,9 +969,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 7.906327
+    m_Target: 15.403037
     speed: 2
-    m_Value: 7.906327
+    m_Value: 15.403037
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1337,7 +996,68 @@ MonoBehaviour:
   m_SceneVisActive: 1
   m_LastLockedObject: {fileID: 0}
   m_ViewIsLockedToObject: 0
---- !u!114 &21
+--- !u!114 &22
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13854, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 310, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Project Settings
+    m_Image: {fileID: 866346219090771560, guid: 0000000000000000d000000000000000,
+      type: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 888.8
+    y: 318.4
+    width: 640.8
+    height: 476.6
+  m_SerializedDataModeController:
+    m_DataMode: 0
+    m_PreferredDataMode: 0
+    m_SupportedDataModes: 
+    isAutomatic: 1
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+  m_PosLeft: {x: 0, y: 0}
+  m_PosRight: {x: 0, y: 0}
+  m_Scope: 1
+  m_SplitterFlex: 0.2019544
+  m_SearchText: 
+  m_TreeViewState:
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 15b3a847
+    m_LastClickedID: 1202238229
+    m_ExpandedIDs: a01a5fa600000000c53aba5a
+    m_RenameOverlay:
+      m_UserAcceptedRename: 0
+      m_Name: 
+      m_OriginalName: 
+      m_EditFieldRect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 0
+        height: 0
+      m_UserData: 0
+      m_IsWaitingForDelay: 0
+      m_IsRenaming: 0
+      m_OriginalEventType: 11
+      m_IsRenamingFilename: 0
+      m_ClientGUIView: {fileID: 0}
+    m_SearchString: 
+--- !u!114 &23
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1357,10 +1077,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 483
-    y: 73
-    width: 757
-    height: 685
+    x: 2751.6
+    y: 919
+    width: 684
+    height: 692
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1372,12 +1092,12 @@ MonoBehaviour:
     m_SaveData: []
   m_ShowAlpha: 0
   m_MipLevel: 0
-  m_Zoom: -1
-  m_ScrollPosition: {x: 0, y: 0}
+  m_Zoom: 0.8498571
+  m_ScrollPosition: {x: 3, y: 1}
   m_SelectedObject: {fileID: 0}
   m_SelectedSpriteRectGUID: 00000000000000000000000000000000
   m_LastUsedModuleTypeName: 
---- !u!114 &22
+--- !u!114 &24
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1534,7 +1254,7 @@ MonoBehaviour:
   m_CurrentEditor: 1
   m_LayerEditor:
     m_SelectedLayerIndex: 0
---- !u!114 &23
+--- !u!114 &25
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1555,10 +1275,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 386.4
-    y: 616.8
-    width: 605.19995
-    height: 158.59998
+    x: 387.2
+    y: 617.60004
+    width: 619.6
+    height: 157.79999
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1570,8 +1290,8 @@ MonoBehaviour:
     m_SaveData: []
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: -20432
---- !u!114 &24
+  m_LastSelectedObjectID: 68256
+--- !u!114 &26
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1592,10 +1312,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 993.60004
+    x: 1008.8
     y: 73.6
-    width: 211.59998
-    height: 432.6
+    width: 197.20001
+    height: 517.4
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1608,9 +1328,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 26180000
+      m_SelectedIDs: 6eb40000
       m_LastClickedID: 0
-      m_ExpandedIDs: 16fbffff
+      m_ExpandedIDs: b8aefeff5cc7feff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1626,7 +1346,7 @@ MonoBehaviour:
         m_IsRenaming: 0
         m_OriginalEventType: 11
         m_IsRenamingFilename: 0
-        m_ClientGUIView: {fileID: 13}
+        m_ClientGUIView: {fileID: 16}
       m_SearchString: 
     m_ExpandedScenes: []
     m_CurrenRootInstanceID: 0
@@ -1634,7 +1354,7 @@ MonoBehaviour:
       m_IsLocked: 0
     m_CurrentSortingName: TransformSorting
   m_WindowGUID: 0c4e42d2e41c54581b02d2d9f1c152e1
---- !u!114 &25
+--- !u!114 &27
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1655,10 +1375,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 993.60004
-    y: 527.2
-    width: 211.59998
-    height: 248.19998
+    x: 1008.8
+    y: 612
+    width: 197.20001
+    height: 163.39996
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1681,7 +1401,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/Base Game Scripts
+    - Assets/Scenes
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1696,7 +1416,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 9e5e0000
     m_LastClickedID: 24222
-    m_ExpandedIDs: 00000000d2640000d4640000d6640000d8640000da640000dc640000de640000e0640000e2640000e4640000e6640000e8640000ea640000ec640000
+    m_ExpandedIDs: 
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1712,7 +1432,7 @@ MonoBehaviour:
       m_IsRenaming: 0
       m_OriginalEventType: 11
       m_IsRenamingFilename: 1
-      m_ClientGUIView: {fileID: 14}
+      m_ClientGUIView: {fileID: 17}
     m_SearchString: 
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
@@ -1721,10 +1441,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_AssetTreeState:
-    scrollPos: {x: 0, y: 398.29837}
+    scrollPos: {x: 0, y: 58.600037}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff00000000d2640000d4640000d6640000d8640000da640000dc640000de640000e0640000e2640000e4640000e6640000e8640000ea640000ec6400006a65000070650000
+    m_ExpandedIDs: ffffffff0406000058060000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1740,7 +1460,7 @@ MonoBehaviour:
       m_IsRenaming: 0
       m_OriginalEventType: 11
       m_IsRenamingFilename: 1
-      m_ClientGUIView: {fileID: 14}
+      m_ClientGUIView: {fileID: 17}
     m_SearchString: 
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
@@ -1780,7 +1500,7 @@ MonoBehaviour:
     m_GridSize: 64
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 115
---- !u!114 &26
+--- !u!114 &28
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1801,9 +1521,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1207.2001
+    x: 1208
     y: 73.6
-    width: 327.80005
+    width: 327
     height: 701.8
   m_SerializedDataModeController:
     m_DataMode: 0
