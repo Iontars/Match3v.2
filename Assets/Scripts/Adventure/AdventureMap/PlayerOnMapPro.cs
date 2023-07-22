@@ -111,7 +111,7 @@ namespace Adventure.AdventureMap
         {
             yield return new WaitForSeconds(0.3f);
             print("Движение завершилось");
-            //SceneManager.LoadScene("Main");
+            SceneManager.LoadScene("Main");
         }
 
         private void CheckSpecialMapPosition()
