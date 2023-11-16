@@ -3850,7 +3850,7 @@ GameObject:
   - component: {fileID: 1697647131}
   - component: {fileID: 1697647134}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3982,6 +3982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf26bca3cf76ed4ca0a75d627b000f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turnEnum: 0
 --- !u!1 &1699054006
 GameObject:
   m_ObjectHideFlags: 0

@@ -89,6 +89,11 @@ namespace Adventure.AdventureMap
                 isLerpMoving = true;
                 yield return new WaitForSeconds(PlayerPrefsStorage.CoroutineForLerpDelay);
                 isLerpMoving = false;
+                if (PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) == 19)
+                {
+                    Debug.LogWarning("2222");
+                    PlayerPrefs.SetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap, -1);
+                }
             }
 
             print(PlayerPrefs.GetInt(PlayerPrefsStorage.PlayerCurrentPositionOnMap) + " ИЗ " + maxPointsCount);
@@ -111,7 +116,7 @@ namespace Adventure.AdventureMap
         {
             yield return new WaitForSeconds(0.3f);
             print("Движение завершилось");
-            SceneManager.LoadScene("Main");
+            //SceneManager.LoadScene("Main");
         }
 
         private void CheckSpecialMapPosition()
