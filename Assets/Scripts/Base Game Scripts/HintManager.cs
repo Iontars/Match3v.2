@@ -1,93 +1,94 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HintManager : MonoBehaviour
+namespace Base_Game_Scripts
 {
-    private Board board;
-    public float hintDelay;
-    private float hintDelaySeconds;
-    public GameObject hintParticle;
-    public GameObject currentHint;
-
-    void Start()
+    public class HintManager : MonoBehaviour
     {
-        board = FindObjectOfType<Board>();
-        hintDelaySeconds = hintDelay;
-    }
+        private Board _board;
+        private float _hintDelaySeconds;
+        public float hintDelay;
+        public GameObject hintParticle;
+        public GameObject currentHint;
 
-    // найти все возможные совпадения на доске
-    List<GameObject> FindAllMatces()
-    {
-        List<GameObject> possibleMoves = new List<GameObject>();
-        for (int i = 0; i < board.width; i++)
+        private void Start()
         {
-            for (int j = 0; j < board.height; j++)
+            _board = FindObjectOfType<Board>();
+            _hintDelaySeconds = hintDelay;
+        }
+
+        // найти все возможные совпадения на доске
+        private List<GameObject> FindAllMatches()
+        {
+            List<GameObject> possibleMoves = new List<GameObject>();
+            for (int i = 0; i < _board.Width; i++)
             {
-                if (board.allDots[i, j] != null)
+                for (int j = 0; j < _board.Height; j++)
                 {
-                    if (i < board.width - 1)
+                    if (_board.currentLevelAllTokensArray[i, j] != null)
                     {
-                        if (board.SwitchAndCheck(i, j, Vector2.right))
+                        if (i < _board.Width - 1)
                         {
-                            possibleMoves.Add(board.allDots[i,j]) ;
+                            if (_board.SwitchAndCheck(i, j, Vector2.right))
+                            {
+                                possibleMoves.Add(_board.currentLevelAllTokensArray[i,j]) ;
+                            }
                         }
-                    }
-                    if (j < board.height - 1)
-                    {
-                        if (board.SwitchAndCheck(i, j, Vector2.up))
+                        if (j < _board.Height - 1)
                         {
-                            possibleMoves.Add(board.allDots[i, j]);
+                            if (_board.SwitchAndCheck(i, j, Vector2.up))
+                            {
+                                possibleMoves.Add(_board.currentLevelAllTokensArray[i, j]);
+                            }
                         }
                     }
                 }
             }
+            return possibleMoves;
         }
-        return possibleMoves;
-    }
-    // выбрать одно из этих совпадений случайным образом
-    GameObject PickOneRandomly()
-    {
-        List<GameObject> possibleMoves = new List<GameObject>();
-        possibleMoves = FindAllMatces();
-        if (possibleMoves.Count > 0)
+        // выбрать одно из этих совпадений случайным образом
+        private GameObject PickOneRandomly()
         {
-            int pieceToUse = Random.Range(0, possibleMoves.Count);
-            return possibleMoves[pieceToUse];
-        }
-        else return null;
-    }
-    // создать подсказку на выбранном совпадении
-    void MarkHint()
-    {
-        GameObject move = PickOneRandomly();
-        if (move != null)
-        {
-            currentHint = Instantiate(hintParticle, move.transform.position, Quaternion.identity);
-        }
-    }
-    // уничтожить подсказку
-    public void DestroyHint()
-    {
-        if (currentHint != null)
-        {
-            Destroy(currentHint);
-            currentHint = null;
-            hintDelaySeconds = hintDelay;
-        }
-    }
-
-    void Update()
-    {
-        if (board.currentState == GameState.move)
-        {
-
-            hintDelaySeconds -= Time.deltaTime;
-            if (hintDelaySeconds <= 0 && currentHint == null)
+            List<GameObject> possibleMoves = FindAllMatches();
+            if (possibleMoves.Count > 0)
             {
-                MarkHint();
-                hintDelaySeconds = hintDelay;
+                int pieceToUse = Random.Range(0, possibleMoves.Count);
+                return possibleMoves[pieceToUse];
+            }
+            else return null;
+        }
+        // создать подсказку на выбранном совпадении
+        void MarkHint()
+        {
+            GameObject move = PickOneRandomly();
+            if (move != null)
+            {
+                currentHint = Instantiate(hintParticle, move.transform.position, Quaternion.identity);
+            }
+        }
+        // уничтожить подсказку
+        public void DestroyHint()
+        {
+            if (currentHint != null)
+            {
+                Destroy(currentHint);
+                currentHint = null;
+                _hintDelaySeconds = hintDelay;
+            }
+        }
 
+        void Update()
+        {
+            if (_board.currentState == GameState.Move)
+            {
+
+                _hintDelaySeconds -= Time.deltaTime;
+                if (_hintDelaySeconds <= 0 && currentHint == null)
+                {
+                    MarkHint();
+                    _hintDelaySeconds = hintDelay;
+
+                }
             }
         }
     }

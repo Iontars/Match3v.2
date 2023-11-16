@@ -13,6 +13,11 @@ TagManager:
   - Breakable
   - Pink Dot
   - Salat Dot
+  - Board
+  - Concrete
+  - Chocolate
+  - Lock
+  - Slime
   layers:
   - Default
   - TransparentFX
@@ -49,4 +54,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Markers
+    uniqueID: 1514755307
     locked: 0

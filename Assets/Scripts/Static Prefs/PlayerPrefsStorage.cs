@@ -1,12 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerPrefsStorage", menuName = "PLayerPrefsMenu")]
-public class PlayerPrefsStorage : ScriptableObject
+namespace Static_Prefs
 {
-    public static string pathToSaveFile = "/player.dat";
+    [CreateAssetMenu(fileName = "PlayerPrefsStorage", menuName = "PLayerPrefsMenu")]
+    public class PlayerPrefsStorage : ScriptableObject
+    {
+        public const string PathToSaveFile = "/player.dat";
+        public const string KeyCurrentLevel = "Current Level";
+        public const string TagBoard = "Board";
+        public const string PlayerCurrentPositionOnMap = "PlayerCurrentPositionOnMap";
+        public const string NumberOfCurrentLevel = "NumberOfCurrentLevel";
+        
+        public const float CoroutineForLerpDelay = 1.5f;
 
-    [SerializeField]
-    public static string keyCurrentLevel = "Current Level";
+    }
 }

@@ -12,25 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2249442d61c6456db7b927b9bebf5fa, type: 3}
   m_Name: Level 4
   m_EditorClassIdentifier: 
-  width: 4
-  height: 4
+  width: 10
+  height: 10
   boardLayout:
-  - x: 0
-    y: 0
-    tileKind: 1
+  - x: 5
+    y: 5
+    tileKind: 0
+  - x: 4
+    y: 5
+    tileKind: 0
+  - x: 3
+    y: 5
+    tileKind: 0
   dots:
   - {fileID: 851745900852720794, guid: ff92602f56e93984c92de6fefbe04a61, type: 3}
   - {fileID: 851745900852720794, guid: 6bec68f4a3ef68242a6eff67dd4a42e5, type: 3}
   - {fileID: 2205036190841030540, guid: 156afdf7791a33f49b79eda7f8470c40, type: 3}
-  - {fileID: 3222974119019145949, guid: d523a2bdbda671a4e9430a06834921af, type: 3}
-  - {fileID: 1092129758423907793, guid: 8fc9ae9e922b409468be77874941f554, type: 3}
-  - {fileID: 380217878639168106, guid: 626dad3cdd87a174e85bdf3fc6d75b7f, type: 3}
-  scoreGoals: 64000000
+  scoreGoals: e8030000d0070000b80b0000
   endGameRequirements:
     gameType: 1
-    counterValue: 30
+    counterValue: 5
   levelGoals:
-  - numberNeeded: 30
-    numberCollected: 0
-    goalSprite: {fileID: 1108514850, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
-    MatchValue: Blue Dot
+  - numberNeeded: 100
+    numberCollected: 6
+    goalSprite: {fileID: 185662926, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
+    MatchValue: Red Dot

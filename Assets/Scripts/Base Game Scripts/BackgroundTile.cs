@@ -1,43 +1,53 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class BackgroundTile : MonoBehaviour
+namespace Base_Game_Scripts
 {
-    private SpriteRenderer sprite;
-    public int hitPoints;
-    GoalManager goalManager;
+    public class BackgroundTile : MonoBehaviour
+    {
+        private SpriteRenderer _sprite;
+        private GoalManager _goalManager;
+        private bool _isGoalManagerNotNull;
+        public int hitPoints;
 
-    private void Start()
-    {
-        sprite = GetComponent<SpriteRenderer>();
-        goalManager = FindObjectOfType<GoalManager>();
-    }
-    public void TakeDamage(int damage)
-    {
-        hitPoints -= damage;
-        MakeLighter();
-    }
-    
-    void MakeLighter()
-    {
-        Color color = sprite.color;
-        float newAlfa = color.a * .5f;
-        sprite.color = new Color(color.r, color.g, color.b, newAlfa);
-    }
-
-    void Update()
-    {
-        if (hitPoints <= 0)
+        private void Awake()
         {
-            // проверка на совпадение целей, если целью уровня стоят Breakable плитки
-            if (goalManager != null)
+            _sprite = GetComponent<SpriteRenderer>();
+            _goalManager = FindObjectOfType<GoalManager>();
+            _isGoalManagerNotNull = _goalManager != null;
+        }
+        
+        public void TakeDamage(int damage)
+        {
+            hitPoints -= damage;
+            MakeLighter();
+        }
+
+        private void MakeLighter() // изменение цвета фоновой плитки п мере получения урона
+        {
+            Color color = _sprite.color;
+            float newAlfa = color.a * .5f;
+            _sprite.color = new Color(color.r, color.g, color.b, newAlfa);
+        }
+
+
+        private void CheckForBreakableTokens()
+        {
+            if (hitPoints <= 0)
             {
-                goalManager.CompareGoal(gameObject.tag);
-                goalManager.UpdateGoals();
-                Debug.LogError("Breakable tile was destroyed");
+                // проверка на совпадение целей, если целью уровня стоят Breakable плитки
+                if (_isGoalManagerNotNull)
+                {
+                    _goalManager.CompareGoal(gameObject.tag);
+                    _goalManager.UpdateGoals();
+                    print("Breakable tile was destroyed");
+                }
+                Destroy(gameObject);
             }
-            Destroy(gameObject);
+        }
+
+        private void Update()
+        {
+            CheckForBreakableTokens();
         }
     }
 }

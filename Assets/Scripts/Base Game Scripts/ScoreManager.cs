@@ -1,46 +1,64 @@
-using System.Collections;
-using System.Collections.Generic;
+using Game_Data_Scripts;
 using UnityEngine;
 using UnityEngine.UI;
+using Static_Prefs;
 
-public class ScoreManager : MonoBehaviour
+namespace Base_Game_Scripts
 {
-    private Board board;
-    public Text scoreText;
-    public int score;
-    public Image scoreBar;
-    GameData gameData;
-
-    public void IncreaseScore(int AmountToIncrease)
+    public class ScoreManager : MonoBehaviour
     {
-        score += AmountToIncrease;
-        if (gameData != null)
+        private Board _board;
+        private GameData _gameData;
+        private int _numberStars;
+        public Image scoreBar;
+        public Text scoreText;
+        public Text stageNumber;
+        public int score;
+
+        public void IncreaseScore(int amountToIncrease)
         {
-            int highScore = gameData.saveData.highScores[board.level];
-            if (highScore < score)
+            score += amountToIncrease;
+            for (int i = 0; i < _board.scoreGoals.Length; i++)
             {
-                gameData.saveData.highScores[board.level] = score;
-
+                if (score > _board.scoreGoals[i] && _numberStars < i + 1)
+                {
+                    _numberStars++;
+                }
             }
-            gameData.Save();
+            if (_gameData != null)
+            {
+                int highScore = _gameData.saveData.highScores[_board.Level];
+                if (highScore < score)
+                {
+                    _gameData.saveData.highScores[_board.Level] = score;
+                    //gameData.saveData.stars[board.level] = numberStars;
+                }
+
+                var currentStars = _gameData.saveData.stars[_board.Level];
+                if (_numberStars > currentStars)
+                {
+                    _gameData.saveData.stars[_board.Level] = _numberStars;
+                }
+                _gameData.Save();
+            }
+            UpdateBar();
         }
-    }
-
-
-    void Start()
-    {
-        board = FindObjectOfType<Board>();
-        gameData = FindObjectOfType<GameData>();
-    }
-
-    void Update()
-    {
-        scoreText.text = score.ToString();
-
-        if (scoreBar != null)
+        
+        private void UpdateBar()
         {
-            //int lenght = board.scoreGoals.Length;
-            scoreBar.fillAmount = (float)score / (float)board?.scoreGoals[board.scoreGoals.Length - 1];
+            scoreText.text = score.ToString();
+            if (_board != null && scoreBar != null)
+            {
+                int lenght = _board.scoreGoals.Length;
+                scoreBar.fillAmount = (float)score / (float)_board?.scoreGoals[_board.scoreGoals.Length - 1];
+            }
+        }
+
+        private void Start()
+        {
+            _board = FindObjectOfType<Board>();
+            _gameData = FindObjectOfType<GameData>();
+            stageNumber.text = PlayerPrefs.GetInt(PlayerPrefsStorage.KeyCurrentLevel).ToString();
         }
     }
 }

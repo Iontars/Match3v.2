@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Base_Game_Scripts;
 using UnityEngine;
 
 
@@ -24,7 +25,7 @@ public class GoalManager : MonoBehaviour
     EndGameManager EndGame;
     Board board;
 
-    void SetupGoals()
+    private void SetupGoals()
     {
         for (int i = 0; i < levelGoals.Length; i++)
         {
@@ -91,17 +92,17 @@ public class GoalManager : MonoBehaviour
     }
 
     // метод достиженяи целей
-    public void GetGoal()
+    private void GetGoal()
     {
         if (board != null)
         {
             if (board.world != null)
             {
-                if (board.level < board.world.levels.Length)
+                if (board.Level < board.world.levels.Length)
                 {
-                    if (board.world.levels[board.level] != null)
+                    if (board.world.levels[board.Level] != null)
                     {
-                        levelGoals = board.world.levels[board.level].levelGoals;
+                        levelGoals = board.world.levels[board.Level].levelGoals;
                         // очень важная часть// установка нулевых значений в поле SO numberCollected иначе SO (Level) не обновит свои значения
                         for (int i = 0; i < levelGoals.Length; i++)
                         {
@@ -118,7 +119,7 @@ public class GoalManager : MonoBehaviour
         board = FindObjectOfType<Board>();
     }
 
-    void Start()
+    private void Start()
     {
         GetGoal();
         SetupGoals();

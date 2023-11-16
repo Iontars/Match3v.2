@@ -25,18 +25,18 @@ MonoBehaviour:
   - {fileID: 851745900852720794, guid: 6bec68f4a3ef68242a6eff67dd4a42e5, type: 3}
   scoreGoals: c80000002c010000f4010000
   endGameRequirements:
-    gameType: 0
-    counterValue: 10
+    gameType: 1
+    counterValue: 30
   levelGoals:
   - numberNeeded: 6
     numberCollected: 3
     goalSprite: {fileID: -140318929, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Orange Dot
   - numberNeeded: 6
-    numberCollected: 3
+    numberCollected: 0
     goalSprite: {fileID: 1840675294, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Pink Dot
   - numberNeeded: 6
-    numberCollected: 6
+    numberCollected: 3
     goalSprite: {fileID: 1108514850, guid: 7edbc79ec9e6dac458cf3b79792f3aa0, type: 3}
     MatchValue: Blue Dot
